@@ -1,0 +1,18 @@
+from flask import Flask
+
+app = Flask(name)
+
+@app.route('/')
+def home():
+    return 'Hello from our Mini IT Project!'
+
+@app.route('/login')
+def login():
+    return 'Login page - coming soon'
+
+@app.route('/logout')
+def logout():
+    return 'Logout page - coming soon'
+
+if name == 'main':
+    app.run(debug=True)
