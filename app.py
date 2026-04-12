@@ -1,6 +1,6 @@
 from flask import Flask
 
-app = Flask(name)
+app = Flask(__name__)
 
 @app.route('/')
 def home():
@@ -14,5 +14,5 @@ def login():
 def logout():
     return 'Logout page - coming soon'
 
-if name == 'main':
+if __name__ == 'main':
     app.run(debug=True)
