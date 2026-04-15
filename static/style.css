@@ -6,3 +6,8 @@ h1{
     color: #522b5b;
     text-align: center;
 }
+
+form{
+    text-align: center;
+    p.solid {border-style: solid;}
+}
