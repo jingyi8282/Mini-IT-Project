@@ -9,5 +9,13 @@ h1{
 
 form{
     text-align: center;
-    p.solid {border-style: solid;}
+    background: #dfb6b2;
+    margin: 30px auto;
+    margin-bottom: 5px;
+    max-width: 950px;
+    border-radius: 14px;
+    padding: 20px;
+    border-left: 6px solid #854f6c;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
 }
+
