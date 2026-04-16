@@ -55,6 +55,9 @@ def login():
 def logout():
     return 'Logout page - coming soon'
 
+@app.route('/tasks')
+def tasks():
+    return 'Hi'
 
-if __name__ == 'main':
+if __name__ == '__main__':
     app.run(debug=True)
