@@ -16,12 +16,14 @@
 </form>
 </section>
 
-<h3> My Tasks </h3>
-<ul>
-    {% for t in tasks %}
-        <li>{{ t }}</li>
-    {% endfor %}
-</ul>
+<div class="tasks_list">
+    <h3> My Tasks </h3>
+    <ul>
+        {% for t in tasks %}
+            <li>{{ t }}</li>
+        {% endfor %}
+    </ul>
+</div>
 
 </body>
 </html>
