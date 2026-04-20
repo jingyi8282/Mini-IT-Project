@@ -61,11 +61,17 @@ def tasks():
     return render_template ("tasks.html", tasks=tasks_list)
 
 @app.route('/add', methods=['POST','GET'])
-def add():
+def add_task():
     if request.method == "POST":
         tasks = request.form['tasks']
         tasks_list.append(tasks)
         return redirect('/tasks')
+    
+@app.route('/delete/<int:task_id>', methods=['POST'])
+def delete_task(task_id):
+    if 0 <= task_id < len(tasks_list):
+        tasks_list.pop(task_id)
+    return redirect('/tasks')
 
 if __name__ == '__main__':
     app.run(debug=True)

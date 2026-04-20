@@ -9,18 +9,24 @@
  
 <h1> TASKS PAGE </h1>
 
+<section>
 
-<form method="POST" action="/add">
+<form class="add_form" method="POST" action="/add">
     <input type="text" name="tasks" placeholder="Enter task">
-    <button type="submit">Add Tasks</button>
+    <button type="submit" class="add_button">Add Tasks</button>
 </form>
+
 </section>
 
 <div class="tasks_list">
     <h3> My Tasks </h3>
     <ul>
         {% for t in tasks %}
-            <li>{{ t }}</li>
+            <li>
+                {{ t }}
+                <form action="/delete/{{loop.index0}}" method="POST" style="display: inline; ">
+                <button type="submit" class="delete_button">Delete Tasks</button></form>
+            </li>
         {% endfor %}
     </ul>
 </div>
