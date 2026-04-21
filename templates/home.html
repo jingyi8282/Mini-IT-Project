@@ -3,35 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <title>Academic Diary</title>
-     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-
+    <link rel="stylesheet" href="{{ url_for('static', filename='homepage.css') }}">
 </head>
 <body>
     <div class="dashboard-container">
-        <aside class="sidebar">
-            <h2 class="user-greeting">Hello, Student!</h2>
-            
-            <div class="nav-links">
-                <button class="btn primary">Login</button>
-                <button class="btn secondary">Register</button>
-            </div>
-            
-            <div class="sidebar-footer">
-            </div>
-        </aside>
-
         <main class="main-content">
+            <nav class="top-nav">
+                <div class="nav-buttons">
+                    <a href="{{ url_for('login') }}" class="btn primary">Login</a>
+                    <a href="{{ url_for('register') }}" class="btn secondary">Register</a>
+                </div>
+            </nav>
+
             <header class="top-bar">
                 <h1 class="main-title">Academic Diary</h1>
             </header>
             
             <section class="grid-layout">
                 <div class="card">
-                    <p style="padding: 20px; color: #888;">[Slogan will go here]</p>
+                   <h3 class="card-header">About the Web</h3>
+                     <p class="card-description">"This diary helps students organize their academic life with precision and clarity."</p>
                 </div>
-                <div class="card"></div>
-                <div class="card"></div>
-                <div class="card"></div>
+
+                <div class="card">
+                    <h3 class="card-header">Our Slogan</h3>
+                    <p class="card-description">"Your Academic Journey, Simplified."</p>
+                </div>
+            
             </section>
         </main>
     </div>
