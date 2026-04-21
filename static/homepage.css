@@ -1,0 +1,87 @@
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #fbe4d8;
+    color: #4A4A4A;
+}
+
+.dashboard-container {
+    padding: 0 20px; 
+}
+
+/* New Top Navigation Bar */
+.top-nav {
+    display: flex;
+    justify-content: flex-end; 
+    align-items: center;
+    padding: 20px 0;
+    border-bottom: 2px solid #854f6c; 
+    margin-bottom: 30px;
+}
+
+.nav-buttons {
+    display: flex;
+    gap: 15px;
+}
+
+.nav-buttons a {
+    text-decoration: none;
+    display: inline-block;
+}
+
+.main-title {
+    color: #522b5b;
+    font-size: 36px;
+    margin-bottom: 30px;
+}
+
+.grid-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    width: 100%;
+}
+
+.card {
+    background-color: #dfb6b2;
+    min-height: 180px;
+    width: 90%;
+    margin: 0 auto;
+    border-radius: 30px;
+    padding: 20px; 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-header {
+    color: #522b5b;
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.card-description {
+    color:  #fbe4d8;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.card:hover {
+    transform: translateY(-5px); /* This lifts the card up slightly */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15); /* This adds the shadow */
+    cursor: pointer; /* Changes your mouse to a hand icon */
+}
+
+.btn {
+    padding: 10px 25px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.primary { background-color: #522b5b; color: #fbe4d8; }
+.secondary { background-color: #854f6c; color: #fbe4d8; }
