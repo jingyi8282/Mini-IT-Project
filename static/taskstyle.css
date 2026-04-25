@@ -61,12 +61,12 @@ input{
 }
 
 
-.delete_button{
+.task_btn{
     border-radius: 14px;
     background-color: #fbe4d8;  
     color: #522b5b;
     font-size: 10px;
-    padding: 3px;
+    padding: 5px;
     margin-left: 5px;
     margin-bottom: 5px;
     cursor: pointer;    
