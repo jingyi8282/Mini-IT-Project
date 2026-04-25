@@ -23,16 +23,22 @@ h3{
 }
 
 .tasks_list{
-    border-left: 8px solid #854f6c;
-    border-top:  8px solid #854f6c;
+    display: flex;
+    gap: 30px;
+    justify-content: space-between;
+    background-color: #854f6c;
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.task_column{
+    flex: 1;
+    border-left: 8px solid  #2B124C;
+    border-top:  8px solid #2B124C;
     border-radius: 14px;
     background-color: #dfb6b2;
-    margin-right: 1100px;
-    margin-top: 100px;
-    padding-left: 10px;
-    padding-right: 10px;
-    padding-bottom: 10px;
-    font-size: 20px;
+    padding: 10 px;
+    font-size: 18px;
 }
 
 .add_button{
