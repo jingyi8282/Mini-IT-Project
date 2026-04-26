@@ -64,7 +64,8 @@ def tasks():
 def add_task():
     if request.method == "POST":
         tasks = request.form['tasks']
-        tasks_list.append(tasks)
+        priority = request.form['priority']
+        tasks_list.append([tasks, priority])
         return redirect('/tasks')
     
 @app.route('/delete/<int:task_id>', methods=['POST'])
