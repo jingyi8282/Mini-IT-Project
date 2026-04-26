@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
 from werkzeug.security import generate_password_hash
 from database import Database
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -65,7 +66,12 @@ def add_task():
     if request.method == "POST":
         tasks = request.form['tasks']
         priority = request.form['priority']
-        tasks_list.append([tasks, priority])
+        deadline = request.form['deadline']
+        today =datetime.now().date()
+        deadline_date = datetime.strptime(deadline, '%Y-%m-%d').date()
+        due_date = deadline_date.strftime('%d-%m-%Y')
+        remaining_days = (deadline_date - today ).days
+        tasks_list.append([tasks, priority, due_date, remaining_days])
         return redirect('/tasks')
     
 @app.route('/delete/<int:task_id>', methods=['POST'])
