@@ -32,9 +32,9 @@
         <ul>
             {% for t in tasks %}
                 <li>
-                    {{ t[0] }} {{t[1]}}
+                    {{ t[0] }} <span class="prio-{{t[1]}}"> {{t[1]}} </span>
                     <form action="/delete/{{loop.index0}}" method="POST" style="display: inline; ">
-                    <button type="submit" class="task_btn">Delete</button>
+                    <button type="submit" class="del_btn">Delete</button>
                     </form>
                 </li>
             {% endfor %}
