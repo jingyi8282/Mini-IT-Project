@@ -72,3 +72,12 @@ input{
     cursor: pointer;    
 }
 
+.priority{
+    border-radius: 14px;
+    border-color: #2B124C;
+    background-color: #fbe4d8;
+    color: #522b5b;
+    padding: 10px;
+    cursor: pointer;
+}
+
