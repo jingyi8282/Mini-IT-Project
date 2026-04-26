@@ -13,7 +13,14 @@
 
 <form class="add_form" method="POST" action="/add">
     <input type="text" name="tasks" placeholder="Enter task">
+    <select name="Priority">
+        <option value="Priority">Priority</option>
+        <option value="Low">Low</option>
+        <option value="Medium">Medium</option>
+        <option value="High">High</option>
+    </select>
     <button type="submit" class="add_button">Add Tasks</button>
+
 </form>
 
 </section>
@@ -27,7 +34,8 @@
                 <li>
                     {{ t }}
                     <form action="/delete/{{loop.index0}}" method="POST" style="display: inline; ">
-                    <button type="submit" class="task_btn">Delete</button></form>
+                    <button type="submit" class="task_btn">Delete</button>
+                    </form>
                 </li>
             {% endfor %}
         </ul>
