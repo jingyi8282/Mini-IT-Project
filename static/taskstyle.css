@@ -2,9 +2,11 @@ body{
     background-color: #fbe4d8
 }
 
-h1{
+header{
     color: #522b5b;
     text-align: center;
+    font-size: 40px;
+    font-weight: bolder;
 }
 
 .add_form{
@@ -68,8 +70,9 @@ input{
     font-size: 12px;
     font-weight: bold;
     padding: 5px;
-    margin-left: 5px;
+    margin-inline: 5px;
     margin-bottom: 5px;
+    margin-top: 5px;
     cursor: pointer;    
 }
 
@@ -112,3 +115,16 @@ input{
     font-size: 12px;
     font-weight: bold;
 }
+
+.int_date{
+    border-radius: 14px;
+    background-color: #fbe4d8;
+    color: #522b5b;
+    padding: 10px;
+}
+
+.due{
+    font-size: 15px;
+    margin-inline-start: 5px;   
+}
+
