@@ -61,11 +61,12 @@ input{
 }
 
 
-.task_btn{
+.del_btn{
     border-radius: 14px;
     background-color: #fbe4d8;  
     color: #522b5b;
-    font-size: 10px;
+    font-size: 12px;
+    font-weight: bold;
     padding: 5px;
     margin-left: 5px;
     margin-bottom: 5px;
@@ -76,8 +77,38 @@ input{
     border-radius: 14px;
     border-color: #2B124C;
     background-color: #fbe4d8;
+    font-weight: bold;
     color: #522b5b;
     padding: 10px;
     cursor: pointer;
 }
 
+.prio-Low{
+    border-radius: 14px;
+    border-style: solid ; 
+    background-color: #c0fcbf;
+    color: #2B124C;
+    padding: 5px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.prio-Medium{
+    border-radius: 14px;
+    border-style: solid;
+    background-color: #fdfb86;
+    color: #522b5b;
+    padding: 5px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.prio-High{
+    border-radius: 14px;
+    border-style: solid;
+    background-color: #ff9393;
+    color: #522b5b;
+    padding: 5px;
+    font-size: 12px;
+    font-weight: bold;
+}
