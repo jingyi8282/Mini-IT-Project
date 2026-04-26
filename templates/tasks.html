@@ -1,18 +1,20 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
+        <meta charset="UTF-8">
         <title> Tasks page </title>
         <link rel="stylesheet" href="{{ url_for('static', filename='taskstyle.css')}}">
     </head>
 
 <body>
  
-<h1> TASKS PAGE </h1>
+<header> TASKS PAGE </header>
 
 <section>
 
 <form class="add_form" method="POST" action="/add">
     <input type="text" name="tasks" placeholder="Enter task">
+    <input class="int_date" type="date" name="deadline" required>
     <select name="priority" class="priority">
         <option value="Priority">Priority</option>
         <option value="Low">Low</option>
@@ -33,6 +35,7 @@
             {% for t in tasks %}
                 <li>
                     {{ t[0] }} <span class="prio-{{t[1]}}"> {{t[1]}} </span>
+                    <span class="due"> Due:{{t[2]}} ({{t[3]}} days remaining) </span>
                     <form action="/delete/{{loop.index0}}" method="POST" style="display: inline; ">
                     <button type="submit" class="del_btn">Delete</button>
                     </form>
