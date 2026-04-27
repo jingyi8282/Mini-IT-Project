@@ -74,6 +74,9 @@ ul {
     padding: 10px;
     cursor: pointer;
 }
+.add_button:hover {
+    background-color: #f5d4c3;
+}
 
 input{
     border-radius: 14px;
@@ -155,3 +158,18 @@ input{
     gap: 5x;
 }
 
+.edit_btn{
+    display: inline-block;
+    border: 2px solid #2B124C ;
+    border-radius: 14px;
+    background-color: #fbe4d8;
+    color: #522b5b;
+    font-size: 12px;
+    font-weight: bold;
+    text-decoration: none;
+    padding: 5px;
+    margin-inline: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    cursor: pointer;
+}
