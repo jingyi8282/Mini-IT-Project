@@ -37,8 +37,12 @@ header{
 
 
 .list{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
     list-style: none;
     padding: 10px;
+    
 }
 
 ul {
@@ -142,5 +146,12 @@ input{
 .due{
     font-size: 15px;
     margin-inline-start: 5px;   
+}
+
+.prio-due{
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 5x;
 }
 
