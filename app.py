@@ -81,9 +81,10 @@ def delete_task(task_id):
     return redirect('/tasks')
 
 @app.route('/edit/<int:task_id>', methods=['GET','POST'])
-def edit_task():
+def edit_task(task_id):
+    task = tasks_list[task_id]
+    return render_template('edit.html', task=task, task_id=task_id)
 
-    return redirect('/edit')
 
 if __name__ == '__main__':
     app.run(debug=True)
