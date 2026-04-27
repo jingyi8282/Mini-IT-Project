@@ -24,7 +24,6 @@ header{
 .h2_column{
     text-align: center;
     color: #522b5b;
-    border-style: dotted;
     border-width: 3px;
 }
 
@@ -32,19 +31,35 @@ header{
     display: flex;
     gap: 30px;
     justify-content: space-between;
-    background-color: #854f6c;
-    border-radius: 12px;
     padding: 20px;
+}
+
+
+.list{
+    list-style: none;
+    padding: 10px;
+}
+
+ul {
+    padding: 0%;
+    margin: 16px;
 }
 
 .task_column{
     flex: 1;
-    border-left: 8px solid  #2B124C;
-    border-top:  8px solid #2B124C;
+    box-shadow: 0 4px 20px rgb(0, 0, 0);
     border-radius: 14px;
     background-color: #dfb6b2;
     padding: 10 px;
     font-size: 18px;
+}
+
+.task_card {
+    border: 2px solid #2B124C;
+    border-radius: 14px;
+    background-color: #fbe4d8;
+    margin-bottom: 10px;
+
 }
 
 .add_button{
