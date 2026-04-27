@@ -80,5 +80,10 @@ def delete_task(task_id):
         tasks_list.pop(task_id)
     return redirect('/tasks')
 
+@app.route('/edit/<int:task_id>', methods=['GET','POST'])
+def edit_task():
+
+    return redirect('/edit')
+
 if __name__ == '__main__':
     app.run(debug=True)
