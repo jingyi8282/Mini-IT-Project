@@ -35,13 +35,20 @@
 
             {% for t in tasks %}
                 <div class="task_card">
+                    
                     <li class="list">
-                        {{ t[0] }} <span class="prio-{{t[1]}}"> {{t[1]}} </span>
-                        <span class="due"> Due:{{t[2]}} ({{t[3]}} days remaining) </span>
+                        {{ t[0] }} 
+
+                        <div class="prio-due">
+                            <span class="prio-{{t[1]}}"> {{t[1]}} </span>
+                            <span class="due"> Due:{{t[2]}} ({{t[3]}} days remaining) </span>
+                        </div>
+
                         <form action="/delete/{{loop.index0}}" method="POST" style="display: inline; ">
                         <button type="submit" class="del_btn">Delete</button>
                         </form>
                     </li>
+                    
                 </div>
             {% endfor %}
         </ul>
