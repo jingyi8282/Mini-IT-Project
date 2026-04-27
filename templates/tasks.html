@@ -44,11 +44,15 @@
                             <span class="due"> Due:{{t[2]}} ({{t[3]}} days remaining) </span>
                         </div>
 
-                        <form action="/delete/{{loop.index0}}" method="POST" style="display: inline; ">
-                        <button type="submit" class="del_btn">Delete</button>
-                        </form>
+                        <div class="edit_del">
+                            <a href="/edit/{{loop.index0}}" class="edit_btn">Edit</a>
+
+                            <form action="/delete/{{loop.index0}}" method="POST" style="display: inline; ">
+                                <button type="submit" class="del_btn">Delete</button>
+                            </form>
+                        </div>
                     </li>
-                    
+
                 </div>
             {% endfor %}
         </ul>
