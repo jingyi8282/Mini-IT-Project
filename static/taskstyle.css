@@ -108,6 +108,15 @@ input{
     padding: 10px;
     cursor: pointer;
 }
+.prio-Priority{
+    border-radius: 14px;
+    border-style: solid;
+    background-color: #fbe4d8;
+    color: #2B124C;
+    padding: 5px;
+    font-size: 12px;
+    font-weight: bold;
+}
 
 .prio-Low{
     border-radius: 14px;
