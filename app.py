@@ -82,8 +82,21 @@ def delete_task(task_id):
 
 @app.route('/edit/<int:task_id>', methods=['GET','POST'])
 def edit_task(task_id):
+    if task_id < 0 or task_id>=len(tasks_list):
+        return redirect ('/tasks')
+    if request.method =="POST" :
+        new_task_name = request.form('tasks')
+        new_date = request.form('deadline')
+        tasks_list[task_id][0] = new_task_name
+        tasks_list[task_id][4] = new_date
+        
+        return redirect ('/tasks')
     task = tasks_list[task_id]
     return render_template('edit.html', task=task, task_id=task_id)
+
+        
+     
+
 
 
 if __name__ == '__main__':
