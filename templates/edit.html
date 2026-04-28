@@ -2,10 +2,18 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title> Tasks page </title>
+        <title> Edit page </title>
         <link rel="stylesheet" href="{{ url_for('static', filename='edit.css')}}">
     </head>
 <body>
+    <header>Edit Task</header>
+    <section>
+        <form class="edit_form" method="POST" action="/edit/ {{task_id}}">
+            <input type="text" value="{{task[0]}}" placeholder="Update task">
+            <input class="date" type="date" name="deadline" value="{{task[4]}}" required>
+
+        </form>
+    </section>
 
 
 </body>
