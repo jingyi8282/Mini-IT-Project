@@ -1,44 +1,63 @@
 class Database:
     def init(self):
-        self.users = {}   # email -> {name, password}
-        self.tasks = {}   # email -> list of tasks
+        self.users = {}
+        self.tasks = {}
+        self.next_task_id = 1
 
     # USER
+    
     def create_user(self, name, email, password):
         if email in self.users:
-            return False
-
-        self.users[email] = {
-            "name": name,
-            "password": password
-        }
-
-        self.tasks[email] = []
+            return False  
+        
+        self.users[email] = {"name": name, "password": password}
         return True
 
-    def get_user(self, email):
-        return self.users.get(email)
+    def check_login(self, email, password):
+        if email in self.users and self.users[email]["password"] == password:
+            return (email, self.users[email]["name"], email)
+        return None
 
-    # TASK
-    def add_task(self, email, title, priority, deadline, category):
-        task_id = len(self.tasks[email]) + 1
+    # TASKSS
+    
+    def add_task(self, user_id, title, priority, deadline, category):
+        task_id = self.next_task_id
+        self.next_task_id += 1
+        self.tasks[task_id] = {
+            "user_id": user_id,
+            "title": title,
+            "priority": priority,
+            "deadline": deadline,
+            "category": category,
+            "completed": 0
+        }
+        return task_id
 
-        task = [task_id, email, title, priority, deadline, category]
-        self.tasks[email].append(task)
+    def get_user_tasks(self, user_id):
+        user_tasks = []
+        for task_id, task in self.tasks.items():
+            if task["user_id"] == user_id:
+                user_tasks.append((
+                    task_id, 
+                    task["user_id"], 
+                    task["title"],
+                    task["priority"], 
+                    task["deadline"], 
+                    task["category"],
+                    task["completed"]
+                ))
+        return user_tasks
 
-    def get_user_tasks(self, email):
-        return self.tasks.get(email, [])
+    def delete_task(self, task_id, user_id):
+        if task_id in self.tasks and self.tasks[task_id]["user_id"] == user_id:
+            del self.tasks[task_id]
+            return True
+        return False
 
-    def delete_task(self, task_id, email):
-        if email in self.tasks:
-            self.tasks[email] = [
-                t for t in self.tasks[email] if t[0] != task_id
-            ]
-
-    def update_task(self, task_id, email, title, priority, deadline):
-        if email in self.tasks:
-            for task in self.tasks[email]:
-                if task[0] == task_id:
-                    task[2] = title
-                    task[3] = priority
-                    task[4] = deadline
+    def update_task(self, task_id, user_id, title, priority, deadline):
+        if task_id in self.tasks and self.tasks[task_id]["user_id"] == user_id:
+            self.tasks[task_id]["title"] = title
+            self.tasks[task_id]["priority"] = priority
+            self.tasks[task_id]["deadline"] = deadline
+            return True
+        return False
