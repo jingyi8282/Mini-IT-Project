@@ -72,34 +72,47 @@ def logout():
     return redirect(url_for('home'))
 
 
-tasks_list = []
+# ============ TASKS (USING DATABASE) ============
+
 @app.route('/tasks')
 def tasks():
-    return render_template("tasks.html", tasks=tasks_list)
-
-@app.route('/add', methods=['POST','GET'])
-def add_task():
-    if request.method == "POST":
-        tasks = request.form['tasks']
-        priority = request.form['priority']
-        deadline = request.form['deadline']
-        today = datetime.now().date()
-        deadline_date = datetime.strptime(deadline, '%Y-%m-%d').date()
-        due_date = deadline_date.strftime('%d-%m-%Y')
-        remaining_days = (deadline_date - today).days
-        tasks_list.append([tasks, priority, due_date, remaining_days])
-        return redirect('/tasks')
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
     
-@app.route('/delete/<int:task_id>', methods=['POST'])
-def delete_task(task_id):
-    if 0 <= task_id < len(tasks_list):
-        tasks_list.pop(task_id)
+    user_tasks = db.get_user_tasks(session['user_id'])
+    return render_template("tasks.html", tasks=user_tasks)
+
+
+@app.route('/add', methods=['POST'])
+def add_task():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+    
+    title = request.form['title']
+    priority = request.form.get('priority', 'Medium')
+    deadline = request.form.get('deadline', '')
+    category = request.form.get('category', 'Subjects')
+    
+    db.add_task(session['user_id'], title, priority, deadline, category)
     return redirect('/tasks')
 
-@app.route('/edit/<int:task_id>', methods=['GET','POST'])
-def edit_task(task_id):
-    task = tasks_list[task_id]
-    return render_template('edit.html', task=task, task_id=task_id)
+
+@app.route('/complete/<int:task_id>')
+def complete_task(task_id):
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+    
+    db.update_task_status(task_id, session['user_id'], 1)
+    return redirect('/tasks')
+
+
+@app.route('/delete/<int:task_id>')
+def delete_task(task_id):
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+    
+    db.delete_task(task_id, session['user_id'])
+    return redirect('/tasks')
 
 
 if __name__ == '__main__':
