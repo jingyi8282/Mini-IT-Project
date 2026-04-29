@@ -76,6 +76,7 @@ body {
     color: #854f6c;
     font-weight: 500;
     text-decoration: none;
+    margin-left: 50px;
 }
 
 .nav-link:hover {
@@ -105,16 +106,17 @@ body {
 
 .card {
     background-color: #dfb6b2;
-    min-height: 180px;
+    min-height: 570px;
     width: 90%;
     margin: 0 auto;
     border-radius: 30px;
     padding: 20px; 
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     text-align: center;
+    padding-top: 40px;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -159,7 +161,7 @@ body {
 
 .login-prompt {
     margin-top: 15px;
-    color: #666;
+    color: #fbe4d8;
     font-size: 15px;
 }
 
@@ -172,6 +174,10 @@ body {
     padding: 0;
     display: inline; /* Changed from inline-block to inline */
     cursor: pointer;
+}
+
+html {
+    scroll-behavior: smooth;
 }
 
 .primary { background-color: #522b5b; color: #fbe4d8; }
