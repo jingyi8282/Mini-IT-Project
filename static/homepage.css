@@ -14,8 +14,16 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 15px 5%;
-    background-color: #fff;
-    border-bottom: 1px solid #eee;
+    background-color:#fbe4d8;
+    border-bottom: 1px solid #fbe4d8;
+}
+
+.nav-logo {
+    height: 40px;
+    width: auto;
+    border-radius: 8px;
+    background-color: transparent;
+    display: block;
 }
 
 /* New Top Navigation Bar */
@@ -31,7 +39,7 @@ body {
 .nav-left {
     display: flex;
     align-items: center;
-    gap: 20px; /* Space between logo, title, and About Me */
+    gap: 15px; /* Space between logo, title, and About Me */
 }
 
 .nav-buttons {
@@ -42,6 +50,18 @@ body {
 .nav-buttons a {
     text-decoration: none;
     display: inline-block;
+}
+
+.navbar .btn.primary:hover {
+    background-color: transparent;
+    color: #522b5b; 
+    border: 2px solid #522b5b;
+}
+
+.navbar .btn.secondary:hover {
+    background-color: transparent;
+    color: #845d81; 
+    border: 2px solid #845d81;
 }
 
 .nav-title {
@@ -55,6 +75,7 @@ body {
     text-decoration: none;
     color: #854f6c;
     font-weight: 500;
+    text-decoration: none;
 }
 
 .nav-link:hover {
@@ -110,9 +131,9 @@ body {
 }
 
 .card:hover {
-    transform: translateY(-5px); /* This lifts the card up slightly */
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15); /* This adds the shadow */
-    cursor: pointer; /* Changes your mouse to a hand icon */
+    transform: translateY(-5px); 
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    cursor: pointer; 
 }
 
 .btn {
@@ -121,6 +142,36 @@ body {
     border: none;
     cursor: pointer;
     font-weight: bold;
+    text-decoration: none;
+}
+
+.btn-secondary {
+    background: none;
+    border: none;
+    padding: 0;
+    color: #522b5b;
+    text-decoration: underline; /* Makes it look like a clickable link */
+    font-weight: bold;
+    display: inline-block;
+    text-align: left;
+    cursor: pointer;
+}
+
+.login-prompt {
+    margin-top: 15px;
+    color: #666;
+    font-size: 15px;
+}
+
+.btn-secondary:hover {
+    color: #522b5b;
+    text-decoration: underline;
+    font-weight: bold;
+    background: none;
+    border: none;
+    padding: 0;
+    display: inline; /* Changed from inline-block to inline */
+    cursor: pointer;
 }
 
 .primary { background-color: #522b5b; color: #fbe4d8; }
