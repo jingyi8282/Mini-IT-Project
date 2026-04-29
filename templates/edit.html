@@ -8,8 +8,8 @@
 <body>
     <header>Edit Task</header>
     <section>
-        <form class="edit_form" method="POST" action="/edit/ {{task_id}}">
-            <input type="text" value="{{task[0]}}" placeholder="Update task">
+        <form class="edit_form" method="POST" action="/edit/{{task_id}}">
+            <input type="text" name="tasks" value="{{task[0]}}" placeholder="Update task">
             <input class="date" type="date" name="deadline" value="{{task[2]}}" required>
             <select name="priority" class="priority">
                 <option value="Priority">Priority</option>
