@@ -85,10 +85,17 @@ def edit_task(task_id):
     if task_id < 0 or task_id>=len(tasks_list):
         return redirect ('/tasks')
     if request.method =="POST" :
-        new_task_name = request.form('tasks')
-        new_date = request.form('deadline')
+        new_task_name = request.form['tasks']
+        new_priority = request.form['priority']
+        new_date = request.form['deadline']
+        today =datetime.now().date()
+        deadline_date = datetime.strptime(new_date, '%Y-%m-%d').date()
+        new_due_date = deadline_date.strftime('%d-%m-%Y')
+        new_remaining_days = (deadline_date - today ).days
         tasks_list[task_id][0] = new_task_name
-        tasks_list[task_id][4] = new_date
+        tasks_list[task_id][2] = new_due_date
+        tasks_list[task_id][1] = new_priority
+        tasks_list[task_id][3] = new_remaining_days
         
         return redirect ('/tasks')
     task = tasks_list[task_id]
