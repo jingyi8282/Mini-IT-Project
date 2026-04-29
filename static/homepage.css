@@ -9,6 +9,15 @@ body {
     padding: 0 20px; 
 }
 
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 5%;
+    background-color: #fff;
+    border-bottom: 1px solid #eee;
+}
+
 /* New Top Navigation Bar */
 .top-nav {
     display: flex;
@@ -19,6 +28,12 @@ body {
     margin-bottom: 30px;
 }
 
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* Space between logo, title, and About Me */
+}
+
 .nav-buttons {
     display: flex;
     gap: 15px;
@@ -27,6 +42,31 @@ body {
 .nav-buttons a {
     text-decoration: none;
     display: inline-block;
+}
+
+.nav-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #522b5b;
+    text-decoration: none;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: #854f6c;
+    font-weight: 500;
+}
+
+.nav-link:hover {
+    color: #522b5b;
+}
+
+.about-me-footer {
+    margin-top: 50px;
+    padding: 40px;
+    background-color: #F8F5FF;
+    border-radius: 20px;
+    text-align: center;
 }
 
 .main-title {

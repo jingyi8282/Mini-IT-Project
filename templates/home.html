@@ -8,15 +8,20 @@
 <body>
     <div class="dashboard-container">
         <main class="main-content">
-            <nav class="top-nav">
-                <div class="nav-buttons">
-                    <a href="{{ url_for('login') }}" class="btn primary">Login</a>
-                    <a href="{{ url_for('register') }}" class="btn secondary">Register</a>
-                </div>
-            </nav>
+            
+            <header class="navbar">
+                <div class="nav-left">
+                    <div class="logo-placeholder">Logo</div>
 
-            <header class="top-bar">
-                <h1 class="main-title">Academic Diary</h1>
+                    <a href="{{ url_for('home') }}" class="nav-title">Academic Diary</a>
+
+                    <a href="#about-me" class="nav-link">About Me</a>
+                    </div>
+
+                    <div class="nav-right">
+                        <a href="{{ url_for('login') }}" class="btn primary">Login</a>
+                        <a href="{{ url_for('register') }}" class="btn secondary">Register</a>
+                    </div>
             </header>
             
             <section class="grid-layout">
