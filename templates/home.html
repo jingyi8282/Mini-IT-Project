@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Academic Diary</title>
-     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <div class="dashboard-container">
@@ -12,8 +11,8 @@
             <h2 class="user-greeting">Hello, Student!</h2>
             
             <div class="nav-links">
-                <button class="btn primary">Login</button>
-                <button class="btn secondary">Register</button>
+                <a href="{{ url_for('login') }}" class="btn primary">Login</a>
+                <a href="{{ url_for('register') }}" class="btn secondary">Register</a>
             </div>
             
             <div class="sidebar-footer">

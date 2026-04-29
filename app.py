@@ -1,10 +1,10 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session
 from werkzeug.security import generate_password_hash
 from database import Database
 from datetime import datetime
 
 app = Flask(__name__)
-
+app.secret_key = 'mysecretkey123'
 db = Database()
 
 
@@ -46,64 +46,106 @@ def register():
     return render_template('register.html')
 
 
-# LOGIN (simple for now)
-@app.route('/login')
+# LOGIN 
+@app.route('/login', methods=['GET', 'POST'])
 def login():
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+        
+        user = db.check_login(email, password)
+        
+        if user:
+            session['user_id'] = user[0]
+            session['user_name'] = user[1]
+            session['user_email'] = user[2]
+            return redirect(url_for('tasks'))
+        else:
+            return render_template('login.html', error="Wrong email or password!")
+    
     return render_template('login.html')
 
 
 @app.route('/logout')
 def logout():
-    return 'Logout page - coming soon'
+    session.clear()
+    return redirect(url_for('home'))
 
-tasks_list =[]
+
+#TASKS
+
 @app.route('/tasks')
 def tasks():
-    return render_template ("tasks.html", tasks=tasks_list)
-
-@app.route('/add', methods=['POST','GET'])
-def add_task():
-    if request.method == "POST":
-        tasks = request.form['tasks']
-        priority = request.form['priority']
-        deadline = request.form['deadline']
-        today =datetime.now().date()
-        deadline_date = datetime.strptime(deadline, '%Y-%m-%d').date()
-        due_date = deadline_date.strftime('%d-%m-%Y')
-        remaining_days = (deadline_date - today ).days
-        tasks_list.append([tasks, priority, due_date, remaining_days])
-        return redirect('/tasks')
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
     
-@app.route('/delete/<int:task_id>', methods=['POST'])
-def delete_task(task_id):
-    if 0 <= task_id < len(tasks_list):
-        tasks_list.pop(task_id)
+    user_tasks = db.get_user_tasks(session['user_id'])
+    tasks_list = []
+    for task in user_tasks:
+        task_id = task[0]
+        title = task[2]
+        priority = task[3]
+        deadline = task[4]
+        
+        if deadline:
+            today = datetime.now().date()
+            deadline_date = datetime.strptime(deadline, '%Y-%m-%d').date()
+            due_date = deadline_date.strftime('%d-%m-%Y')
+            remaining_days = (deadline_date - today).days
+        else:
+            due_date = "No deadline"
+            remaining_days = 0
+        
+        tasks_list.append([title, priority, due_date, remaining_days, task_id])
+    
+    return render_template("tasks.html", tasks=tasks_list)
+
+
+@app.route('/add', methods=['POST'])
+def add_task():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+    
+    title = request.form['tasks']
+    priority = request.form['priority']
+    deadline = request.form['deadline']
+    
+    db.add_task(session['user_id'], title, priority, deadline, "Subjects")
     return redirect('/tasks')
 
-@app.route('/edit/<int:task_id>', methods=['GET','POST'])
+
+@app.route('/delete/<int:task_id>', methods=['POST'])
+def delete_task(task_id):
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+    
+    db.delete_task(task_id, session['user_id'])
+    return redirect('/tasks')
+
+
+@app.route('/edit/<int:task_id>', methods=['GET', 'POST'])
 def edit_task(task_id):
-    if task_id < 0 or task_id>=len(tasks_list):
-        return redirect ('/tasks')
-    if request.method =="POST" :
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+    
+    if request.method == "POST":
         new_task_name = request.form['tasks']
         new_priority = request.form['priority']
         new_date = request.form['deadline']
-        today =datetime.now().date()
-        deadline_date = datetime.strptime(new_date, '%Y-%m-%d').date()
-        new_due_date = deadline_date.strftime('%d-%m-%Y')
-        new_remaining_days = (deadline_date - today ).days
-        tasks_list[task_id][0] = new_task_name
-        tasks_list[task_id][2] = new_due_date
-        tasks_list[task_id][1] = new_priority
-        tasks_list[task_id][3] = new_remaining_days
         
-        return redirect ('/tasks')
-    task = tasks_list[task_id]
-    return render_template('edit.html', task=task, task_id=task_id)
-
-        
-     
-
+        db.update_task(task_id, session['user_id'], new_task_name, new_priority, new_date)
+        return redirect('/tasks')
+    
+    user_tasks = db.get_user_tasks(session['user_id'])
+    task = None
+    for t in user_tasks:
+        if t[0] == task_id:
+            task = [t[2], t[3], t[4], 0, t[0]]
+            break
+    
+    if task:
+        return render_template('edit.html', task=task, task_id=task_id)
+    return redirect('/tasks')
 
 
 if __name__ == '__main__':
