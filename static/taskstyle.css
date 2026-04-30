@@ -1,40 +1,81 @@
 body{
-    background-color: #fbe4d8
+    background-color: #fbe4d8;
+    font-family: 'Inter', sans-serif;
 }
 
-h1{
+header{
     color: #522b5b;
     text-align: center;
+    font-size: 40px;
+    font-weight: bolder;
 }
 
-form{
+.add_form{
     text-align: center;
     background: #dfb6b2;
     margin: 30px auto;
-    margin-bottom: 5px;
+    margin-bottom: 50px;
     max-width: 950px;
     border-radius: 14px;
     padding: 30px;
     border-left: 10px solid #854f6c;
+
+}
+
+.h2_column{
+    text-align: center;
+    color: #522b5b;
+    border-width: 3px;
 }
 
 .tasks_list{
-    border-left: 8px solid #854f6c;
-    border-top:  8px solid #854f6c;
-    border-radius: 14px;
-    background-color: #dfb6b2;
-    margin-right: 1100px;
-    margin-top: 100px;
-    padding-left: 20px;
-    padding-right: 10px;
-    padding-bottom: 10px;
+    display: flex;
+    gap: 30px;
+    justify-content: space-between;
+    padding: 20px;
 }
 
-button{
+
+.list{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    list-style: none;
+    padding: 10px;
+    
+}
+
+ul {
+    padding: 0%;
+    margin: 16px;
+}
+
+.task_column{
+    flex: 1;
+    box-shadow: 0 4px 20px rgb(0, 0, 0);
+    border-radius: 14px;
+    background-color: #dfb6b2;
+    padding: 10 px;
+    font-size: 18px;
+}
+
+.task_card {
+    border: 2px solid #2B124C;
+    border-radius: 14px;
+    background-color: #fbe4d8;
+    margin-bottom: 10px;
+
+}
+
+.add_button{
     border-radius: 14px;
     background-color: #fbe4d8;
     color: #522b5b;
     padding: 10px;
+    cursor: pointer;
+}
+.add_button:hover {
+    background-color: #f5d4c3;
 }
 
 input{
@@ -42,4 +83,102 @@ input{
     background-color: #fbe4d8;
     color: #522b5b;
     padding: 20px;
+}
+
+
+.del_btn{
+    border-radius: 14px;
+    background-color: #fbe4d8;  
+    color: #522b5b;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 5px;
+    margin-inline: 5px;
+    margin-bottom: 5px;
+    margin-top: 5px;
+    cursor: pointer;    
+}
+
+.priority{
+    border-radius: 14px;
+    border-color: #2B124C;
+    background-color: #fbe4d8;
+    font-weight: bold;
+    color: #522b5b;
+    padding: 10px;
+    cursor: pointer;
+}
+.prio-Priority{
+    border-radius: 14px;
+    border-style: solid;
+    background-color: #fbe4d8;
+    color: #2B124C;
+    padding: 5px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.prio-Low{
+    border-radius: 14px;
+    border-style: solid ; 
+    background-color: #c0fcbf;
+    color: #2B124C;
+    padding: 5px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.prio-Medium{
+    border-radius: 14px;
+    border-style: solid;
+    background-color: #fdfb86;
+    color: #522b5b;
+    padding: 5px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.prio-High{
+    border-radius: 14px;
+    border-style: solid;
+    background-color: #ff9393;
+    color: #522b5b;
+    padding: 5px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.int_date{
+    border-radius: 14px;
+    background-color: #fbe4d8;
+    color: #522b5b;
+    padding: 10px;
+}
+
+.due{
+    font-size: 15px;
+    margin-inline-start: 5px;   
+}
+
+.prio-due{
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 5x;
+}
+
+.edit_btn{
+    display: inline-block;
+    border: 2px solid #2B124C ;
+    border-radius: 14px;
+    background-color: #fbe4d8;
+    color: #522b5b;
+    font-size: 12px;
+    font-weight: bold;
+    text-decoration: none;
+    padding: 5px;
+    margin-inline: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    cursor: pointer;
 }
