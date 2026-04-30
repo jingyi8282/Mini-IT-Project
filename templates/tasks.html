@@ -1,58 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title> Tasks page </title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='taskstyle.css')}}">
-    </head>
-
+<head>
+    <meta charset="UTF-8">
+    <title> Tasks page </title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='taskstyle.css')}}">
+</head>
 <body>
- 
+
 <header> TASKS PAGE </header>
 
 <section>
-
-<form class="add_form" method="POST" action="/add">
-    <input type="text" name="tasks" placeholder="Enter task">
-    <input class="int_date" type="date" name="deadline" required>
-    <select name="priority" class="priority">
-        <option value="Priority">Priority</option>
-        <option value="Low">Low</option>
-        <option value="Medium">Medium</option>
-        <option value="High">High</option>
-    </select>
-    <button type="submit" class="add_button">Add Tasks</button>
-
-</form>
-
+    <form class="add_form" method="POST" action="/add">
+        <input type="text" name="tasks" placeholder="Enter task">
+        <input class="int_date" type="date" name="deadline" required>
+        <select name="priority" class="priority">
+            <option value="Priority">Priority</option>
+            <option value="Low">Low</option>
+            <option value="Medium">Medium</option>
+            <option value="High">High</option>
+        </select>
+        <button type="submit" class="add_button">Add Tasks</button>
+    </form>
 </section>
 
 <div class="tasks_list">
-
     <div class="task_column">
         <h3 class="h2_column"> My Tasks </h3>
         <ul>
-
             {% for t in tasks %}
                 <div class="task_card">
-                    
                     <li class="list">
                         {{ t[0] }} 
 
                         <div class="prio-due">
                             <span class="prio-{{t[1]}}"> {{t[1]}} </span>
-                            <span class="due"> Due:{{t[2]}} ({{t[3]}} days remaining) </span>
+                            <span class="due"> Due: {{t[2]}} ({{t[3]}} days remaining) </span>
                         </div>
 
                         <div class="edit_del">
-                            <a href="/edit/{{loop.index0}}" class="edit_btn">Edit</a>
+                            <!-- Changed loop.index0 to t[4] -->
+                            <a href="/edit/{{t[4]}}" class="edit_btn">Edit</a>
 
-                            <form action="/delete/{{loop.index0}}" method="POST" style="display: inline; ">
+                            <!-- Changed loop.index0 to t[4] -->
+                            <form action="/delete/{{t[4]}}" method="POST" style="display: inline;">
                                 <button type="submit" class="del_btn">Delete</button>
                             </form>
                         </div>
                     </li>
-
                 </div>
             {% endfor %}
         </ul>
@@ -65,7 +59,6 @@
     <div class="task_column">
         <h3 class="h2_column"> Completed </h3>
     </div>
-
 </div>
 
 </body>

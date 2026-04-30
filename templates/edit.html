@@ -1,31 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title> Edit page </title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='edit.css')}}">
-    </head>
+<head>
+    <meta charset="UTF-8">
+    <title> Edit page </title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='edit.css')}}">
+</head>
 <body>
     <header>Edit Task</header>
     <section>
         <form class="edit_form" method="POST" action="/edit/{{task_id}}">
             <input type="text" name="tasks" value="{{task[0]}}" placeholder="Update task">
+            
+            <!-- Using task[2] for the date value -->
             <input class="date" type="date" name="deadline" value="{{task[2]}}" required>
+            
             <select name="priority" class="priority">
                 <option value="Priority">Priority</option>
                 <option value="Low" {% if task[1] == 'Low' %} selected {% endif %}>Low</option>
                 <option value="Medium" {% if task[1] == 'Medium' %} selected {% endif %}>Medium</option>
                 <option value="High" {% if task[1] == 'High' %} selected {% endif %}>High</option>
-                </select>
+            </select>
+            
             <button type="submit" class="update_btn">Save</button>
-
             <a href="/tasks" class="cancel_btn">Cancel</a>
 
             <div class="btn_update"></div>
-
         </form>
     </section>
-
-
 </body>
-</html>    
+</html>
