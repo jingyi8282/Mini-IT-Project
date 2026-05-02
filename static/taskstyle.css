@@ -117,7 +117,6 @@ input{
     color: #2B124C;
     padding: 5px;
     font-size: 12px;
-    font-weight: bold;
 }
 
 .prio-Low{
@@ -127,7 +126,6 @@ input{
     color: #2B124C;
     padding: 5px;
     font-size: 12px;
-    font-weight: bold;
 }
 
 .prio-Medium{
@@ -137,7 +135,6 @@ input{
     color: #522b5b;
     padding: 5px;
     font-size: 12px;
-    font-weight: bold;
 }
 
 .prio-High{
@@ -147,7 +144,6 @@ input{
     color: #522b5b;
     padding: 5px;
     font-size: 12px;
-    font-weight: bold;
 }
 
 .int_date{
@@ -158,8 +154,7 @@ input{
 }
 
 .due{
-    font-size: 15px;
-    margin-inline-start: 5px;   
+    font-size: 11px;  
 }
 
 .prio-due{
@@ -168,6 +163,7 @@ input{
     align-items: center;
     gap: 5x;
 }
+
 
 .edit_btn{
     display: inline-block;
@@ -193,4 +189,53 @@ input{
     font-weight: bold;
     padding: 10px;
     cursor: pointer;
+}
+
+.ctgy-Category{
+    border-radius: 14px;
+    border-style: solid;
+    background-color: #fbe4d8;
+    color: #2B124C;
+    padding: 5px;
+    font-size: 12px;
+    text-transform: capitalize;
+}
+
+.ctgy-assignments{
+    border-radius: 14px;
+    border-style: solid;
+    background-color: #fbe4d8;
+    color: #2B124C;
+    padding: 5px;
+    margin-inline: 10px;
+    font-size: 12px;
+    text-transform: capitalize;
+}
+
+.ctgy-revision{
+    border-radius: 14px;
+    border-style: solid;
+    background-color: #fbe4d8;
+    color: #2B124C;
+    padding: 5px;
+    margin-inline: 10px;
+    font-size: 12px;
+    text-transform: capitalize;
+}
+
+.ctgy-personal{
+    border-radius: 14px;
+    border-style: solid;
+    background-color: #fbe4d8;
+    color: #2B124C;
+    padding: 10px;
+    margin-inline: 10px;
+    font-size: 12;
+    text-transform: capitalize;
+}
+
+.edit_del{
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: flex-end;
 }
