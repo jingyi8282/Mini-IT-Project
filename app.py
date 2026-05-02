@@ -44,13 +44,13 @@ def tasks():
             due = d_date.strftime('%d-%m-%Y')
         except:
             rem, due = 0, t[4]
-        processed.append([t[2], t[3], due, rem, t[0]])
+        processed.append([t[2], t[3], due, rem, t[0], t[5]])
     return render_template("tasks.html", tasks=processed, user_name=session['user_name'])
 
 @app.route('/add', methods=['POST'])
 def add_task():
     if 'user_id' in session:
-        db.add_task(session['user_id'], request.form.get('tasks'), request.form.get('priority'), request.form.get('deadline'), "General")
+        db.add_task(session['user_id'], request.form.get('tasks'), request.form.get('priority'), request.form.get('deadline'), request.form.get('category') or "General")
     return redirect(url_for('tasks'))
 
 @app.route('/edit/<int:task_id>', methods=['GET', 'POST'])
