@@ -43,6 +43,17 @@
                         <div class="prio-due">
                             <span class="prio-{{t[1]}}"> {{t[1]}} </span>
                             <span class="ctgy-{{t[5]}}"> {{t[5]}} </span>
+<<<<<<< HEAD
+                            <span class="due"> Due: {{t[2]}} ({{t[3]}} days remaining) </span> 
+                        </div>       
+
+                        <div class="edit_del">
+                            <a href="/edit/{{t[4]}}" class="edit_btn">Edit</a>
+<<<<<<< HEAD
+=======
+
+>>>>>>> main
+=======
                             <form action="/move/{{t[4]}}" method="POST">
                                 <select name="status" class="status">
                                     <option value="my_task">My Task</option>
@@ -60,6 +71,7 @@
 
                         <div class="edit_del">
                             <a href="/edit/{{t[4]}}" class="edit_btn">Edit</a>
+>>>>>>> 640c359c130b82e929513c9f5bdc4e50f00ddfb4
                             <form action="/delete/{{t[4]}}" method="POST" style="display: inline;">
                                 <button type="submit" class="del_btn">Delete</button>
                             </form>
