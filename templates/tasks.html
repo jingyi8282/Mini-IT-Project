@@ -1,28 +1,64 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title> Tasks page </title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='taskstyle.css')}}">
-    </head>
-
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> Tasks page </title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='taskstyle.css')}}">
+</head>
 <body>
- 
-<h1> TASKS PAGE </h1>
 
+<header> TASKS PAGE </header>
 
-<form method="POST" action="/add">
-    <input type="text" name="tasks" placeholder="Enter task">
-    <button type="submit">Add Tasks</button>
-</form>
+<section>
+    <form class="add_form" method="POST" action="/add">
+        <input type="text" name="tasks" placeholder="Enter task">
+        <input class="int_date" type="date" name="deadline" required>
+        <select name="priority" class="priority">
+            <option value="Priority">Priority</option>
+            <option value="Low">Low</option>
+            <option value="Medium">Medium</option>
+            <option value="High">High</option>
+        </select>
+        <button type="submit" class="add_button">Add Tasks</button>
+    </form>
 </section>
 
 <div class="tasks_list">
-    <h3> My Tasks </h3>
-    <ul>
-        {% for t in tasks %}
-            <li>{{ t }}</li>
-        {% endfor %}
-    </ul>
+    <div class="task_column">
+        <h3 class="h2_column"> My Tasks </h3>
+        <ul>
+            {% for t in tasks %}
+                <div class="task_card">
+                    <li class="list">
+                        {{ t[0] }} 
+
+                        <div class="prio-due">
+                            <span class="prio-{{t[1]}}"> {{t[1]}} </span>
+                            <span class="due"> Due: {{t[2]}} ({{t[3]}} days remaining) </span>
+                        </div>
+
+                        <div class="edit_del">
+                             
+                            <a href="/edit/{{t[4]}}" class="edit_btn">Edit</a>
+
+                             
+                            <form action="/delete/{{t[4]}}" method="POST" style="display: inline;">
+                                <button type="submit" class="del_btn">Delete</button>
+                            </form>
+                        </div>
+                    </li>
+                </div>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="task_column">
+        <h3 class="h2_column"> In Progress </h3>
+    </div>
+
+    <div class="task_column">
+        <h3 class="h2_column"> Completed </h3>
+    </div>
 </div>
 
 </body>
