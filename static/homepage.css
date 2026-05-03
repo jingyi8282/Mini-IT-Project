@@ -1,0 +1,184 @@
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #fbe4d8;
+    color: #4A4A4A;
+}
+
+.dashboard-container {
+    padding: 0 20px; 
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 5%;
+    background-color:#fbe4d8;
+    border-bottom: 1px solid #fbe4d8;
+}
+
+.nav-logo {
+    height: 40px;
+    width: auto;
+    border-radius: 8px;
+    background-color: transparent;
+    display: block;
+}
+
+/* New Top Navigation Bar */
+.top-nav {
+    display: flex;
+    justify-content: flex-end; 
+    align-items: center;
+    padding: 20px 0;
+    border-bottom: 2px solid #854f6c; 
+    margin-bottom: 30px;
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Space between logo, title, and About Me */
+}
+
+.nav-buttons {
+    display: flex;
+    gap: 15px;
+}
+
+.nav-buttons a {
+    text-decoration: none;
+    display: inline-block;
+}
+
+.navbar .btn.primary:hover {
+    background-color: transparent;
+    color: #522b5b; 
+    border: 2px solid #522b5b;
+}
+
+.navbar .btn.secondary:hover {
+    background-color: transparent;
+    color: #845d81; 
+    border: 2px solid #845d81;
+}
+
+.nav-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #522b5b;
+    text-decoration: none;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: #854f6c;
+    font-weight: 500;
+    text-decoration: none;
+    margin-left: 50px;
+}
+
+.nav-link:hover {
+    color: #522b5b;
+}
+
+.about-me-footer {
+    margin-top: 50px;
+    padding: 40px;
+    background-color: #F8F5FF;
+    border-radius: 20px;
+    text-align: center;
+}
+
+.main-title {
+    color: #522b5b;
+    font-size: 36px;
+    margin-bottom: 30px;
+}
+
+.grid-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    width: 100%;
+}
+
+.card {
+    background-color: #dfb6b2;
+    min-height: 570px;
+    width: 90%;
+    margin: 0 auto;
+    border-radius: 30px;
+    padding: 20px; 
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    text-align: center;
+    padding-top: 40px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-header {
+    color: #522b5b;
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.card-description {
+    color:  #fbe4d8;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.card:hover {
+    transform: translateY(-5px); 
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    cursor: pointer; 
+}
+
+.btn {
+    padding: 10px 25px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.btn-secondary {
+    background: none;
+    border: none;
+    padding: 0;
+    color: #522b5b;
+    text-decoration: underline; /* Makes it look like a clickable link */
+    font-weight: bold;
+    display: inline-block;
+    text-align: left;
+    cursor: pointer;
+}
+
+.login-prompt {
+    margin-top: 15px;
+    color: #fbe4d8;
+    font-size: 15px;
+}
+
+.btn-secondary:hover {
+    color: #522b5b;
+    text-decoration: underline;
+    font-weight: bold;
+    background: none;
+    border: none;
+    padding: 0;
+    display: inline; /* Changed from inline-block to inline */
+    cursor: pointer;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+.primary { background-color: #522b5b; color: #fbe4d8; }
+.secondary { background-color: #854f6c; color: #fbe4d8; }

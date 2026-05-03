@@ -1,0 +1,63 @@
+body{
+    background-color: #fbe4d8;
+}
+
+header{
+    color: #522b5b;
+    text-align: center;
+    font-size: 40px;
+    font-weight: bolder;
+}
+
+.edit_form{
+    text-align: center;
+    border-radius: 14px;
+    background-color: #dfb6b2;
+    border: 5px solid #854f6c;
+    max-width: 950px;
+    margin: 30px auto;
+    padding: 50px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0 );
+}
+
+input{
+    border-radius: 14px;
+    background-color: #fbe4d8;
+    color: #522b5b;
+    padding: 20px;
+}
+
+.date{
+    padding: 10px;
+}
+
+.priority{
+    border-radius: 14px;
+    border-color: #2B124C;
+    background-color: #fbe4d8;
+    color: #522b5b;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.update_btn{
+    border-radius: 14px;
+    background-color: #fbe4d8;
+    color: #522b5b;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.update_btn:hover{
+    background-color: #f5d4c3;
+}
+
+.cancel_btn{
+    border-radius: 14px;
+    border: 2px solid #2B124C;
+    background-color: #fbe4d8;
+    color: #522b5b;
+    padding: 8px;
+    text-decoration: none;
+    cursor: pointer;
+}

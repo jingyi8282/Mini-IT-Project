@@ -7,7 +7,7 @@ db = Database()
 
 @app.route("/")
 def home():
-    return redirect(url_for("login"))
+    return render_template("home.html")
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -74,11 +74,12 @@ def tasks():
     
     display_tasks = []
     for t in user_tasks:
+        days_rem = 0 
         display_tasks.append([
             t.get('title', ''),      
             t.get('priority', ''),   
             t.get('deadline', ''),   
-            0, # Placeholder for days remaining
+            days_rem,        
             t.get('id', 0)          
         ])
     
@@ -122,7 +123,11 @@ def edit_task(task_id):
     if not target:
         return "Task not found"
 
-    task_list = [target['title'], target['priority'], target['deadline']]
+    task_list = [
+        target.get('title', ''), 
+        target.get('priority', ''), 
+        target.get('deadline', '')
+    ]
     return render_template("edit.html", task=task_list, task_id=task_id)
 
 @app.route("/logout")
