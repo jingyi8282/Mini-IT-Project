@@ -11,6 +11,7 @@
 
 <section>
     <form class="add_form" method="POST" action="/add">
+        
         <input type="text" name="tasks" placeholder="Enter task">
         <input class="int_date" type="date" name="deadline" required>
         <select name="priority" class="priority">
@@ -18,6 +19,13 @@
             <option value="Low">Low</option>
             <option value="Medium">Medium</option>
             <option value="High">High</option>
+        </select>
+        <select name ="category" class="category">
+            <option value="Category">Category</option>
+            <option value="assignments">Assignments</option>
+            <option value="revision">Revision</option>
+            <option value="personal">Personal</option>
+
         </select>
         <button type="submit" class="add_button">Add Tasks</button>
     </form>
@@ -34,14 +42,12 @@
 
                         <div class="prio-due">
                             <span class="prio-{{t[1]}}"> {{t[1]}} </span>
-                            <span class="due"> Due: {{t[2]}} ({{t[3]}} days remaining) </span>
-                        </div>
+                            <span class="ctgy-{{t[5]}}"> {{t[5]}} </span>
+                            <span class="due"> Due: {{t[2]}} ({{t[3]}} days remaining) </span> 
+                        </div>       
 
                         <div class="edit_del">
-                             
                             <a href="/edit/{{t[4]}}" class="edit_btn">Edit</a>
-
-                             
                             <form action="/delete/{{t[4]}}" method="POST" style="display: inline;">
                                 <button type="submit" class="del_btn">Delete</button>
                             </form>
