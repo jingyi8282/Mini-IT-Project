@@ -2,35 +2,46 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Academic Diary</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='homepage.css') }}">
 </head>
 <body>
-    <div class="dashboard-container">
-        <aside class="sidebar">
-            <h2 class="user-greeting">Hello, Student!</h2>
-            
-            <div class="nav-links">
-                <a href="{{ url_for('login') }}" class="btn primary">Login</a>
-                <a href="{{ url_for('register') }}" class="btn secondary">Register</a>
-            </div>
-            
-            <div class="sidebar-footer">
-            </div>
-        </aside>
 
         <main class="main-content">
-            <header class="top-bar">
-                <h1 class="main-title">Academic Diary</h1>
+            
+            <header class="navbar">
+                <div class="nav-left">
+                    <img src="{{ url_for('static', filename='AD_Logo.png') }}" alt="Academic Diary Logo" class="nav-logo">
+
+                    <a href="{{ url_for('home') }}" class="nav-title">Academic Diary</a>
+
+                    <a href="#about-the-web" class="nav-link">About Me</a>
+                    </div>
+
+                    <div class="nav-right">
+                        <a href="{{ url_for('login') }}" class="btn primary">Login</a>
+                        <a href="{{ url_for('register') }}" class="btn secondary">Register</a>
+                    </div>
             </header>
             
             <section class="grid-layout">
                 <div class="card">
-                    <p style="padding: 20px; color: #888;">[Slogan will go here]</p>
+                    <h3 class="card-header">Study Smarter, Not Harder</h3>
+                    <p class="card-description">"Your Academic Journey, Simplified."</p>
+                    
+                    <p class="login-prompt">Already have an account?
+                    <a href="{{ url_for('login') }}" class="btn-secondary">Login</a>
+                   </p>
+
                 </div>
-                <div class="card"></div>
-                <div class="card"></div>
-                <div class="card"></div>
+            
+                <div class="card" id="about-the-web">
+                   <h3 class="card-header">About the Web</h3>
+                     <p class="card-description">"This diary helps students organize their academic life with precision and clarity."</p>
+                </div>
+
             </section>
         </main>
     </div>
