@@ -1,119 +1,119 @@
 from flask import Flask, render_template, request, redirect, url_for, session
-from werkzeug.security import generate_password_hash
 from database import Database
-from datetime import datetime
 
 app = Flask(__name__)
-app.secret_key = 'mysecretkey123'
+app.secret_key = "abc123"
 db = Database()
 
 
-@app.route('/')
+@app.route("/")
 def home():
-    return render_template('home.html')
+    return redirect(url_for("login"))
 
 
-# REGISTER
-@app.route('/register', methods=['GET', 'POST'])
+@app.route("/register", methods=["GET", "POST"])
 def register():
-    if request.method == 'POST':
-        name = request.form['name']
-        email = request.form['email']
-        password = request.form['password']
-        confirm = request.form['confirm_password']
+    if request.method == "POST":
+        name = request.form.get("name")
+        email = request.form.get("email")
+        password = request.form.get("password")
+        confirm = request.form.get("confirm_password")
 
         if not name or not email or not password:
-            return render_template('register.html', error="All fields are required!")
-
-        if "@" not in email or "." not in email:
-            return render_template('register.html', error="Invalid email address!")
+            return render_template("register.html", error="All fields required")
 
         if password != confirm:
-            return render_template('register.html', error="Passwords do not match!")
+            return render_template("register.html", error="Passwords do not match")
 
         if len(password) < 6:
-            return render_template('register.html', error="Password must be at least 6 characters long!")
+            return render_template("register.html", error="Password too short (min 6 characters)")
 
-        hashed_password = generate_password_hash(password)
-
-        result = db.create_user(name, email, hashed_password)
-
-        if result:
-            return redirect(url_for('login'))
+        if db.create_user(name, email, password):
+            return redirect(url_for("login"))
         else:
-            return render_template('register.html', error="Email already exists.")
+            return render_template("register.html", error="Email already exists")
 
-    return render_template('register.html')
+    return render_template("register.html")
 
 
-# LOGIN 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route("/login", methods=["GET", "POST"])
 def login():
-    if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
-        
+    if request.method == "POST":
+        email = request.form.get("email")
+        password = request.form.get("password")
+
         user = db.check_login(email, password)
-        
         if user:
-            session['user_id'] = user[0]
-            session['user_name'] = user[1]
-            session['user_email'] = user[2]
-            return redirect(url_for('tasks'))
+            session["email"] = user[0]
+            session["name"] = user[1]
+            return redirect(url_for("tasks"))
         else:
-            return render_template('login.html', error="Wrong email or password!")
-    
-    return render_template('login.html')
+            return render_template("login.html", error="Wrong email or password")
+
+    return render_template("login.html")
 
 
-@app.route('/logout')
+@app.route("/tasks")
+def tasks():
+    if "email" not in session:
+        return redirect(url_for("login"))
+
+    user_tasks = db.get_tasks(session["email"])
+    return render_template("tasks.html", name=session["name"], tasks=user_tasks)
+
+
+@app.route("/add", methods=["POST"])
+def add_task():
+    if "email" not in session:
+        return redirect(url_for("login"))
+
+    title = request.form.get("tasks")
+    priority = request.form.get("priority")
+    deadline = request.form.get("deadline")
+
+    if title:
+        db.add_task(session["email"], tasks, priority, deadline)
+
+    return redirect(url_for("tasks"))
+
+
+@app.route("/delete/<int:task_id>")
+def delete_task(task_id):
+    if "email" in session:
+        db.delete_task(session["email"], task_id)
+    return redirect(url_for("tasks"))
+
+
+@app.route("/edit/<int:task_id>", methods=["GET", "POST"])
+def edit_task(task_id):
+    if "email" not in session:
+        return redirect(url_for("login"))
+
+    tasks = db.get_tasks(session["email"])
+    current_task = None
+    for task in tasks:
+        if task["id"] == task_id:
+            current_task = task
+            break
+
+    if not current_task:
+        return "Task not found"
+
+    if request.method == "POST":
+        new_title = request.form.get("tasks")
+        new_priority = request.form.get("priority")
+        new_deadline = request.form.get("deadline")
+        db.update_task(session["email"], task_id, new_title, new_priority, new_deadline)
+        return redirect(url_for("tasks"))
+
+    return render_template("edit.html", task=current_task)
+
+
+@app.route("/logout")
 def logout():
     session.clear()
-    return redirect(url_for('home'))
+    return redirect(url_for("login"))
 
 
-# ============ TASKS (USING DATABASE) ============
-
-@app.route('/tasks')
-def tasks():
-    if 'user_id' not in session:
-        return redirect(url_for('login'))
-    
-    user_tasks = db.get_user_tasks(session['user_id'])
-    return render_template("tasks.html", tasks=user_tasks)
-
-
-@app.route('/add', methods=['POST'])
-def add_task():
-    if 'user_id' not in session:
-        return redirect(url_for('login'))
-    
-    title = request.form['title']
-    priority = request.form.get('priority', 'Medium')
-    deadline = request.form.get('deadline', '')
-    category = request.form.get('category', 'Subjects')
-    
-    db.add_task(session['user_id'], title, priority, deadline, category)
-    return redirect('/tasks')
-
-
-@app.route('/complete/<int:task_id>')
-def complete_task(task_id):
-    if 'user_id' not in session:
-        return redirect(url_for('login'))
-    
-    db.update_task_status(task_id, session['user_id'], 1)
-    return redirect('/tasks')
-
-
-@app.route('/delete/<int:task_id>')
-def delete_task(task_id):
-    if 'user_id' not in session:
-        return redirect(url_for('login'))
-    
-    db.delete_task(task_id, session['user_id'])
-    return redirect('/tasks')
-
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(debug=True)
