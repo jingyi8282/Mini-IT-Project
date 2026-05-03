@@ -7,7 +7,7 @@ db = Database()
 
 @app.route("/")
 def home():
-    return redirect(url_for("login"))
+    return render_template("home.html")
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
