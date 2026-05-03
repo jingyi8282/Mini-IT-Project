@@ -24,5 +24,15 @@
       "category": "personal",
       "status": "in_progress"
     }
+  ],
+  "LALITHAMBIGAI.ANANDAN.RAJ@student.mmu.edu.my": [
+    {
+      "id": 1,
+      "title": "Assignment ",
+      "priority": "Low",
+      "deadline": "2026-05-07",
+      "category": "revision",
+      "status": "my_task"
+    }
   ]
 }
