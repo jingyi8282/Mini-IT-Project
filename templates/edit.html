@@ -9,9 +9,9 @@
     <header>Edit Task</header>
     <section>
         <form class="edit_form" method="POST" action="/edit/{{task_id}}">
-            <input type="text" name="tasks" value="{{task[0]}}" placeholder="Update task">
+            <input type="text" name="tasks" value="{{task[0]}}" placeholder="Enter New Task">
             
-            <!-- Using task[2] for the date value -->
+            
             <input class="date" type="date" name="deadline" value="{{task[2]}}" required>
             
             <select name="priority" class="priority">
@@ -19,6 +19,12 @@
                 <option value="Low" {% if task[1] == 'Low' %} selected {% endif %}>Low</option>
                 <option value="Medium" {% if task[1] == 'Medium' %} selected {% endif %}>Medium</option>
                 <option value="High" {% if task[1] == 'High' %} selected {% endif %}>High</option>
+            </select>
+            <select name="category" class="category">
+                <option value="Category">Category</option>
+                <option value="assignments" {% if task[5] == 'assignments' %} selected {% endif %}>Assignments</option>
+                <option value="revision" {% if task[5] == 'revision' %} selected {% endif %}>Revision</option>
+                <option value="personal" {% if task[5] == 'personal' %} selected {% endif %}>Personal</option>
             </select>
             
             <button type="submit" class="update_btn">Save</button>
