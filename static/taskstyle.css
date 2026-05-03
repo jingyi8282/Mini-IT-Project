@@ -101,6 +101,10 @@ input{
     cursor: pointer;    
 }
 
+.del_btn:hover{
+    background-color: #f5d4c3;
+}
+
 .priority{
     border-radius: 14px;
     border-color: #2B124C;
@@ -112,25 +116,25 @@ input{
 }
 .prio-Priority{
     border-radius: 14px;
-    border-style: solid;
+    border: 2px solid #2B124C;
     background-color: #fbe4d8;
-    color: #2B124C;
+    color: #522b5b;
     padding: 5px;
     font-size: 12px;
 }
 
 .prio-Low{
     border-radius: 14px;
-    border-style: solid ; 
+    border: 2px solid #2B124C;
     background-color: #c0fcbf;
-    color: #2B124C;
+    color: #522b5b;
     padding: 5px;
     font-size: 12px;
 }
 
 .prio-Medium{
     border-radius: 14px;
-    border-style: solid;
+    border: 2px solid #2B124C;
     background-color: #fdfb86;
     color: #522b5b;
     padding: 5px;
@@ -139,7 +143,7 @@ input{
 
 .prio-High{
     border-radius: 14px;
-    border-style: solid;
+    border: 2px solid #2B124C;
     background-color: #ff9393;
     color: #522b5b;
     padding: 5px;
@@ -155,6 +159,7 @@ input{
 
 .due{
     font-size: 11px;  
+    margin: 5px;
 }
 
 .prio-due{
@@ -180,10 +185,13 @@ input{
     margin-bottom: 5px;
     cursor: pointer;
 }
+.edit_btn:hover{
+    background-color: #f5d4c3;
+}
 
 .category{
     border-radius: 14px;
-    border-color: #2B124C;
+    border: 2px solid #2B124C;
     background-color: #fbe4d8;
     color: #522b5b;
     font-weight: bold;
@@ -193,9 +201,9 @@ input{
 
 .ctgy-Category{
     border-radius: 14px;
-    border-style: solid;
+    border: 2px solid #2B124C;
     background-color: #fbe4d8;
-    color: #2B124C;
+    color: #522b5b;
     padding: 5px;
     font-size: 12px;
     text-transform: capitalize;
@@ -203,9 +211,9 @@ input{
 
 .ctgy-assignments{
     border-radius: 14px;
-    border-style: solid;
+    border: 2px solid #2B124C;
     background-color: #fbe4d8;
-    color: #2B124C;
+    color: #522b5b;
     padding: 5px;
     margin-inline: 10px;
     font-size: 12px;
@@ -214,9 +222,9 @@ input{
 
 .ctgy-revision{
     border-radius: 14px;
-    border-style: solid;
+    border: 2px solid #2B124C;
     background-color: #fbe4d8;
-    color: #2B124C;
+    color: #522b5b;
     padding: 5px;
     margin-inline: 10px;
     font-size: 12px;
@@ -225,12 +233,12 @@ input{
 
 .ctgy-personal{
     border-radius: 14px;
-    border-style: solid;
+    border: 2px solid #2B124C;
     background-color: #fbe4d8;
-    color: #2B124C;
-    padding: 10px;
+    color: #522b5b;
+    padding: 5px;
     margin-inline: 10px;
-    font-size: 12;
+    font-size: 12px;
     text-transform: capitalize;
 }
 
@@ -239,3 +247,26 @@ input{
     flex-wrap: nowrap;
     justify-content: flex-end;
 }
+
+.status{
+    border-radius: 14px;
+    border: 2px solid #2B124C;
+    background-color: #fbe4d8;
+    color: #522b5b;
+    padding: 4px;
+    cursor: pointer;
+}
+
+.move_btn{
+    border-radius: 14px;
+    background-color: #fbe4d8;
+    font-size: 12px;
+    color: #522b5b;
+    padding: 5px;
+    cursor: pointer;
+}
+
+.move_btn:hover{
+    background-color: #f5d4c3;
+}
+
