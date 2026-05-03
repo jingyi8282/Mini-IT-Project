@@ -1,79 +1,139 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 from database import Database
-from datetime import datetime
 
 app = Flask(__name__)
-app.secret_key = 'supersecretkey'
+app.secret_key = "abc123"
 db = Database()
 
-@app.route('/')
+@app.route("/")
 def home():
-    return render_template('home.html')
+    return redirect(url_for("login"))
 
-# REGISTER
-@app.route('/register', methods=['GET', 'POST'])
+@app.route("/register", methods=["GET", "POST"])
 def register():
-    if request.method == 'POST':
-        name, email, password = request.form.get('name'), request.form.get('email'), request.form.get('password')
+    if request.method == "POST":
+        name = request.form.get("username")
+        email = request.form.get("email")
+        password = request.form.get("password")
+        confirm = request.form.get("confirm_password")
+
+        if not name or not email or not password:
+            return render_template("register.html", error="All fields required")
+
+        if password != confirm:
+            return render_template("register.html", error="Passwords do not match")
+
         if db.create_user(name, email, password):
-            return redirect(url_for('login'))
-        return render_template('register.html', error="User exists!")
-    return render_template('register.html')
+            return redirect(url_for("login"))
+        else:
+            return render_template("register.html", error="Email already exists")
 
-# LOGIN
-@app.route('/login', methods=['GET', 'POST'])
+    return render_template("register.html")
+
+@app.route("/login", methods=["GET", "POST"])
 def login():
-    if request.method == 'POST':
-        user = db.check_login(request.form.get('email'), request.form.get('password'))
+    if request.method == "POST":
+        email = request.form.get("email")
+        password = request.form.get("password")
+
+        user = db.check_login(email, password)
         if user:
-            session['user_id'], session['user_name'] = user[0], user[1]
-            return redirect(url_for('tasks'))
-        return render_template('login.html', error="Login failed!")
-    return render_template('login.html')
+            session["email"] = user[0]
+            session["name"] = user[1]
+            return redirect(url_for("tasks"))
+        else:
+            return render_template("login.html", error="Wrong email or password")
 
-# TASKS
-@app.route('/tasks')
+    return render_template("login.html")
+
+@app.route("/forgot", methods=["GET", "POST"])
+def forgot():
+    if request.method == "POST":
+        email = request.form.get("email")
+        new_password = request.form.get("new_password")
+        confirm = request.form.get("confirm_password")
+
+        if new_password != confirm:
+            return render_template("forgot.html", error="Passwords do not match")
+        
+        if email in db.users:
+            db.users[email]["password"] = new_password
+            db.save_users()
+            return redirect(url_for("login"))
+        else:
+            return render_template("forgot.html", error="Email not found")
+            
+    return render_template("forgot.html")
+
+@app.route("/tasks")
 def tasks():
-    if 'user_id' not in session: return redirect(url_for('login'))
-    raw = db.get_user_tasks(session['user_id'])
-    processed = []
-    for t in raw:
-        try:
-            d_date = datetime.strptime(t[4], '%Y-%m-%d').date()
-            rem = (d_date - datetime.now().date()).days
-            due = d_date.strftime('%d-%m-%Y')
-        except:
-            rem, due = 0, t[4]
-        processed.append([t[2], t[3], due, rem, t[0]])
-    return render_template("tasks.html", tasks=processed, user_name=session['user_name'])
+    if "email" not in session:
+        return redirect(url_for("login"))
 
-@app.route('/add', methods=['POST'])
+    user_tasks = db.get_tasks(session["email"])
+    
+    display_tasks = []
+    for t in user_tasks:
+        days_rem = 0 
+        display_tasks.append([
+            t.get('title', ''),      
+            t.get('priority', ''),   
+            t.get('deadline', ''),   
+            days_rem,        
+            t.get('id', 0)          
+        ])
+    
+    return render_template("tasks.html", name=session.get("name"), tasks=display_tasks)
+
+@app.route("/add", methods=["POST"])
 def add_task():
-    if 'user_id' in session:
-        db.add_task(session['user_id'], request.form.get('tasks'), request.form.get('priority'), request.form.get('deadline'), "General")
-    return redirect(url_for('tasks'))
+    if "email" not in session:
+        return redirect(url_for("login"))
 
-@app.route('/edit/<int:task_id>', methods=['GET', 'POST'])
-def edit_task(task_id):
-    if 'user_id' not in session: return redirect(url_for('login'))
-    if request.method == 'POST':
-        db.update_task(task_id, session['user_id'], request.form.get('tasks'), request.form.get('priority'), request.form.get('deadline'))
-        return redirect(url_for('tasks'))
-    all_t = db.get_user_tasks(session['user_id'])
-    task = next((x for x in all_t if x[0] == task_id), None)
-    if task:
-        return render_template('edit.html', task=[task[2], task[3], task[4], 0, task[0]], task_id=task_id)
-    return redirect(url_for('tasks'))
+    title = request.form.get("tasks")
+    priority = request.form.get("priority")
+    deadline = request.form.get("deadline")
 
-@app.route('/delete/<int:task_id>', methods=['POST'])
+    if title:
+        db.add_task(session["email"], title, priority, deadline)
+
+    return redirect(url_for("tasks"))
+
+@app.route("/delete/<int:task_id>", methods=["GET", "POST"])
 def delete_task(task_id):
-    if 'user_id' in session: db.delete_task(task_id, session['user_id'])
-    return redirect(url_for('tasks'))
+    if "email" in session:
+        db.delete_task(session["email"], task_id)
+    return redirect(url_for("tasks"))
 
-@app.route('/logout')
+@app.route("/edit/<int:task_id>", methods=["GET", "POST"])
+def edit_task(task_id):
+    if "email" not in session:
+        return redirect(url_for("login"))
+
+    if request.method == "POST":
+        new_title = request.form.get("tasks")
+        new_priority = request.form.get("priority")
+        new_deadline = request.form.get("deadline")
+        db.update_task(session["email"], task_id, new_title, new_priority, new_deadline)
+        return redirect(url_for("tasks"))
+
+    user_tasks = db.get_tasks(session["email"])
+    target = next((t for t in user_tasks if t["id"] == task_id), None)
+
+    if not target:
+        return "Task not found"
+
+    task_list = [
+        target.get('title', ''), 
+        target.get('priority', ''), 
+        target.get('deadline', '')
+    ]
+    return render_template("edit.html", task=task_list, task_id=task_id)
+
+@app.route("/logout")
 def logout():
     session.clear()
-    return redirect(url_for('home'))
+    return redirect(url_for("login"))
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(debug=True)
