@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Login - Study Planner</title>
+    <title>Reset Password - Study Planner</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='auth.css') }}">
 </head>
 <body>
     <div class="form-container">
-        <h2>🔐 Login to Academic Diary</h2>
+        <h2>🔐 Reset Password</h2>
         
         {% if error %}
             <div class="error">{{ error }}</div>
@@ -17,15 +17,16 @@
             <label>Email</label>
             <input type="email" name="email" placeholder="Enter your email..." required>
             
-            <label>Password</label>
-            <input type="password" name="password" placeholder="Enter your password..." required>
+            <label>New Password</label>
+            <input type="password" name="new_password" placeholder="Enter new password..." required>
             
-            <button type="submit">Login</button>
+            <label>Confirm New Password</label>
+            <input type="password" name="confirm_password" placeholder="Confirm new password..." required>
+            
+            <button type="submit">Reset Password</button>
         </form>
         
-        <p>Don't have an account? <a href="{{ url_for('register') }}">Register here</a></p>
-        
-        <p><a href="{{ url_for('forgot') }}">Forgot password?</a></p>
+        <p><a href="{{ url_for('login') }}">Back to Login</a></p>
     </div>
 </body>
 </html>

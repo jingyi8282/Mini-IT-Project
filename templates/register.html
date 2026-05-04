@@ -11,13 +11,12 @@
         <h2>📚 Create Account</h2>
         
         {% if error %}
-            <div class="error">{{ error }}</div>
+            <div class="error" style="color: red; margin-bottom: 10px;">{{ error }}</div>
         {% endif %}
         
-        <form method="POST">
+        <form method="POST" action="{{ url_for('register') }}">
             <label>Username</label>
-            <!-- FIXED HERE -->
-            <input type="text" name="name" placeholder="Enter your username..." required>
+            <input type="text" name="username" placeholder="Enter your username..." required>
             
             <label>Email</label>
             <input type="email" name="email" placeholder="Enter your email..." required>

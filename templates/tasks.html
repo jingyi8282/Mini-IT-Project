@@ -2,22 +2,26 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title> Tasks page </title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='taskstyle.css')}}">
+    <title>Tasks page</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='taskstyle.css') }}">
 </head>
 <body>
 
-<header> TASKS PAGE </header>
+<header>TASKS PAGE</header>
 
 <section>
     <form class="add_form" method="POST" action="/add">
-        <input type="text" name="tasks" placeholder="Enter task">
-        <input class="int_date" type="date" name="deadline" required>
+        <input type="text" name="tasks" placeholder="Enter task" required>
+        <input class="int_date" type="date" name="deadline">
         <select name="priority" class="priority">
-            <option value="Priority">Priority</option>
             <option value="Low">Low</option>
             <option value="Medium">Medium</option>
             <option value="High">High</option>
+        </select>
+        <select name="category" class="category">
+            <option value="assignments">Assignments</option>
+            <option value="revision">Revision</option>
+            <option value="personal">Personal</option>
         </select>
         <button type="submit" class="add_button">Add Tasks</button>
     </form>
@@ -25,24 +29,32 @@
 
 <div class="tasks_list">
     <div class="task_column">
-        <h3 class="h2_column"> My Tasks </h3>
+        <h3 class="h2_column">My Tasks</h3>
         <ul>
-            {% for t in tasks %}
+            {% for t in my_tasks %}
                 <div class="task_card">
                     <li class="list">
-                        {{ t[0] }} 
+                        {{ t[0] }}
 
                         <div class="prio-due">
-                            <span class="prio-{{t[1]}}"> {{t[1]}} </span>
-                            <span class="due"> Due: {{t[2]}} ({{t[3]}} days remaining) </span>
+                            <span class="prio-{{ t[1] }}">{{ t[1] }}</span>
+                            <span class="ctgy-{{ t[5] }}">{{ t[5] }}</span>
+                            <span class="due">Due: {{ t[2] }} ({{ t[3] }} days remaining)</span>
                         </div>
 
-                        <div class="edit_del">
-                            <!-- Changed loop.index0 to t[4] -->
-                            <a href="/edit/{{t[4]}}" class="edit_btn">Edit</a>
-
-                            <!-- Changed loop.index0 to t[4] -->
-                            <form action="/delete/{{t[4]}}" method="POST" style="display: inline;">
+                        <div class="status_move">
+                            <form action="/move/{{ t[4] }}" method="POST" style="display: inline;">
+                                <select name="status" class="status">
+                                    <option value="my_task">My Task</option>
+                                    <option value="in_progress">In Progress</option>
+                                    <option value="completed">Completed</option>
+                                </select>
+                                <button type="submit" class="move_btn">Move</button>
+                            </form>
+                        </div>    
+                        <div class="edit_del">    
+                            <a href="/edit/{{ t[4] }}" class="edit_btn">Edit</a>
+                            <form action="/delete/{{ t[4] }}" method="POST" style="display: inline;">
                                 <button type="submit" class="del_btn">Delete</button>
                             </form>
                         </div>
@@ -53,11 +65,75 @@
     </div>
 
     <div class="task_column">
-        <h3 class="h2_column"> In Progress </h3>
+        <h3 class="h2_column">In Progress</h3>
+        <ul>
+            {% for t in in_progress %}
+                <div class="task_card">
+                    <li class="list">
+                        {{ t[0] }}
+
+                        <div class="prio-due">
+                            <span class="prio-{{ t[1] }}">{{ t[1] }}</span>
+                            <span class="ctgy-{{ t[5] }}">{{ t[5] }}</span>
+                            <span class="due">Due: {{ t[2] }} ({{ t[3] }} days remaining)</span>
+                        </div>
+
+                        <div class="status_move">    
+                            <form action="/move/{{ t[4] }}" method="POST" style="display: inline;">
+                                <select name="status" class="status">
+                                    <option value="my_task">My Task</option>
+                                    <option value="in_progress" selected>In Progress</option>
+                                    <option value="completed">Completed</option>
+                                </select>
+                                <button type="submit" class="move_btn">Move</button>
+                            </form>
+                        </div>
+                        <div class="edit_del">    
+                            <a href="/edit/{{ t[4] }}" class="edit_btn">Edit</a>
+                            <form action="/delete/{{ t[4] }}" method="POST" style="display: inline;">
+                                <button type="submit" class="del_btn">Delete</button>
+                            </form>
+                        </div>
+                    </li>
+                </div>
+            {% endfor %}
+        </ul>
     </div>
 
     <div class="task_column">
-        <h3 class="h2_column"> Completed </h3>
+        <h3 class="h2_column">Completed</h3>
+        <ul>
+            {% for t in completed %}
+                <div class="task_card">
+                    <li class="list">
+                        {{ t[0] }}
+
+                        <div class="prio-due">
+                            <span class="prio-{{ t[1] }}">{{ t[1] }}</span>
+                            <span class="ctgy-{{ t[5] }}">{{ t[5] }}</span>
+                            <span class="due">Due: {{ t[2] }} ({{ t[3] }} days remaining)</span>
+                        </div>
+
+                        <div class="status_move">
+                            <form action="/move/{{ t[4] }}" method="POST" style="display: inline;">
+                                <select name="status" class="status">
+                                    <option value="my_task">My Task</option>
+                                    <option value="in_progress">In Progress</option>
+                                    <option value="completed" selected>Completed</option>
+                                </select>
+                                <button type="submit" class="move_btn">Move</button>
+                            </form>
+                        </div>
+                        <div class="edit_del">    
+                            <a href="/edit/{{ t[4] }}" class="edit_btn">Edit</a>
+                            <form action="/delete/{{ t[4] }}" method="POST" style="display: inline;">
+                                <button type="submit" class="del_btn">Delete</button>
+                            </form>
+                        </div>
+                    </li>
+                </div>
+            {% endfor %}
+        </ul>
     </div>
 </div>
 
