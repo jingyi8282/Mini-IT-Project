@@ -2,27 +2,27 @@
   "jean2828@gmail.com": [
     {
       "id": 1,
-      "title": "maths",
-      "priority": "High",
+      "title": "coding",
+      "priority": "Medium",
       "deadline": "2026-05-06",
-      "category": "revision",
+      "category": "assignments",
       "status": "completed"
     },
     {
       "id": 2,
       "title": "maths",
-      "priority": "Medium",
+      "priority": "High",
       "deadline": "2026-05-06",
-      "category": "Category",
-      "status": "my_task"
+      "category": "revision",
+      "status": "in_progress"
     },
     {
       "id": 3,
-      "title": "science",
-      "priority": "High",
-      "deadline": "2026-05-06",
-      "category": "personal",
-      "status": "in_progress"
+      "title": "digital system",
+      "priority": "Medium",
+      "deadline": "2026-05-07",
+      "category": "revision",
+      "status": "my_task"
     }
   ]
 }
