@@ -189,6 +189,9 @@ def edit_task(task_id):
     ]
     return render_template("edit.html", task=task_list, task_id=task_id)
 
+@app.route('/focus')
+def focus():
+    return render_template('focus.html')
 
 @app.route("/logout")
 def logout():
