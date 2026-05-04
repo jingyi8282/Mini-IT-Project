@@ -24,5 +24,31 @@
       "category": "revision",
       "status": "my_task"
     }
+  ],
+  "LALITHAMBIGAI.ANANDAN.RAJ@student.mmu.edu.my": [
+    {
+      "id": 1,
+      "title": "English assignment ",
+      "priority": "Low",
+      "deadline": "2026-05-08",
+      "category": "assignments",
+      "status": "my_task"
+    },
+    {
+      "id": 2,
+      "title": "Maths chapter 3",
+      "priority": "Medium",
+      "deadline": "2026-05-07",
+      "category": "revision",
+      "status": "in_progress"
+    },
+    {
+      "id": 3,
+      "title": "Digital systems ",
+      "priority": "High",
+      "deadline": "2026-05-05",
+      "category": "personal",
+      "status": "completed"
+    }
   ]
 }
