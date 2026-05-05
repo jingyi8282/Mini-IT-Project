@@ -26,6 +26,14 @@ body {
     display: block;
 }
 
+.card-slogan-logo {
+    width: 210px;         
+    height: auto;          
+    display: block;        
+    margin: 0 auto 15px auto; 
+    opacity: 0.9;         
+}
+
 /* New Top Navigation Bar */
 .top-nav {
     display: flex;
