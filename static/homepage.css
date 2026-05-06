@@ -20,7 +20,7 @@ body {
 }
 
 .nav-logo {
-    height: 40px;
+    height: 55px;
     width: auto;
     border-radius: 8px;
     background-color: transparent;
@@ -117,7 +117,7 @@ body {
 
 .side-image-container {
     height: 500px;           /* Gives the images that nice tall, elongated look */
-    width: 180px;            /* Narrowed down from 250px so they easily fit at the sides */
+    width: 220px;            /* Narrowed down from 250px so they easily fit at the sides */
     flex-shrink: 0;          /* Crucial: Prevents the browser from squishing the image width */
     display: flex;
     justify-content: center;
