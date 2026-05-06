@@ -155,7 +155,7 @@ body {
 }
 
 .card-slogan-logo {
-    width: 270px;
+    width: 290px;
     height: auto;
     display: block;          
     margin: 0 auto 20px auto; 
@@ -181,15 +181,18 @@ body {
 
 .card-header {
     color: #522b5b;
-    font-size: 24px;
+    font-size: 32px;
     margin-bottom: 10px;
+    font-weight: bold;
+    text-align: center;
 }
 
 .card-description {
     color:  #fbe4d8;
-    font-size: 18px; /* Made the description text bigger */
+    font-size: 23px; /* Made the description text bigger */
     line-height: 1.6;
-    margin-bottom: 15px;
+    margin: 0 auto;
+    text-align: center;
 }
 
 .card:hover {
@@ -223,7 +226,7 @@ body {
 .login-prompt {
     margin-top: 15px;
     color: #fbe4d8;
-    font-size: 15px;
+    font-size: 20px;
 }
 
 .btn-secondary:hover {
@@ -249,3 +252,82 @@ html {
 
 .primary { background-color: #522b5b; color: #fbe4d8; }
 .secondary { background-color: #854f6c; color: #fbe4d8; }
+
+.section-header-center {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.section-title {
+    color: #522b5b;
+    font-size: 36px;
+    margin-bottom: 10px;
+}
+
+.section-subtitle {
+    color: #854f6c;
+    font-size: 18px;
+    font-style: italic;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 columns layout */
+    gap: 30px;
+    margin-top: 20px;
+    width: 100%;
+}
+
+.feature-card {
+    background-color: #fbe4d8; /* Same background as your main card */
+    padding: 40px 30px;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+.feature-icon-container {
+    width: 60px;
+    height: 60px;
+    background-color: #fbe4d8;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.feature-icon {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+}
+
+.feature-header {
+    color: #522b5b;
+    font-size: 20px;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.feature-description {
+    color: #2b124c;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* Make it responsive for smaller screens */
+@media (max-width: 900px) {
+    .features-grid {
+        grid-template-columns: repeat(1, 1fr);
+    }
+}
