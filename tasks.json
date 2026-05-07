@@ -27,14 +27,6 @@
   ],
   "LALITHAMBIGAI.ANANDAN.RAJ@student.mmu.edu.my": [
     {
-      "id": 1,
-      "title": "English assignment ",
-      "priority": "Low",
-      "deadline": "2026-05-08",
-      "category": "assignments",
-      "status": "in_progress"
-    },
-    {
       "id": 2,
       "title": "Maths chapter 3",
       "priority": "Medium",
