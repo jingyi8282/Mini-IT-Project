@@ -13,17 +13,26 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px 5%;
+    padding: 15px 0;      /* Removed horizontal padding (5%) and vertical padding (was 15px) */
     background-color:#fbe4d8;
-    border-bottom: 1px solid #fbe4d8;
+    border-bottom: none;   /* Cleaner look right above the card */
+    margin-bottom: 0;       /* Ensures no bottom spacing push */
 }
 
 .nav-logo {
-    height: 40px;
+    height: 55px;
     width: auto;
     border-radius: 8px;
     background-color: transparent;
     display: block;
+}
+
+.card-slogan-logo {
+    width: 210px;         
+    height: auto;          
+    display: block;        
+    margin: 0 auto 15px auto; 
+    opacity: 0.9;         
 }
 
 /* New Top Navigation Bar */
@@ -83,6 +92,7 @@ body {
     color: #522b5b;
 }
 
+
 .about-me-footer {
     margin-top: 50px;
     padding: 40px;
@@ -99,43 +109,97 @@ body {
 
 .grid-layout {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: 20px;
+    flex-direction: column;
+    gap: 0;                /* Remove large gap to pull things tighter */
+    align-items: center;
+    margin-top: 0;         /* Pulls the whole card section right up to the navbar */
+}
+
+.side-image-container {
+    height: 500px;           /* Gives the images that nice tall, elongated look */
+    width: 220px;            /* Narrowed down from 250px so they easily fit at the sides */
+    flex-shrink: 0;          /* Crucial: Prevents the browser from squishing the image width */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden; 
+    border-radius: 20px;
+}
+
+/* This controls the image itself */
+.side-img {
     width: 100%;
+    height: 100%; 
+    border-radius: 20px;
+    object-fit: cover;       /* Cuts off the sides of the images cleanly so they don't distort */
+}
+
+.section-divider {
+    border: 0;
+    height: 1px;
+    background: #4a2c4a;
+    margin: 40px auto;
+    width: 90%;
+    opacity: 0.2;
+}
+
+.card-center-content {
+    flex: 1;                 /* Takes up all the remaining space in the middle */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; 
+    align-items: center;
+    padding: 10px 20px;
+    text-align: center;
+    min-width: 280px;        /* Ensures the text has enough room and doesn't get squeezed */
+}
+
+.card-slogan-logo {
+    width: 290px;
+    height: auto;
+    display: block;          
+    margin: 0 auto 20px auto; 
+    opacity: 0.9;            /* Keeps your subtle styling */
 }
 
 .card {
-    background-color: #dfb6b2;
-    min-height: 570px;
-    width: 90%;
-    margin: 0 auto;
-    border-radius: 30px;
-    padding: 20px; 
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    text-align: center;
-    padding-top: 40px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;          
+    flex-direction: row;    
+    flex-wrap: nowrap;       
+    align-items: center;    
+    justify-content: space-between; 
+    gap: 30px;              
+    background-color: #d8a7a7; 
+    padding: 40px;
+    border-radius: 40px;
+    width: 100%;            /* Fills 100% of the newly constrained 1200px main-content */
+    max-width: 1300px;        /* Prevents expansion beyond 100% width */
+    margin: 10px auto;       /* Minimal top/bottom margin to sit tight with the navbar */
+    overflow: hidden;
+    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.4s ease;
 }
 
 .card-header {
     color: #522b5b;
-    font-size: 24px;
+    font-size: 32px;
     margin-bottom: 10px;
+    font-weight: bold;
+    text-align: center;
 }
 
 .card-description {
     color:  #fbe4d8;
-    font-size: 16px;
-    line-height: 1.5;
+    font-size: 23px; /* Made the description text bigger */
+    line-height: 1.6;
+    margin: 0 auto;
+    text-align: center;
 }
 
 .card:hover {
     transform: translateY(-5px); 
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
     cursor: pointer; 
+    
 }
 
 .btn {
@@ -162,7 +226,7 @@ body {
 .login-prompt {
     margin-top: 15px;
     color: #fbe4d8;
-    font-size: 15px;
+    font-size: 20px;
 }
 
 .btn-secondary:hover {
@@ -180,5 +244,90 @@ html {
     scroll-behavior: smooth;
 }
 
+.main-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
 .primary { background-color: #522b5b; color: #fbe4d8; }
 .secondary { background-color: #854f6c; color: #fbe4d8; }
+
+.section-header-center {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.section-title {
+    color: #522b5b;
+    font-size: 36px;
+    margin-bottom: 10px;
+}
+
+.section-subtitle {
+    color: #854f6c;
+    font-size: 18px;
+    font-style: italic;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 columns layout */
+    gap: 30px;
+    margin-top: 20px;
+    width: 100%;
+}
+
+.feature-card {
+    background-color: #fbe4d8; /* Same background as your main card */
+    padding: 40px 30px;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+.feature-icon-container {
+    width: 60px;
+    height: 60px;
+    background-color: #fbe4d8;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.feature-icon {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+}
+
+.feature-header {
+    color: #522b5b;
+    font-size: 20px;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.feature-description {
+    color: #2b124c;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* Make it responsive for smaller screens */
+@media (max-width: 900px) {
+    .features-grid {
+        grid-template-columns: repeat(1, 1fr);
+    }
+}
