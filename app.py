@@ -3,18 +3,29 @@ from flask import Flask, render_template, request, redirect, url_for, session
 from database import Database
 from datetime import datetime
 import PyPDF2  
+<<<<<<< HEAD
 import docx 
+=======
+import docx  # Added for Word document support
+>>>>>>> auth
 import os
 
 app = Flask(__name__)
 app.secret_key = "abc123"
 db = Database()
 
+<<<<<<< HEAD
 GROQ_API_KEY = ""  
 client = Groq(api_key=GROQ_API_KEY)
 
 def call_groq_ai(prompt, max_tokens=1000):
     """Function to call Groq AI using the Llama 3.3 model"""
+=======
+GROQ_API_KEY = "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"  
+client = Groq(api_key=GROQ_API_KEY)
+
+def call_groq_ai(prompt, max_tokens=1000):
+>>>>>>> auth
     try:
         completion = client.chat.completions.create(
             model="llama-3.3-70b-versatile", 
@@ -28,16 +39,27 @@ def call_groq_ai(prompt, max_tokens=1000):
         return completion.choices[0].message.content
     except Exception as e:
         return f"AI Error: {str(e)}"
+<<<<<<< HEAD
 
 # authentication
+=======
+>>>>>>> auth
 
 @app.route("/")
 def home():
     return render_template("home.html")
 
+<<<<<<< HEAD
 @app.route('/focus')
 def focus():
     return render_template('focus.html')
+=======
+@app.route("/focus")
+def focus_room():
+    if "email" not in session:
+        return redirect(url_for("login"))
+    return render_template("focus.html")
+>>>>>>> auth
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -86,7 +108,10 @@ def forgot():
             return render_template("forgot.html", error="Email not found")
     return render_template("forgot.html")
 
+<<<<<<< HEAD
 # quick notes
+=======
+>>>>>>> auth
 @app.route("/notes", methods=["GET", "POST"])
 def notes():
     if "email" not in session:
@@ -119,17 +144,28 @@ def notes():
             user_text = user_text[:8000]
 
         if action == "summarize":
+<<<<<<< HEAD
             prompt = f"Summarize these notes into 3-5 clear bullet points:\n\n{user_text}"
         elif action == "quiz":
             prompt = f"Create 5 multiple choice questions based on these notes. Provide options and the correct answer for each:\n\n{user_text}"
         else:
             prompt = f"Analyze these notes and explain the key concepts:\n\n{user_text}"
+=======
+            prompt = f"Summarize these notes into 3-5 bullet points:\n\n{user_text}"
+        elif action == "quiz":
+            prompt = f"Create 5 multiple choice questions based on these notes:\n\n{user_text}"
+        else:
+            prompt = f"Analyze these notes:\n\n{user_text}"
+>>>>>>> auth
         
         ai_output = call_groq_ai(prompt)
 
     return render_template("notes.html", result=ai_output)
+<<<<<<< HEAD
 
 # tasks
+=======
+>>>>>>> auth
 
 @app.route("/tasks")
 def tasks():
@@ -139,11 +175,15 @@ def tasks():
     my_tasks, in_progress, completed = [], [], []
     for task in user_tasks:
         task_status = task.get("status", "my_task")
+<<<<<<< HEAD
         task_data = [
             task.get("title", ""), task.get("priority", ""), 
             task.get("deadline", ""), 0, task.get("id", 0), 
             task.get("category", ""), task_status
         ]
+=======
+        task_data = [task.get("title", ""), task.get("priority", ""), task.get("deadline", ""), 0, task.get("id", 0), task.get("category", ""), task_status]
+>>>>>>> auth
         if task_status == "in_progress":
             in_progress.append(task_data)
         elif task_status == "completed":
@@ -191,11 +231,15 @@ def edit_task(task_id):
     user_tasks = db.get_tasks(session["email"])
     target = next((t for t in user_tasks if t["id"] == task_id), None)
     if not target: return "Task not found"
+<<<<<<< HEAD
     task_list = [
         target.get('title', ''), target.get('priority', ''), 
         target.get('deadline', ''), 0, target.get('id', 0), 
         target.get('category', ''), target.get('status', 'my_task')
     ]
+=======
+    task_list = [target.get('title', ''), target.get('priority', ''), target.get('deadline', ''), 0, target.get('id', 0), target.get('category', ''), target.get('status', 'my_task')]
+>>>>>>> auth
     return render_template("edit.html", task=task_list, task_id=task_id)
 
 @app.route("/logout")
