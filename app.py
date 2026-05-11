@@ -1,3 +1,4 @@
+import google.generativeai as genai
 from flask import Flask, render_template, request, redirect, url_for, session
 from database import Database
 from datetime import datetime
@@ -11,10 +12,10 @@ db = Database()
 def home():
     return render_template("home.html")
 
-
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
+        # Pulls 'username' to match the name attribute in your register.html
         name = request.form.get("username")
         email = request.form.get("email")
         password = request.form.get("password")
@@ -34,7 +35,6 @@ def register():
 
     return render_template("register.html")
 
-
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
@@ -50,7 +50,6 @@ def login():
             return render_template("login.html", error="Wrong email or password")
 
     return render_template("login.html")
-
 
 @app.route("/forgot", methods=["GET", "POST"])
 def forgot():
@@ -72,7 +71,6 @@ def forgot():
             return render_template("forgot.html", error="Email not found")
 
     return render_template("forgot.html")
-
 
 @app.route("/tasks")
 def tasks():
