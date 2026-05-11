@@ -6,15 +6,7 @@
       "priority": "Medium",
       "deadline": "2026-05-06",
       "category": "assignments",
-      "status": "completed"
-    },
-    {
-      "id": 2,
-      "title": "maths",
-      "priority": "High",
-      "deadline": "2026-05-06",
-      "category": "revision",
-      "status": "in_progress"
+      "status": "my_task"
     },
     {
       "id": 3,
@@ -22,7 +14,7 @@
       "priority": "Medium",
       "deadline": "2026-05-07",
       "category": "revision",
-      "status": "my_task"
+      "status": "in_progress"
     }
   ],
   "LALITHAMBIGAI.ANANDAN.RAJ@student.mmu.edu.my": [
