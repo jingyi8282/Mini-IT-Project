@@ -10,7 +10,7 @@ app = Flask(__name__)
 app.secret_key = "abc123"
 db = Database()
 
-GROQ_API_KEY = "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"  
+GROQ_API_KEY = ""  
 client = Groq(api_key=GROQ_API_KEY)
 
 def call_groq_ai(prompt, max_tokens=1000):
