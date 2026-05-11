@@ -1,0 +1,27 @@
+body{
+    background-color: #fbe4d8;
+}
+
+header{
+    color: #522b5b;
+    text-align: center;
+    font-size: 40px;
+    font-weight: bold;
+}
+
+h2{
+    text-align: center;
+    color: #2B124C;
+}
+
+.focus_layout{
+    display: grid;
+    gap: 20px ;
+    padding: 25px;
+}
+
+.focus_card{
+    background-color: #dfb6b2;
+    border-radius: 14px;
+    padding: 8px;
+}

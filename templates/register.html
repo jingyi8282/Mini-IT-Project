@@ -14,7 +14,7 @@
             <div class="error" style="color: red; margin-bottom: 10px;">{{ error }}</div>
         {% endif %}
         
-        <form method="POST">
+        <form method="POST" action="{{ url_for('register') }}">
             <label>Username</label>
             <input type="text" name="username" placeholder="Enter your username..." required>
             

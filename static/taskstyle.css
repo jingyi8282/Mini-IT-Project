@@ -270,3 +270,6 @@ input{
     background-color: #f5d4c3;
 }
 
+.status_move{
+    display: flex;
+}

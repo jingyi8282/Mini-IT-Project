@@ -9,41 +9,104 @@
 </head>
 <body>
 
-        <main class="main-content">
-            
-            <header class="navbar">
-                <div class="nav-left">
-                    <img src="{{ url_for('static', filename='AD_Logo.png') }}" alt="Academic Diary Logo" class="nav-logo">
+    <main class="main-content">
+        
+        <header class="navbar">
+            <div class="nav-left">
+                <img src="{{ url_for('static', filename='AD_Logo.png') }}" alt="Academic Diary Logo" class="nav-logo">
+                <a href="{{ url_for('home') }}" class="nav-title">Academic Diary</a>
+                <a href="#about-the-web" class="nav-link">About Me</a>
+            </div>
 
-                    <a href="{{ url_for('home') }}" class="nav-title">Academic Diary</a>
+            <div class="nav-right">
+                <a href="{{ url_for('login') }}" class="btn primary">Login</a>
+                <a href="{{ url_for('register') }}" class="btn secondary">Register</a>
+            </div>
+        </header>
+        
+        <section class="grid-layout">
+            <div class="card">
+                
+                <div class="side-image-container">
+                    <img src="{{ url_for('static', filename='homepage_img2.png') }}" alt="Left Decoration" class="side-img">
+                </div>
 
-                    <a href="#about-the-web" class="nav-link">About Me</a>
-                    </div>
+                <div class="card-center-content">
+                    <img src="{{url_for('static', filename='AD_Logo.png') }}" alt="Academic Diary Logo" class="card-slogan-logo">
 
-                    <div class="nav-right">
-                        <a href="{{ url_for('login') }}" class="btn primary">Login</a>
-                        <a href="{{ url_for('register') }}" class="btn secondary">Register</a>
-                    </div>
-            </header>
-            
-            <section class="grid-layout">
-                <div class="card">
                     <h3 class="card-header">Study Smarter, Not Harder</h3>
                     <p class="card-description">"Your Academic Journey, Simplified."</p>
                     
                     <p class="login-prompt">Already have an account?
-                    <a href="{{ url_for('login') }}" class="btn-secondary">Login</a>
-                   </p>
-
-                </div>
-            
-                <div class="card" id="about-the-web">
-                   <h3 class="card-header">About the Web</h3>
-                     <p class="card-description">"This diary helps students organize their academic life with precision and clarity."</p>
+                    <a href="{{ url_for('login') }}" class="btn-secondary">Login</a></p>
                 </div>
 
-            </section>
-        </main>
-    </div>
+                <div class="side-image-container">
+                    <img src="{{ url_for('static', filename='homepage_img3.png') }}" alt="Right Decoration" class="side-img">
+                </div>
+            </div>
+
+            <div class="card" id="about-the-web">
+                <div class="card-center-content">
+                <h3 class="card-header">About the Web</h3>
+                <p class="card-description">"This diary helps students organize their academic life with precision and clarity."</p>
+                </div>
+
+                <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon-container">
+                <img src="{{ url_for('static', filename='icon_note.png') }}" alt="Note Taking Icon" class="feature-icon">
+            </div>
+            <h3 class="feature-header">Smart Note-Taking</h3>
+            <p class="feature-description">Organise your notes by subject, date, and topic — all in one beautiful, easy-to-use space.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon-container">
+                <img src="{{ url_for('static', filename='icon_calendar.png') }}" alt="Calendar Icon" class="feature-icon">
+            </div>
+            <h3 class="feature-header">Assignment Tracker</h3>
+            <p class="feature-description">Never miss a deadline again. Track every assignment, exam, and project with clear due dates.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon-container">
+                <img src="{{ url_for('static', filename='icon_chart.png') }}" alt="Insights Icon" class="feature-icon">
+            </div>
+            <h3 class="feature-header">Progress Insights</h3>
+            <p class="feature-description">Visualise your academic progress over time and stay motivated to reach your goals.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon-container">
+                <img src="{{ url_for('static', filename='icon_group.png') }}" alt="Groups Icon" class="feature-icon">
+            </div>
+            <h3 class="feature-header">Study Groups</h3>
+            <p class="feature-description">Collaborate with classmates, share resources, and study together more effectively.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon-container">
+                <img src="{{ url_for('static', filename='icon_diary.png') }}" alt="Diary Icon" class="feature-icon">
+            </div>
+            <h3 class="feature-header">All-in-One Diary</h3>
+            <p class="feature-description">From timetables to personal reflections — your entire academic life lives in one place.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon-container">
+                <img src="{{ url_for('static', filename='icon_clock.png') }}" alt="Clock Icon" class="feature-icon">
+            </div>
+            <h3 class="feature-header">Pomodoro Timer</h3>
+            <p class="feature-description">Boost your focus and time management skills with an integrated, easy-to-use Pomodoro clock.</p>
+        </div>
+
+            </div>
+
+        </section>
+
+        <hr class="section-divider">
+
+    </main>
 </body>
 </html>
