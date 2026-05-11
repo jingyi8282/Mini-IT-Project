@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Study Assistant - Notes</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='auth.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='notes.css') }}">
+</head>
+<body>
+
+<div class="form-container">
+    <h2>📚 AI Study Assistant</h2>
+    
+    {% if error %}
+        <div class="error-msg">{{ error }}</div>
+    {% endif %}
+
+    <form method="POST" enctype="multipart/form-data">
+        <label>Paste Notes:</label>
+        <textarea name="content" rows="6" placeholder="Paste your notes here..."></textarea>
+        
+        <div class="file-section">
+            <label><strong>OR Upload a File (PDF or DOCX):</strong></label><br>
+            <input type="file" name="pdf_file" accept=".pdf, .docx" style="margin-top: 10px;">
+        </div>
+        
+        <div class="button-group">
+            <button type="submit" name="action" value="summarize" class="btn-summarize">Summarize</button>
+            <button type="submit" name="action" value="quiz" class="btn-quiz">Generate Quiz</button>
+        </div>
+    </form>
+
+    {% if result %}
+    <div class="result-box">
+        <h3>✨ AI Analysis Result:</h3>
+        <hr>
+        {{ result }}
+    </div>
+    {% endif %}
+
+    <p style="margin-top: 20px; text-align: center;">
+        <a href="{{ url_for('tasks') }}" class="back-link">← Back to Dashboard</a>
+    </p>
+</div>
+
+</body>
+</html>
