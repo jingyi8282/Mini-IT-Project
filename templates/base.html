@@ -12,8 +12,12 @@
         <ul>
             <li><a href="{{url_for('tasks')}}"> My Task </a></li>
             <li><a href="{{url_for('focus')}}"> Focus Room </a></li>
-            
         </ul>
+        <div class="right_bar">
+            <ul>
+                <li><a href="{{url_for('home')}}"> Logout </a></li>
+            </ul>
+        </div>
     </nav>
     <main> {% block content %}{% endblock %} </main>
     

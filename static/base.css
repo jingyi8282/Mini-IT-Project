@@ -30,5 +30,11 @@ body{
     height: 60px;
     width: auto;
     border-radius: 8px;
+}
+
+.right_bar{
+    margin-left: auto;
+    display: flex;
+    align-items: center;
     
 }
