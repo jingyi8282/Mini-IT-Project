@@ -14,9 +14,14 @@ class Database:
         else:
             self.users = {}
 
+
         if os.path.exists(self.tasks_file):
             with open(self.tasks_file, "r") as f:
-                self.tasks = json.load(f)
+                loaded_tasks = json.load(f)
+                if isinstance(loaded_tasks, list):
+                    self.tasks = {}
+                else:
+                    self.tasks = loaded_tasks
         else:
             self.tasks = {}
 
@@ -28,7 +33,7 @@ class Database:
         with open(self.tasks_file, "w") as f:
             json.dump(self.tasks, f, indent=2)
 
-    # USER
+    # USER FUNCTIONS
     def create_user(self, name, email, password):
         if email in self.users:
             return False
@@ -50,13 +55,18 @@ class Database:
         self.save_users()
         return True
 
-    # TASKS
+    # TASK FUNCTIONS
     def add_task(self, email, title, priority, deadline, category):
-        tasks = self.tasks.get(email, [])
+        # Make sure the email exists in tasks
+        if email not in self.tasks:
+            self.tasks[email] = []
         
+        tasks = self.tasks[email]
+        
+        # Get next task ID
         task_id = 1
         for task in tasks:
-            if task["id"] >= task_id:
+            if task.get("id", 0) >= task_id:
                 task_id = task["id"] + 1
         
         new_task = {
@@ -68,21 +78,26 @@ class Database:
             "status": "my_task"
         }
         
-        if email not in self.tasks:
-            self.tasks[email] = []
-        
         self.tasks[email].append(new_task)
         self.save_tasks()
         return task_id
 
     def get_tasks(self, email):
-        return self.tasks.get(email, [])
+        # Make sure tasks is a dictionary
+        if not isinstance(self.tasks, dict):
+            self.tasks = {}
+        
+        # Return empty list if email not found
+        if email not in self.tasks:
+            return []
+        
+        return self.tasks[email]
 
     def delete_task(self, email, task_id):
         if email in self.tasks:
             new_list = []
             for task in self.tasks[email]:
-                if task["id"] != task_id:
+                if task.get("id") != task_id:
                     new_list.append(task)
             self.tasks[email] = new_list
             self.save_tasks()
@@ -90,7 +105,7 @@ class Database:
     def update_task(self, email, task_id, title, priority, deadline, category):
         if email in self.tasks:
             for task in self.tasks[email]:
-                if task["id"] == task_id:
+                if task.get("id") == task_id:
                     task["title"] = title
                     task["priority"] = priority
                     task["deadline"] = deadline
@@ -102,12 +117,12 @@ class Database:
     def update_task_status(self, email, task_id, status):
         if email in self.tasks:
             for task in self.tasks[email]:
-                if task["id"] == task_id:
+                if task.get("id") == task_id:
                     task["status"] = status
                     self.save_tasks()
                     return True
         return False
 
     def get_tasks_by_status(self, email, status):
-        tasks = self.tasks.get(email, [])
+        tasks = self.get_tasks(email)
         return [t for t in tasks if t.get("status") == status]
