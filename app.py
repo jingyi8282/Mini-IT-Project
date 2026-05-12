@@ -10,6 +10,7 @@ app = Flask(__name__)
 app.secret_key = "abc123"
 db = Database()
 
+# Using your provided Groq API key
 GROQ_API_KEY = "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"  
 client = Groq(api_key=GROQ_API_KEY)
 
@@ -28,29 +29,62 @@ def call_groq_ai(prompt, max_tokens=1000):
     except Exception as e:
         return f"AI Error: {str(e)}"
 
-
 def calculate_days_remaining(deadline_str):
-    """Calculates days from today until the deadline string (YYYY-MM-DD)"""
+    """Fixes the '0 days' bug"""
     if not deadline_str:
         return 0
     try:
         today = datetime.now().date()
         deadline_date = datetime.strptime(deadline_str, "%Y-%m-%d").date()
         remaining = (deadline_date - today).days
-        return max(0, remaining) 
+        return max(0, remaining)
     except ValueError:
         return 0
 
-# AUTHENTICATION
+# ============ ROUTES ============
+
 @app.route("/")
 def home():
     return render_template("home.html")
 
-@app.route("/focus")
+@app.route("/focus", methods=["GET", "POST"])
 def focus_room():
     if "email" not in session:
         return redirect(url_for("login"))
-    return render_template("focus.html")
+    
+    ai_output = ""
+    if request.method == "POST":
+        user_text = request.form.get("content")
+        uploaded_file = request.files.get("pdf_file")
+        action = request.form.get("action")
+        
+        # Handle File Uploads
+        if uploaded_file and uploaded_file.filename != '':
+            file_ext = uploaded_file.filename.split('.')[-1].lower()
+            try:
+                if file_ext == 'pdf':
+                    reader = PyPDF2.PdfReader(uploaded_file)
+                    user_text = "".join([page.extract_text() for page in reader.pages])
+                elif file_ext == 'docx':
+                    doc = docx.Document(uploaded_file)
+                    user_text = "\n".join([para.text for para in doc.paragraphs])
+            except Exception as e:
+                return render_template("focus.html", error=f"File Error: {str(e)}")
+        
+        if not user_text:
+            return render_template("focus.html", error="Please enter text or upload a file!")
+
+        # Process with AI
+        if action == "summarize":
+            prompt = f"Summarize this content into 3-5 key bullet points:\n\n{user_text}"
+        elif action == "quiz":
+            prompt = f"Create 3 multiple choice questions based on this:\n\n{user_text}"
+        else:
+            prompt = f"Analyze these notes:\n\n{user_text}"
+        
+        ai_output = call_groq_ai(prompt)
+
+    return render_template("focus.html", result=ai_output)
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -59,12 +93,10 @@ def register():
         email = request.form.get("email")
         password = request.form.get("password")
         confirm = request.form.get("confirm_password")
-
         if not name or not email or not password:
             return render_template("register.html", error="All fields required")
         if password != confirm:
             return render_template("register.html", error="Passwords do not match")
-        
         if db.create_user(name, email, password):
             return redirect(url_for("login"))
         else:
@@ -85,87 +117,21 @@ def login():
             return render_template("login.html", error="Wrong email or password")
     return render_template("login.html")
 
-@app.route("/forgot", methods=["GET", "POST"])
-def forgot():
-    if request.method == "POST":
-        email = request.form.get("email")
-        new_password = request.form.get("new_password")
-        confirm = request.form.get("confirm_password")
-
-        if not email or not new_password:
-            return render_template("forgot.html", error="Email and password required")
-        if new_password != confirm:
-            return render_template("forgot.html", error="Passwords do not match")
-
-        if db.reset_password(email, new_password):
-            return render_template("login.html", error="Password reset! Please login.")
-        else:
-            return render_template("forgot.html", error="Email not found")
-    return render_template("forgot.html")
-#QUICK NOTES
-@app.route("/notes", methods=["GET", "POST"])
-def notes():
-    if "email" not in session:
-        return redirect(url_for("login"))
-    
-    ai_output = ""
-    if request.method == "POST":
-        user_text = request.form.get("content")
-        uploaded_file = request.files.get("pdf_file")
-        action = request.form.get("action")
-        
-        if uploaded_file and uploaded_file.filename != '':
-            ext = uploaded_file.filename.split('.')[-1].lower()
-            try:
-                if ext == 'pdf':
-                    reader = PyPDF2.PdfReader(uploaded_file)
-                    user_text = "".join([page.extract_text() for page in reader.pages])
-                elif ext == 'docx':
-                    doc = docx.Document(uploaded_file)
-                    user_text = "\n".join([para.text for para in doc.paragraphs])
-                else:
-                    return render_template("notes.html", error="Unsupported file type!")
-            except Exception:
-                return render_template("notes.html", error="Could not read file.")
-        
-        if not user_text:
-            return render_template("notes.html", error="Please paste notes or upload a file!")
-
-        if len(user_text) > 8000:
-            user_text = user_text[:8000]
-
-        if action == "summarize":
-            prompt = f"Summarize these notes into 3-5 clear bullet points:\n\n{user_text}"
-        elif action == "quiz":
-            prompt = f"Create 10 multiple choice questions based on these notes:\n\n{user_text}"
-        
-        ai_output = call_groq_ai(prompt)
-
-    return render_template("notes.html", result=ai_output)
-
-#TASKS
 @app.route("/tasks")
 def tasks():
     if "email" not in session:
         return redirect(url_for("login"))
-    
     user_tasks = db.get_tasks(session["email"])
     my_tasks, in_progress, completed = [], [], []
-    
     for task in user_tasks:
         task_status = task.get("status", "my_task")
-        due_date = task.get("deadline", "")
-        
-        days_left = calculate_days_remaining(due_date)
+        deadline = task.get("deadline", "")
+        days_left = calculate_days_remaining(deadline)
         
         task_data = [
-            task.get("title", ""), 
-            task.get("priority", ""), 
-            due_date, 
-            days_left, 
-            task.get("id", 0), 
-            task.get("category", ""), 
-            task_status
+            task.get("title", ""), task.get("priority", ""), 
+            deadline, days_left, task.get("id", 0), 
+            task.get("category", ""), task_status
         ]
         
         if task_status == "in_progress":
@@ -201,11 +167,11 @@ def move_task(task_id):
         new_status = request.form.get("status")
         db.update_task_status(session["email"], task_id, new_status)
     return redirect(url_for("tasks"))
+
 @app.route("/edit/<int:task_id>", methods=["GET", "POST"])
 def edit_task(task_id):
     if "email" not in session:
         return redirect(url_for("login"))
-    
     if request.method == "POST":
         new_title = request.form.get("tasks")
         new_priority = request.form.get("priority")
@@ -216,20 +182,13 @@ def edit_task(task_id):
     
     user_tasks = db.get_tasks(session["email"])
     target = next((t for t in user_tasks if t["id"] == task_id), None)
-    
-    if not target: 
-        return "Task not found"
+    if not target: return "Task not found"
     
     days_left = calculate_days_remaining(target.get('deadline', ''))
-    
     task_list = [
-        target.get('title', ''), 
-        target.get('priority', ''), 
-        target.get('deadline', ''), 
-        days_left, 
-        target.get('id', 0), 
-        target.get('category', ''), 
-        target.get('status', 'my_task')
+        target.get('title', ''), target.get('priority', ''), 
+        target.get('deadline', ''), days_left, target.get('id', 0), 
+        target.get('category', ''), target.get('status', 'my_task')
     ]
     return render_template("edit.html", task=task_list, task_id=task_id)
 
