@@ -1,12 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Tasks page</title>
+{% extends "base.html" %}
+{% block content %}
     <link rel="stylesheet" href="{{ url_for('static', filename='taskstyle.css') }}">
-</head>
-<body>
-
+    
 <header>TASKS PAGE</header>
 
 <section>
@@ -37,13 +32,13 @@
                         {{ t[0] }}
 
                         <div class="prio-due">
-                            <span class="prio-{{ t[1] }}">{{ t[1] }}</span>
-                            <span class="ctgy-{{ t[5] }}">{{ t[5] }}</span>
+                            <span class="prio-{{t[1]}}">{{ t[1] }}</span>
+                            <span class="ctgy-{{t[5]}}">{{ t[5] }}</span>
                             <span class="due">Due: {{ t[2] }} ({{ t[3] }} days remaining)</span>
                         </div>
 
                         <div class="status_move">
-                            <form action="/move/{{ t[4] }}" method="POST" style="display: inline;">
+                            <form action="/move/{{t[4]}}" method="POST" style="display: inline;">
                                 <select name="status" class="status">
                                     <option value="my_task">My Task</option>
                                     <option value="in_progress">In Progress</option>
@@ -53,8 +48,8 @@
                             </form>
                         </div>    
                         <div class="edit_del">    
-                            <a href="/edit/{{ t[4] }}" class="edit_btn">Edit</a>
-                            <form action="/delete/{{ t[4] }}" method="POST" style="display: inline;">
+                            <a href="/edit/{{t[4]}}" class="edit_btn">Edit</a>
+                            <form action="/delete/{{t[4]}}" method="POST" style="display: inline;">
                                 <button type="submit" class="del_btn">Delete</button>
                             </form>
                         </div>
@@ -73,13 +68,13 @@
                         {{ t[0] }}
 
                         <div class="prio-due">
-                            <span class="prio-{{ t[1] }}">{{ t[1] }}</span>
-                            <span class="ctgy-{{ t[5] }}">{{ t[5] }}</span>
+                            <span class="prio-{{t[1]}}">{{ t[1] }}</span>
+                            <span class="ctgy-{{t[5]}}">{{ t[5] }}</span>
                             <span class="due">Due: {{ t[2] }} ({{ t[3] }} days remaining)</span>
                         </div>
 
                         <div class="status_move">    
-                            <form action="/move/{{ t[4] }}" method="POST" style="display: inline;">
+                            <form action="/move/{{t[4]}}" method="POST" style="display: inline;">
                                 <select name="status" class="status">
                                     <option value="my_task">My Task</option>
                                     <option value="in_progress" selected>In Progress</option>
@@ -89,8 +84,8 @@
                             </form>
                         </div>
                         <div class="edit_del">    
-                            <a href="/edit/{{ t[4] }}" class="edit_btn">Edit</a>
-                            <form action="/delete/{{ t[4] }}" method="POST" style="display: inline;">
+                            <a href="/edit/{{t[4]}}" class="edit_btn">Edit</a>
+                            <form action="/delete/{{t[4]}}" method="POST" style="display: inline;">
                                 <button type="submit" class="del_btn">Delete</button>
                             </form>
                         </div>
@@ -109,13 +104,13 @@
                         {{ t[0] }}
 
                         <div class="prio-due">
-                            <span class="prio-{{ t[1] }}">{{ t[1] }}</span>
-                            <span class="ctgy-{{ t[5] }}">{{ t[5] }}</span>
+                            <span class="prio-{{t[1]}}">{{ t[1] }}</span>
+                            <span class="ctgy-{{t[5]}}">{{ t[5] }}</span>
                             <span class="due">Due: {{ t[2] }} ({{ t[3] }} days remaining)</span>
                         </div>
 
                         <div class="status_move">
-                            <form action="/move/{{ t[4] }}" method="POST" style="display: inline;">
+                            <form action="/move/{{t[4]}}" method="POST" style="display: inline;">
                                 <select name="status" class="status">
                                     <option value="my_task">My Task</option>
                                     <option value="in_progress">In Progress</option>
@@ -125,8 +120,8 @@
                             </form>
                         </div>
                         <div class="edit_del">    
-                            <a href="/edit/{{ t[4] }}" class="edit_btn">Edit</a>
-                            <form action="/delete/{{ t[4] }}" method="POST" style="display: inline;">
+                            <a href="/edit/{{t[4]}}" class="edit_btn">Edit</a>
+                            <form action="/delete/{{t[4]}}" method="POST" style="display: inline;">
                                 <button type="submit" class="del_btn">Delete</button>
                             </form>
                         </div>
@@ -137,5 +132,4 @@
     </div>
 </div>
 
-</body>
-</html>
+{% endblock %}

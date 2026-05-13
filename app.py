@@ -5,6 +5,7 @@ from datetime import datetime
 import PyPDF2  
 import docx  
 import os
+import random
 
 app = Flask(__name__)
 app.secret_key = "abc123"
@@ -80,8 +81,32 @@ def focus_room():
             prompt = f"Analyze these notes:\n\n{user_text}"
         
         ai_output = call_groq_ai(prompt)
+    quotes = [
+        {
+            "text" : "Success is no accident. It is hard work, perseverance, learning, studying, sacrifice and most of all, love of what you are doing or learning to do.",
+            "author" : "Pelé, Brazilian football legend"
+        },
+        {
+            "text" : "An investment in knowledge pays the best interest.",
+            "author" : "Benjamin Franklin, writer and polymath"
+        },
+        {
+            "text" : "Striving for success without hard work is like trying to harvest where you haven't plated.",
+            "author" : "David Bly"
+        },
+        {
+            "text" : "Success isn’t overnight. It’s when every day you get a little better than the day before. It all adds up.",
+            "author" : "Dwayne Johnson"
+        },
+        {
+            "text" : "Nothing is impossible. The word itself says 'I'm Possible.",
+            "author" : "Audrey Hepburn"
+        }
+    ]
+    
+    random_quote = random.choice(quotes)
 
-    return render_template("focus.html", result=ai_output)
+    return render_template("focus.html", result=ai_output, quotes=random_quote)
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -99,6 +124,7 @@ def register():
         else:
             return render_template("register.html", error="Email already exists")
     return render_template("register.html")
+    
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -113,6 +139,9 @@ def login():
         else:
             return render_template("login.html", error="Wrong email or password")
     return render_template("login.html")
+@app.route('/forgot')
+def forgot():
+    return render_template('forgot.html') 
 
 @app.route("/tasks")
 def tasks():
