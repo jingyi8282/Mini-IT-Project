@@ -138,7 +138,7 @@ def login():
         if user:
             session["email"] = user[0]
             session["name"] = user[1]
-            return redirect(url_for("tasks"))
+            return redirect(url_for("dashboard"))
         else:
             return render_template("login.html", error="Wrong email or password")
     return render_template("login.html")
@@ -220,6 +220,12 @@ def edit_task(task_id):
         target.get('category', ''), target.get('status', 'my_task')
     ]
     return render_template("edit.html", task=task_list, task_id=task_id)
+
+@app.route("/dashboard")
+def dashboard():
+    if "email" not in session:
+        return redirect(url_for("login"))
+    return render_template("dashboard.html", name=session.get("name"))
 
 @app.route("/logout")
 def logout():
