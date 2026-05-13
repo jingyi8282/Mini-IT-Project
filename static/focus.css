@@ -28,10 +28,8 @@ h2{
 }
 
 .notes-area {
-    background: #dfb6b2;
     padding: 15px;
     border-radius: 12px;
-    border-left: 8px solid #854f6c;
     margin-top: 10px;
 }
 .notes-area textarea {
@@ -41,14 +39,19 @@ h2{
     border-radius: 8px;
     border: 2px solid #2B124C;
     background: #fbe4d8;
-    font-family: inherit;
     box-sizing: border-box;
     resize: none;
+    box-shadow: 0 4px 20px rgb(247, 106, 247);
 }
-.file-input {
+.file-input::file-selector-button {
     font-size: 11px;
-    margin: 10px 0;
+    margin: 5px;
     display: block;
+    background-color: #fbe4d8;
+    border: 2px solid #2B124C;
+    border-radius: 14px;
+    padding: 8px;
+    cursor: pointer;
 }
 .btn-row {
     display: flex;
@@ -77,4 +80,29 @@ h2{
     max-height: 150px;
     overflow-y: auto;
     color: #2B124C;
+}
+
+.quote_section{
+    background-color: #fbe4d8;
+    border: 2px solid #2B124C;
+    border-radius: 14px;
+    margin-bottom: 20px;
+    margin-inline: 10px;
+    padding: 20px;
+    text-align: center;
+    font-family: cursive;
+    font-size: 25px;
+    box-shadow: 0 4px 20px rgb(247, 106, 247);
+}
+
+.new_quote{
+    border-radius: 14px;
+    background-color: #fbe4d8;
+    border: 2px solid #2B124C;
+    display: block;
+    margin-left: auto;
+    margin-bottom: 10px;
+    width: fit-content;
+    padding: 5px;
+    text-decoration: none;
 }
