@@ -1,15 +1,42 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Academic Diary</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
 </head>
 <body>
-    <h1>Welcome to your Dashboard, {{ name }}!</h1>
-    <nav>
-        <a href="{{ url_for('tasks') }}">Go to My Tasks</a>
-        <a href="{{ url_for('focus_room') }}">Focus Room</a>
-        <a href="{{ url_for('logout') }}">Logout</a>
-    </nav>
+
+    <!-- Reusable Navbar Theme -->
+    <header class="navbar">
+        <div class="nav-left">
+            <img src="{{ url_for('static', filename='AD_Logo.png') }}" alt="Logo" class="nav-logo">
+            <a href="{{ url_for('tasks') }}" class="nav-link">My Task</a>
+            <a href="{{ url_for('focus_room') }}" class="nav-link">Focus Room</a>
+        </div>
+        <div class="nav-right">
+            <a href="{{ url_for('logout') }}" class="nav-link">Logout</a>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <h1 class="dashboard-header">Welcome, {{ name }}!</h1>
+
+        <section class="dashboard-grid">
+            <!-- Large Task Card -->
+            <a href="{{ url_for('tasks') }}" class="dashboard-card">
+                <h2 class="card-title">My Tasks</h2>
+                <p class="card-subtitle">Manage your daily academic goals</p>
+            </a>
+
+            
+            <a href="{{ url_for('focus_room') }}" class="dashboard-card">
+                <h2 class="card-title">Focus Room</h2>
+                <p class="card-subtitle">Where your discipline and creativity all in one place</p>
+            </a>
+        </section>
+    </main>
+
 </body>
 </html>
