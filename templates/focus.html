@@ -38,8 +38,13 @@
         </div>
 
     <div class="focus_card">
-        <h2>Quote Section</h2>
+        <h2>Daily Motivation</h2>
+        <div class="quote_section">
+            <blockquote>"{{ quotes.text }}"</blockquote>
+            <p>- {{ quotes.author }}</p>
         </div>
+        <a href="{{url_for('focus_room')}}" class="new_quote">New Quote</a>
+    </div>
 </section>
 
 
