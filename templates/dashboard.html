@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
+</head>
+<body>
+    <h1>Welcome to your Dashboard, {{ name }}!</h1>
+    <nav>
+        <a href="{{ url_for('tasks') }}">Go to My Tasks</a>
+        <a href="{{ url_for('focus_room') }}">Focus Room</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </nav>
+</body>
+</html>

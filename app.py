@@ -3,11 +3,7 @@ from flask import Flask, render_template, request, redirect, url_for, session
 from database import Database
 from datetime import datetime
 import PyPDF2  
-<<<<<<< HEAD
-import docx  # Added for Word document support
-=======
 import docx  
->>>>>>> 4c10ac889f403158a6e0f18976ef007127a212d6
 import os
 import random
 
@@ -15,10 +11,7 @@ app = Flask(__name__)
 app.secret_key = "abc123"
 db = Database()
 
-<<<<<<< HEAD
-=======
 # Using your provided Groq API key
->>>>>>> 4c10ac889f403158a6e0f18976ef007127a212d6
 GROQ_API_KEY = "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"  
 client = Groq(api_key=GROQ_API_KEY)
 
@@ -36,8 +29,6 @@ def call_groq_ai(prompt, max_tokens=1000):
         return completion.choices[0].message.content
     except Exception as e:
         return f"AI Error: {str(e)}"
-<<<<<<< HEAD
-=======
 
 def calculate_days_remaining(deadline_str):
     """Fixes the '0 days' bug"""
@@ -52,19 +43,11 @@ def calculate_days_remaining(deadline_str):
         return 0
 
 # ============ ROUTES ============
->>>>>>> 4c10ac889f403158a6e0f18976ef007127a212d6
 
 @app.route("/")
 def home():
     return render_template("home.html")
 
-<<<<<<< HEAD
-@app.route("/focus")
-def focus_room():
-    if "email" not in session:
-        return redirect(url_for("login"))
-    return render_template("focus.html")
-=======
 @app.route("/focus", methods=["GET", "POST"])
 def focus_room():
     if "email" not in session:
@@ -127,7 +110,6 @@ def focus_room():
     random_quote = random.choice(quotes)
 
     return render_template("focus.html", result=ai_output, quotes=random_quote)
->>>>>>> 4c10ac889f403158a6e0f18976ef007127a212d6
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -162,65 +144,7 @@ def login():
     return render_template("login.html")
 @app.route('/forgot')
 def forgot():
-<<<<<<< HEAD
-    if request.method == "POST":
-        email = request.form.get("email")
-        new_password = request.form.get("new_password")
-        confirm = request.form.get("confirm_password")
-        if not email or not new_password:
-            return render_template("forgot.html", error="Email and password required")
-        if new_password != confirm:
-            return render_template("forgot.html", error="Passwords do not match")
-        if db.reset_password(email, new_password):
-            return render_template("login.html", error="Password reset! Please login.")
-        else:
-            return render_template("forgot.html", error="Email not found")
-    return render_template("forgot.html")
-
-@app.route("/notes", methods=["GET", "POST"])
-def notes():
-    if "email" not in session:
-        return redirect(url_for("login"))
-    
-    ai_output = ""
-    if request.method == "POST":
-        user_text = request.form.get("content")
-        uploaded_file = request.files.get("pdf_file")
-        action = request.form.get("action")
-        
-        if uploaded_file and uploaded_file.filename != '':
-            file_ext = uploaded_file.filename.split('.')[-1].lower()
-            try:
-                if file_ext == 'pdf':
-                    reader = PyPDF2.PdfReader(uploaded_file)
-                    user_text = "".join([page.extract_text() for page in reader.pages])
-                elif file_ext == 'docx':
-                    doc = docx.Document(uploaded_file)
-                    user_text = "\n".join([para.text for para in doc.paragraphs])
-                else:
-                    return render_template("notes.html", error="Unsupported file type.")
-            except Exception as e:
-                return render_template("notes.html", error=f"Error reading file: {str(e)}")
-        
-        if not user_text:
-            return render_template("notes.html", error="Please paste notes or upload a file!")
-
-        if len(user_text) > 8000:
-            user_text = user_text[:8000]
-
-        if action == "summarize":
-            prompt = f"Summarize these notes into 3-5 bullet points:\n\n{user_text}"
-        elif action == "quiz":
-            prompt = f"Create 5 multiple choice questions based on these notes:\n\n{user_text}"
-        else:
-            prompt = f"Analyze these notes:\n\n{user_text}"
-        
-        ai_output = call_groq_ai(prompt)
-
-    return render_template("notes.html", result=ai_output)
-=======
     return render_template('forgot.html') 
->>>>>>> 4c10ac889f403158a6e0f18976ef007127a212d6
 
 @app.route("/tasks")
 def tasks():
@@ -230,9 +154,6 @@ def tasks():
     my_tasks, in_progress, completed = [], [], []
     for task in user_tasks:
         task_status = task.get("status", "my_task")
-<<<<<<< HEAD
-        task_data = [task.get("title", ""), task.get("priority", ""), task.get("deadline", ""), 0, task.get("id", 0), task.get("category", ""), task_status]
-=======
         deadline = task.get("deadline", "")
         days_left = calculate_days_remaining(deadline)
         
@@ -242,7 +163,6 @@ def tasks():
             task.get("category", ""), task_status
         ]
         
->>>>>>> 4c10ac889f403158a6e0f18976ef007127a212d6
         if task_status == "in_progress":
             in_progress.append(task_data)
         elif task_status == "completed":
@@ -292,9 +212,6 @@ def edit_task(task_id):
     user_tasks = db.get_tasks(session["email"])
     target = next((t for t in user_tasks if t["id"] == task_id), None)
     if not target: return "Task not found"
-<<<<<<< HEAD
-    task_list = [target.get('title', ''), target.get('priority', ''), target.get('deadline', ''), 0, target.get('id', 0), target.get('category', ''), target.get('status', 'my_task')]
-=======
     
     days_left = calculate_days_remaining(target.get('deadline', ''))
     task_list = [
@@ -302,7 +219,6 @@ def edit_task(task_id):
         target.get('deadline', ''), days_left, target.get('id', 0), 
         target.get('category', ''), target.get('status', 'my_task')
     ]
->>>>>>> 4c10ac889f403158a6e0f18976ef007127a212d6
     return render_template("edit.html", task=task_list, task_id=task_id)
 
 @app.route("/logout")
