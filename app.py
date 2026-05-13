@@ -10,7 +10,6 @@ app = Flask(__name__)
 app.secret_key = "abc123"
 db = Database()
 
-# Using your provided Groq API key
 GROQ_API_KEY = "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"  
 client = Groq(api_key=GROQ_API_KEY)
 
@@ -58,7 +57,6 @@ def focus_room():
         uploaded_file = request.files.get("pdf_file")
         action = request.form.get("action")
         
-        # Handle File Uploads
         if uploaded_file and uploaded_file.filename != '':
             file_ext = uploaded_file.filename.split('.')[-1].lower()
             try:
@@ -74,7 +72,6 @@ def focus_room():
         if not user_text:
             return render_template("focus.html", error="Please enter text or upload a file!")
 
-        # Process with AI
         if action == "summarize":
             prompt = f"Summarize this content into 3-5 key bullet points:\n\n{user_text}"
         elif action == "quiz":
