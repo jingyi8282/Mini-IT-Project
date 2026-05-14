@@ -5,33 +5,6 @@ body {
     color: #4A4A4A;
 }
 
-.navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 5%;
-    background-color: #fbe4d8;
-    border-bottom: 2px solid #854f6c; 
-}
-
-.nav-logo {
-    height: 40px;
-    margin-right: 20px;
-}
-
-.nav-left, .nav-right {
-    display: flex;
-    gap: 20px;
-    align-items: center;
-}
-
-.nav-link {
-    text-decoration: none;
-    color: #522b5b;
-    font-weight: 600;
-}
-
-
 .main-content {
     max-width: 1200px;
     margin: 0 auto;
