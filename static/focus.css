@@ -106,3 +106,19 @@ h2{
     padding: 5px;
     text-decoration: none;
 }
+
+.vid_column{
+    display: flex;
+    gap: 10px;
+    justify-content: space-between;
+}
+
+h3{
+    color: #2B124C;
+}
+
+.vid{
+    border: 2px solid #fbe4d8;
+    border-radius: 14px;
+    box-shadow: 0 4px 20px rgb(247, 106, 247);
+}
