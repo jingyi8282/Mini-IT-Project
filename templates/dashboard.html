@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
+
+
+    <main class="main-content">
+        <h1 class="dashboard-header">Welcome, {{ name }}!</h1>
+
+        <section class="dashboard-grid">
+            <!-- Large Task Card -->
+            <a href="{{ url_for('tasks') }}" class="dashboard-card">
+                <h2 class="card-title">My Tasks</h2>
+                <p class="card-subtitle">Manage your daily academic goals</p>
+            </a>
+
+            
+            <a href="{{ url_for('focus_room') }}" class="dashboard-card">
+                <h2 class="card-title">Focus Room</h2>
+                <p class="card-subtitle">Where your discipline and creativity all in one place</p>
+            </a>
+        </section>
+    </main>
+
+{% endblock %}

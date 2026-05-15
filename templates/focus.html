@@ -1,34 +1,54 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Focus Room</title>
+{% extends "base.html" %}
+{% block content %}
+
     <link rel="stylesheet" href="{{ url_for('static', filename='focus.css') }}">
-</head>
-<body>
     
 <header>Focus Room</header>
 <section class="focus_layout">
     <div class="focus_card">
         <h2>Deep Work Mode</h2>
-    </div>  
+        </div>  
     
     <div class="focus_card">
-        <h2>Quick Notes</h2>
+        <h2>Quick Notes & AI</h2>
+        <div class="notes-area">
+            {% if error %}<p style="color: red; font-size: 11px;">⚠️ {{ error }}</p>{% endif %}
+            
+            <form action="{{ url_for('focus_room') }}" method="POST" enctype="multipart/form-data">
+                <textarea name="content" placeholder="Paste notes here..."></textarea>
+                <input type="file" name="pdf_file" class="file-input" accept=".pdf, .docx">
+                
+                <div class="btn-row">
+                    <button type="submit" name="action" value="summarize">Summarize</button>
+                    <button type="submit" name="action" value="quiz">Quiz</button>
+                </div>
+            </form>
+
+            {% if result %}
+                <div class="ai-result">
+                    <strong>🤖 AI Result:</strong><br>
+                    {{ result | replace('\n', '<br>') | safe }}
+                </div>
+            {% endif %}
+        </div>
     </div>
 
     <div class="focus_card">
         <h2>Break Zone</h2>
-    </div>
+        </div>
 
     <div class="focus_card">
-        <h2>Quote Section</h2>
+        <h2>Daily Motivation</h2>
+        <div class="quote_section">
+            <blockquote>"{{ quotes.text }}"</blockquote>
+            <p>- {{ quotes.author }}</p>
+        </div>
+        <a href="{{url_for('focus_room')}}" class="new_quote">New Quote</a>
     </div>
 </section>
 
 
-
-
-</body>
-</html>
+<div style="text-align: center; margin-top: 20px;">
+    <a href="{{ url_for('dashboard') }}" style="color: white; text-decoration: none;">← Back to Dashboard</a>
+</div>
+{% endblock %}
