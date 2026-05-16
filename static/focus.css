@@ -112,7 +112,7 @@ h2{
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 10 px;
+    text-align: center;
 }
 
 h3{
@@ -125,12 +125,12 @@ h3{
     padding: 0%;
     margin: 0%;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
 }
 
 .vid_column li{
-    display: flex;
-    justify-content: center;
     padding: 0%;
     margin: 0%;
 }
@@ -140,6 +140,7 @@ h3{
     gap: 20px;
     justify-content: space-between;
     padding: 15px;
+    align-items: flex-start;
     
 }
 
