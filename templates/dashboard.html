@@ -3,22 +3,58 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
 
 
-    <main class="main-content">
-        <h1 class="dashboard-header">Welcome, {{ name }}!</h1>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-        <section class="dashboard-grid">
-            <!-- Large Task Card -->
-            <a href="{{ url_for('tasks') }}" class="dashboard-card">
-                <h2 class="card-title">My Tasks</h2>
-                <p class="card-subtitle">Manage your daily academic goals</p>
-            </a>
+<div class="dashboard-container">
+    
+    <div class="chart-card">
+        <h3>Task Completion Status</h3>
+        <div class="chart-wrapper">
+            <canvas id="taskDonutChart"></canvas>
+            <div class="chart-center-text">
+                <span class="total-number">{{ total }}</span>
+                <span class="total-label">total</span>
+            </div>
+        </div>
+    </div>
 
-            
-            <a href="{{ url_for('focus_room') }}" class="dashboard-card">
-                <h2 class="card-title">Focus Room</h2>
-                <p class="card-subtitle">Where your discipline and creativity all in one place</p>
-            </a>
-        </section>
-    </main>
+</div>
+
+<script>
+    // Grab the dynamic numbers injected by Flask Jinja templates
+    const completedTasks = {{ completed }};
+    const incompleteTasks = {{ incomplete }};
+
+    const ctx = document.getElementById('taskDonutChart').getContext('2d');
+    
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Complete', 'Incomplete'],
+            datasets: [{
+                data: [completedTasks, incompleteTasks],
+                // Deep purple/lavender tones matching your theme
+                backgroundColor: ['#8A4FFF', '#E2D6FF'], 
+                borderWidth: 0,
+                cutout: '75%' // Creates the hollow ring space for text
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        boxWidth: 12,
+                        padding: 15,
+                        font: { size: 12 }
+                    }
+                },
+                tooltip: { enabled: true }
+            }
+        }
+    });
+</script>
 
 {% endblock %}

@@ -150,7 +150,28 @@ def forgot():
 def dashboard():
     if "email" not in session:
         return redirect(url_for("login"))
-    return render_template("dashboard.html", name=session.get("name"))
+    
+    user_email = session.get("email")
+
+    all_user_tasks = db.get_tasks(user_email)
+
+    completed_count = sum( 
+        1 for task in all_user_tasks 
+        if str(task.get('status', '')).lower() in ['completed', 'complete'])
+    
+    incomplete_count = sum(
+        1 for task in all_user_tasks 
+        if str(task.get('status', '')).lower() in ['my_task', 'my tasks', 'in_progress', 'in progress'])
+
+    total_tasks = completed_count + incomplete_count
+
+    return render_template(
+        "dashboard.html", 
+        name=session.get("name"),
+        completed=completed_count,
+        incomplete=incomplete_count,
+        total=total_tasks
+        )
 
 @app.route("/tasks")
 def tasks():
