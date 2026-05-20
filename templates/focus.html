@@ -1,5 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
+{% if timer_running %}
+    <meta http-equiv="refresh" content="1">
+{% endif %}
 
     <link rel="stylesheet" href="{{ url_for('static', filename='focus.css') }}">
     
@@ -16,7 +19,19 @@
 
     <div class="focus_card">
         <h2>Deep Work Mode</h2>
-        </div>  
+        <div class="pomo_timer">
+           <h3> Timer : {{ timer_mode }} </h3>
+           <div class="timer_display"> {{ time_string }} </div>
+           <div class="timer_btn">
+                {% if not timer_running %}
+                    <a href="{{url_for('start_timer')}}"><button type="button" class="start_btn"> Start </button></a>
+                {% else %}
+                    <a href="{{url_for('pause_timer')}}"><button type="button" class="pause_btn"> Pause </button></a>
+                {% endif %}
+                <a href="{{url_for('reset_timer', mode=timer_mode)}}"><button type="button" class="reset_btn"> Reset </button></a>
+           </div>
+        </div>
+    </div>  
     
     <div class="focus_card">
         <h2>Quick Notes & AI</h2>
