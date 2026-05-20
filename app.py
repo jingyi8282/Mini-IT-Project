@@ -6,32 +6,30 @@ import PyPDF2
 import docx  
 import os
 import random
+from werkzeug.utils import secure_filename
+import glob
 
 app = Flask(__name__)
 app.secret_key = "abc123"
 db = Database()
 
-# Using your provided Groq API key
-GROQ_API_KEY = "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"  
+# ai notes feature
+GROQ_API_KEY = "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"
 client = Groq(api_key=GROQ_API_KEY)
 
-def call_groq_ai(prompt, max_tokens=1000):
+def call_groq_ai(prompt):
     try:
-        completion = client.chat.completions.create(
-            model="llama-3.3-70b-versatile", 
-            messages=[
-                {"role": "system", "content": "You are a helpful study assistant."},
-                {"role": "user", "content": prompt}
-            ],
+        response = client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
+            messages=[{"role": "user", "content": prompt}],
             temperature=0.3,
-            max_tokens=max_tokens
+            max_tokens=1000
         )
-        return completion.choices[0].message.content
+        return response.choices[0].message.content
     except Exception as e:
-        return f"AI Error: {str(e)}"
+        return f"AI Error: {str(e)}. Check your API key."
 
 def calculate_days_remaining(deadline_str):
-    """Fixes the '0 days' bug"""
     if not deadline_str:
         return 0
     try:
@@ -41,9 +39,8 @@ def calculate_days_remaining(deadline_str):
         return max(0, remaining)
     except ValueError:
         return 0
-
-# ============ ROUTES ============
-
+    
+# ROUTES 
 @app.route("/")
 def home():
     return render_template("home.html")
@@ -59,7 +56,6 @@ def focus_room():
         uploaded_file = request.files.get("pdf_file")
         action = request.form.get("action")
         
-        # Handle File Uploads
         if uploaded_file and uploaded_file.filename != '':
             file_ext = uploaded_file.filename.split('.')[-1].lower()
             try:
@@ -75,15 +71,15 @@ def focus_room():
         if not user_text:
             return render_template("focus.html", error="Please enter text or upload a file!")
 
-        # Process with AI
         if action == "summarize":
-            prompt = f"Summarize this content into 3-5 key bullet points:\n\n{user_text}"
+            prompt = f"Summarize this content into 5 key bullet points:\n\n{user_text}"
         elif action == "quiz":
-            prompt = f"Create 3 multiple choice questions based on this:\n\n{user_text}"
+            prompt = f"Create 5 multiple choice questions based on this:\n\n{user_text}"
         else:
             prompt = f"Analyze these notes:\n\n{user_text}"
         
         ai_output = call_groq_ai(prompt)
+
     quotes = [
         {
             "text" : "Success is no accident. It is hard work, perseverance, learning, studying, sacrifice and most of all, love of what you are doing or learning to do.",
@@ -108,7 +104,6 @@ def focus_room():
     ]
     
     random_quote = random.choice(quotes)
-
     return render_template("focus.html", result=ai_output, quotes=random_quote)
 
 @app.route("/register", methods=["GET", "POST"])
@@ -127,7 +122,6 @@ def register():
         else:
             return render_template("register.html", error="Email already exists")
     return render_template("register.html")
-    
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -138,13 +132,31 @@ def login():
         if user:
             session["email"] = user[0]
             session["name"] = user[1]
+            db.update_streak(email)
             return redirect(url_for("dashboard"))
         else:
             return render_template("login.html", error="Wrong email or password")
     return render_template("login.html")
-@app.route('/forgot')
+
+@app.route("/forgot", methods=["GET", "POST"])
 def forgot():
-    return render_template('forgot.html') 
+    if request.method == "POST":
+        email = request.form.get("email")
+        new_password = request.form.get("new_password")
+        confirm = request.form.get("confirm_password")
+
+        if not email or not new_password:
+            return render_template("forgot.html", error="Email and password required")
+        if new_password != confirm:
+            return render_template("forgot.html", error="Passwords do not match")
+        if len(new_password) < 6:
+            return render_template("forgot.html", error="Password too short (min 6 chars)")
+
+        if db.reset_password(email, new_password):
+            return render_template("login.html", error="Password reset! Please login.")
+        else:
+            return render_template("forgot.html", error="Email not found")
+    return render_template("forgot.html")
 
 @app.route("/dashboard")
 def dashboard():
@@ -201,6 +213,8 @@ def move_task(task_id):
     if "email" in session:
         new_status = request.form.get("status")
         db.update_task_status(session["email"], task_id, new_status)
+        if new_status == "completed":
+            db.add_points(session["email"], 10)
     return redirect(url_for("tasks"))
 
 @app.route("/edit/<int:task_id>", methods=["GET", "POST"])
@@ -226,6 +240,120 @@ def edit_task(task_id):
         target.get('category', ''), target.get('status', 'my_task')
     ]
     return render_template("edit.html", task=task_list, task_id=task_id)
+
+@app.route("/profile")
+def profile():
+    if "email" not in session:
+        return redirect(url_for("login"))
+    
+    user = db.users.get(session["email"], {})
+    tasks = db.get_tasks(session["email"])
+    
+    total_tasks = len(tasks)
+    completed_tasks = sum(1 for t in tasks if t.get("status") == "completed")
+    points = db.get_points(session["email"])
+    streak = db.get_streak(session["email"])
+    bio = db.get_bio(session["email"])
+    
+    return render_template("profile.html",
+                         name=session.get("name"),
+                         email=session["email"],
+                         joined_date=user.get("joined_date", "2025"),
+                         total_tasks=total_tasks,
+                         completed_tasks=completed_tasks,
+                         points=points,
+                         streak=streak,
+                         profile_pic=user.get("profile_pic"),
+                         bio=bio)
+
+@app.route("/upload_photo", methods=["POST"])
+def upload_photo():
+    if "email" not in session:
+        return redirect(url_for("login"))
+    
+    if "profile_photo" not in request.files:
+        return redirect(url_for("profile"))
+    
+    file = request.files["profile_photo"]
+    
+    if file and file.filename:
+        filename = secure_filename(f"{session['email']}_{file.filename}")
+        file.save(os.path.join("static/uploads", filename))
+        db.update_pic(session["email"], filename)
+        return render_template("profile.html", success="Profile picture updated!")
+    
+    return render_template("profile.html", error="Invalid file type. Use PNG, JPG, or GIF.")
+
+@app.route("/edit_profile", methods=["GET", "POST"])
+def edit_profile():
+    if "email" not in session:
+        return redirect(url_for("login"))
+    
+    if request.method == "POST":
+        new_name = request.form.get("name")
+        new_bio = request.form.get("bio")
+        
+        if new_name:
+            db.users[session["email"]]["name"] = new_name
+            session["name"] = new_name
+            db.save_users()
+        
+        if new_bio is not None:
+            db.update_bio(session["email"], new_bio)
+        
+        return redirect(url_for("profile"))
+    
+    user = db.users.get(session["email"], {})
+    return render_template("edit_profile.html", 
+                         name=session.get("name"),
+                         bio=user.get("bio", ""))
+
+@app.route("/change_password", methods=["GET", "POST"])
+def change_password():
+    if "email" not in session:
+        return redirect(url_for("login"))
+    
+    if request.method == "POST":
+        current_password = request.form.get("current_password")
+        new_password = request.form.get("new_password")
+        confirm_password = request.form.get("confirm_password")
+        
+        user = db.check_login(session["email"], current_password)
+        if not user:
+            return render_template("change_password.html", error="Current password is wrong!")
+        
+        if new_password != confirm_password:
+            return render_template("change_password.html", error="New passwords do not match!")
+        
+        if len(new_password) < 6:
+            return render_template("change_password.html", error="Password too short (min 6 chars)")
+        
+        db.reset_password(session["email"], new_password)
+        return render_template("change_password.html", success="Password changed successfully!")
+    
+    return render_template("change_password.html")
+
+@app.route("/delete_account", methods=["POST"])
+def delete_account():
+    if "email" not in session:
+        return redirect(url_for("login"))
+    
+    email = session["email"]
+    
+    if email in db.users:
+        del db.users[email]
+        db.save_users()
+    
+    if email in db.tasks:
+        del db.tasks[email]
+        db.save_tasks()
+    
+    pic_path = os.path.join("static/uploads", f"{email}_*")
+    for f in glob.glob(pic_path):
+        os.remove(f)
+    
+    session.clear()
+    return render_template("login.html", error="Account permanently deleted.")
 
 @app.route("/logout")
 def logout():
