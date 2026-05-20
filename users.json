@@ -18,7 +18,13 @@
   },
   "ratnajane0207@gmail.com": {
     "name": "Ratna Jane",
-    "password": "123456"
+    "password": "123456",
+    "joined": "2026-05-21",
+    "points": 0,
+    "streak": 1,
+    "last_login": "2026-05-21",
+    "pic": null,
+    "bio": null
   },
   "jingyi282828@gmail.com": {
     "name": "jingyi",
