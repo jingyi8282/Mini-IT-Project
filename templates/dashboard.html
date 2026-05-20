@@ -1,24 +1,69 @@
 {% extends "base.html" %}
 {% block content %}
     <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
-
-
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <div class="dashboard-container">
-    
-    <div class="chart-card">
-        <h3>Task Completion Status</h3>
-        <div class="chart-wrapper">
-            <canvas id="taskDonutChart"></canvas>
-            <div class="chart-center-text">
-                <span class="total-number">{{ total }}</span>
-                <span class="total-label">total</span>
-            </div>
-        </div>
+
+    <div class="dashboard-welcome">
+        <h1>Welcome {{ name if name else 'User' }},</h1>
+        <p>This is where you can track your progress.</p>
     </div>
 
-</div>
+    <div class="metrics-summary-row">
+        <div class="metric-box">
+            <span class="metric-number">{{ completed }}</span>
+            <span class="metric-title">Completed tasks</span>
+        </div>
+        <div class="metric-box-divider"></div>
+        
+        <div class="metric-box">
+            <span class="metric-number">{{ incomplete }}</span>
+            <span class="metric-title">Incomplete tasks</span>
+        </div>
+        <div class="metric-box-divider"></div>
+        
+        <div class="metric-box">
+            <span class="metric-number overdue-alert">{{ overdue }}</span>
+            <span class="metric-title">Overdue tasks</span>
+        </div>
+        <div class="metric-box-divider"></div>
+        
+        <div class="metric-box">
+            <span class="metric-number">{{ total }}</span>
+            <span class="metric-title">Total tasks</span>
+        </div>
+    </div>
+    
+    <div class="charts-row">
+
+        <div class="chart-card donut-card">
+            <h3>Task Completion Status</h3>
+            <div class="chart-wrapper">
+                <canvas id="taskDonutChart"></canvas>
+                <div class="chart-center-text">
+                    <span class="total-number">{{ total }}</span>
+                    <span class="total-label">total</span>
+                </div>
+            </div>
+        </div>
+   
+        <div class="chart-card bar-card">
+            <div class="chart-header-nav">
+                <span class="chart-title-main">Tasks by</span>
+                <div class="chart-tabs">
+                    <button class="tab-btn active" onclick="switchGraphFilter('category', this)">Category</button>
+                    <button class="tab-btn" onclick="switchGraphFilter('priority', this)">Priority</button>
+                    <button class="tab-btn" onclick="switchGraphFilter('weekly', this)">Weekly</button>
+                    <button class="tab-btn" onclick="switchGraphFilter('deadline', this)">Deadline</button>
+                </div>
+            </div>
+            <div class="chart-body" style="position: relative; height: 200px; width: 100%;">
+                <canvas id="tasksBarChart"></canvas>
+            </div>
+        </div> 
+
+    </div> </div>
 
 <script>
     // Grab the dynamic numbers injected by Flask Jinja templates
@@ -55,6 +100,70 @@
             }
         }
     });
+
+    let tasksBarChartInstance = null;
+
+async function switchGraphFilter(filterType, element) {
+    // 1. Manage active styling across tab buttons
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    if (element) {
+        element.classList.add('active');
+    }
+
+    try {
+        // 2. Fetch fresh live calculation aggregates from our dynamic flask api
+        const response = await fetch(`/api/graph-data/${filterType}`);
+        const data = await response.json();
+
+        const ctx = document.getElementById('tasksBarChart').getContext('2d');
+
+        // 3. Clear ancient drawing properties to prevent rendering overlap glitches
+        if (tasksBarChartInstance) {
+            tasksBarChartInstance.destroy();
+        }
+
+        // 4. Paint the custom stylized Bar Chart canvas instance
+        tasksBarChartInstance = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: data.labels,
+                datasets: [{
+                    label: 'Number of Tasks',
+                    data: data.values,
+                    backgroundColor: '#8A4FFF', // Matching your signature clean purple core accent
+                    borderRadius: 6,            // Rounded bar look from reference picture
+                    borderWidth: 0,
+                    barThickness: 25            // Controls the clean thickness profiles
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false } // Hides redundant top indicators
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { stepSize: 1, color: '#9CA3AF' },
+                        grid: { color: 'rgba(243, 244, 246, 0.6)' }
+                    },
+                    x: {
+                        ticks: { color: '#9CA3AF' },
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+    } catch (error) {
+        console.error("Error loading interactive bar data maps:", error);
+    }
+}
+
+// Automatically populate the default Category view whenever dashboard mounts initialized
+document.addEventListener("DOMContentLoaded", () => {
+    switchGraphFilter('category');
+});
 </script>
 
 {% endblock %}

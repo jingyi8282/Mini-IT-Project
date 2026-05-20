@@ -1,13 +1,37 @@
 {% extends "base.html" %}
 {% block content %}
+{% if timer_running %}
+    <meta http-equiv="refresh" content="1">
+{% endif %}
 
     <link rel="stylesheet" href="{{ url_for('static', filename='focus.css') }}">
     
 <header>Focus Room</header>
 <section class="focus_layout">
     <div class="focus_card">
+        <h2>Daily Motivation</h2>
+        <div class="quote_section">
+            <blockquote>"{{ quotes.text }}"</blockquote>
+            <p>- {{ quotes.author }}</p>
+        </div>
+        <a href="{{url_for('focus_room')}}" class="new_quote">New Quote</a>
+    </div>
+
+    <div class="focus_card">
         <h2>Deep Work Mode</h2>
-        </div>  
+        <div class="pomo_timer">
+           <h3> Timer : {{ timer_mode }} </h3>
+           <div class="timer_display"> {{ time_string }} </div>
+           <div class="timer_btn">
+                {% if not timer_running %}
+                    <a href="{{url_for('start_timer')}}"><button type="button" class="start_btn"> Start </button></a>
+                {% else %}
+                    <a href="{{url_for('pause_timer')}}"><button type="button" class="pause_btn"> Pause </button></a>
+                {% endif %}
+                <a href="{{url_for('reset_timer', mode=timer_mode)}}"><button type="button" class="reset_btn"> Reset </button></a>
+           </div>
+        </div>
+    </div>  
     
     <div class="focus_card">
         <h2>Quick Notes & AI</h2>
@@ -35,20 +59,31 @@
 
     <div class="focus_card">
         <h2>Break Zone</h2>
+        <div class="break_zone">
+            <div class="vid_column">
+                <h3>Lofi-Music</h3>
+                <ul>
+                    <li><iframe class="vid" width="300" height="150" src="https://www.youtube.com/embed/BCxTQq0UiFs?si=lG3h7BEwlG9Oypfn" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></li>
+                    <li><iframe class="vid" width="300" height="150" src="https://www.youtube.com/embed/VUQfT3gNT3g?si=3EcCEKpKX5q5_Hym" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></li>
+                </ul>
+            </div>
+            <div class="vid_column">
+                <h3>Nature Sounds</h3>
+                <ul>
+                    <li><iframe class="vid" width="300" height="150" src="https://www.youtube.com/embed/xAmop8CSZ2g?si=Wahl5PRl65DCH_HD" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></li>
+                    <li><iframe class="vid" width="300" height="150" src="https://www.youtube.com/embed/nta1YhicoGw?si=7S6DatfNIfl994e2" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></li>
+                </ul>
+            </div>
+            <div class="vid_column">
+                <h3>Motivational Videos</h3>
+                <ul>
+                    <li><iframe class="vid" width="300" height="150" src="https://www.youtube.com/embed/g6BtbIiJ_rc?si=dZv19IUkWgMeIfGG" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></li>
+                    <li><iframe class="vid" width="300" height="150" src="https://www.youtube.com/embed/CFiCdpnn-jo?si=mi82VftmBPl42GcG" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></li>
+                </ul>
+            </div>  
         </div>
-
-    <div class="focus_card">
-        <h2>Daily Motivation</h2>
-        <div class="quote_section">
-            <blockquote>"{{ quotes.text }}"</blockquote>
-            <p>- {{ quotes.author }}</p>
-        </div>
-        <a href="{{url_for('focus_room')}}" class="new_quote">New Quote</a>
     </div>
 </section>
 
 
-<div style="text-align: center; margin-top: 20px;">
-    <a href="{{ url_for('dashboard') }}" style="color: white; text-decoration: none;">← Back to Dashboard</a>
-</div>
 {% endblock %}
