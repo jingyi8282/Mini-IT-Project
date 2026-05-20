@@ -212,7 +212,7 @@ def delete_task(task_id):
 def move_task(task_id):
     if "email" in session:
         new_status = request.form.get("status")
-        db.update_task_status(session["email"], task_id, new_status)
+        db.update_status(session["email"], task_id, new_status)
         if new_status == "completed":
             db.add_points(session["email"], 10)
     return redirect(url_for("tasks"))
@@ -258,12 +258,12 @@ def profile():
     return render_template("profile.html",
                          name=session.get("name"),
                          email=session["email"],
-                         joined_date=user.get("joined_date", "2025"),
+                         joined_date=user.get("joined", "2025"),
                          total_tasks=total_tasks,
                          completed_tasks=completed_tasks,
                          points=points,
                          streak=streak,
-                         profile_pic=user.get("profile_pic"),
+                         profile_pic=user.get("pic"),
                          bio=bio)
 
 @app.route("/upload_photo", methods=["POST"])
