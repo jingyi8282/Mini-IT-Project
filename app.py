@@ -62,11 +62,12 @@ def focus_room():
             rem_seconds = 0
         else:
             session["timer_remaining"] = remaining
+            rem_seconds = remaining 
     else:   
         rem_seconds = session.get("time_remaining", 1500)
-        minutes = rem_seconds // 60
-        seconds = rem_seconds % 60
-        time_string = f"{minutes:02d}:{seconds:02d}"
+    minutes = rem_seconds // 60
+    seconds = rem_seconds % 60
+    time_string = f"{minutes:02d}:{seconds:02d}"
     
     ai_output = ""
     if request.method == "POST":
@@ -124,7 +125,7 @@ def focus_room():
     
     random_quote = random.choice(quotes)
 
-    return render_template("focus.html", result=ai_output, quotes=random_quote, time_string=time_string, timer_running=session.get("timer_running", False), timer_mode=session.get("timer_mode", 'work'))
+    return render_template("focus.html", result=ai_output, quotes=random_quote, time_string=time_string, timer_running=session.get("timer_running", False), timer_mode=session.get("timer_mode", "work"))
 
 @app.route("/focus/timer/start")
 def start_timer():
@@ -132,20 +133,24 @@ def start_timer():
         remaining = session.get("timer_remaining", 1500)
         session["timer_end"] = time.time() + remaining
         session["timer_running"] = True
-    return redirect(url_for('focus_room'))
+    return redirect(url_for("focus_room"))
 
 @app.route("/focus/timer/pause")
 def pause_timer():
     if session.get("timer_running", False):
-        session["timer_remaining"] = int(session["timer_end"] - time.time())
+        remaining = int(session.get("timer_end", time.time()) - time.time())
+        session["timer_remaining"] = max(0, remaining)
         session["timer_running"] = False
-    return redirect(url_for('focus_room'))
+    return redirect(url_for("focus_room"))
 
 @app.route("/focus/timer/reset/<mode>")
 def reset_timer(mode):
     session["timer_running"] = False
     session["timer_mode"] = mode
-    session["timer_remaining"] = 1500 if mode == 'work' else 300
+    if mode == "work":
+        session["timer_remaining"] = 1500
+    else:
+        session["timer_remaining"] = 300
     return redirect(url_for('focus_room'))
 
 @app.route("/register", methods=["GET", "POST"])
