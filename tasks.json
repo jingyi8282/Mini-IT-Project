@@ -6,7 +6,17 @@
       "priority": "High",
       "deadline": "2026-05-12",
       "category": "revision",
+      "status": "completed"
+
+    },
+    {
+      "id": 2,
+      "title": "maths",
+      "priority": "Medium",
+      "deadline": "2026-05-17",
+      "category": "revision",
       "status": "my_task"
+
     }
   ],
   "LALITHAMBIGAI.ANANDAN.RAJ@student.mmu.edu.my": [
@@ -35,5 +45,28 @@
       "status": "my_task"
     }
   ],
+<<<<<<< HEAD
   "ratnajane0207@gmail.com": []
+=======
+  "ratnajane0207@gmail.com": [],
+  "jingyi282828@gmail.com": [],
+  "jingyi2828@gmail.com": [
+    {
+      "id": 1,
+      "title": "math",
+      "priority": "Low",
+      "deadline": "2026-06-03",
+      "category": "revision",
+      "status": "my_task"
+    },
+    {
+      "id": 2,
+      "title": "digital system",
+      "priority": "Medium",
+      "deadline": "2026-05-20",
+      "category": "revision",
+      "status": "in_progress"
+    }
+  ]
+>>>>>>> main
 }

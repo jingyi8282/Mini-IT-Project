@@ -1,128 +1,158 @@
 import json
 import os
+from datetime import datetime, timedelta
 
 class Database:
     def __init__(self):
-        self.users_file = "users.json"
-        self.tasks_file = "tasks.json"
-        self.load_data()
+        self.user_file = "users.json"
+        self.task_file = "tasks.json"
+        self.load()
 
-    def load_data(self):
-        if os.path.exists(self.users_file):
-            with open(self.users_file, "r") as f:
-                self.users = json.load(f)
+    def load(self):
+        # load users
+        if os.path.exists(self.user_file):
+            f = open(self.user_file, "r")
+            self.users = json.load(f)
+            f.close()
         else:
             self.users = {}
 
-
-        if os.path.exists(self.tasks_file):
-            with open(self.tasks_file, "r") as f:
-                loaded_tasks = json.load(f)
-                if isinstance(loaded_tasks, list):
-                    self.tasks = {}
-                else:
-                    self.tasks = loaded_tasks
+        # load tasks
+        if os.path.exists(self.task_file):
+            f = open(self.task_file, "r")
+            data = json.load(f)
+            f.close()
+            self.tasks = {} if type(data) == list else data
         else:
             self.tasks = {}
 
     def save_users(self):
-        with open(self.users_file, "w") as f:
-            json.dump(self.users, f, indent=2)
+        f = open(self.user_file, "w")
+        json.dump(self.users, f, indent=2)
+        f.close()
 
     def save_tasks(self):
-        with open(self.tasks_file, "w") as f:
-            json.dump(self.tasks, f, indent=2)
+        f = open(self.task_file, "w")
+        json.dump(self.tasks, f, indent=2)
+        f.close()
 
-    # USER FUNCTIONS
-    def create_user(self, name, email, password):
+    # ============ USERS ============
+    
+    def create_user(self, name, email, pw):
         if email in self.users:
             return False
-        self.users[email] = {"name": name, "password": password}
+        self.users[email] = {
+            "name": name, "password": pw, "joined": str(datetime.now().date()),
+            "points": 0, "streak": 0, "last_login": None, "pic": None, "bio": ""
+        }
         self.tasks[email] = []
         self.save_users()
         self.save_tasks()
         return True
 
-    def check_login(self, email, password):
-        if email in self.users and self.users[email]["password"] == password:
-            return (email, self.users[email]["name"], email)
+    def check_login(self, email, pw):
+        user = self.users.get(email)
+        if user and user["password"] == pw:
+            # Fix old accounts
+            for field in ["joined", "points", "streak", "last_login", "pic", "bio"]:
+                if field not in user:
+                    user[field] = 0 if field in ["points", "streak"] else (str(datetime.now().date()) if field == "joined" else None)
+            self.save_users()
+            return (email, user["name"], email)
         return None
 
-    def reset_password(self, email, new_password):
+    def reset_password(self, email, new_pw):
         if email not in self.users:
             return False
-        self.users[email]["password"] = new_password
+        self.users[email]["password"] = new_pw
         self.save_users()
         return True
 
-    # TASK FUNCTIONS
-    def add_task(self, email, title, priority, deadline, category):
-        # Make sure the email exists in tasks
+    # ============ STREAK & POINTS ============
+    
+    def update_streak(self, email):
+        user = self.users.get(email)
+        if not user:
+            return
+        today = str(datetime.now().date())
+        last = user.get("last_login")
+        if last == today:
+            return
+        user["streak"] = 1 if not last or last != str(datetime.now().date() - timedelta(days=1)) else user.get("streak", 0) + 1
+        user["last_login"] = today
+        self.save_users()
+
+    def add_points(self, email, pts):
+        if email in self.users:
+            self.users[email]["points"] = self.users[email].get("points", 0) + pts
+            self.save_users()
+
+    def get_points(self, email):
+        return self.users.get(email, {}).get("points", 0)
+
+    def get_streak(self, email):
+        return self.users.get(email, {}).get("streak", 0)
+
+    def update_pic(self, email, filename):
+        if email in self.users:
+            self.users[email]["pic"] = filename
+            self.save_users()
+    
+    def update_bio(self, email, bio):
+        if email in self.users:
+            self.users[email]["bio"] = bio
+            self.save_users()
+            return True
+        return False
+    
+    def get_bio(self, email):
+        return self.users.get(email, {}).get("bio", "")
+
+    # ============ TASKS ============
+    
+    def add_task(self, email, title, priority, deadline, cat):
         if email not in self.tasks:
             self.tasks[email] = []
-        
-        tasks = self.tasks[email]
-        
-        # Get next task ID
-        task_id = 1
-        for task in tasks:
-            if task.get("id", 0) >= task_id:
-                task_id = task["id"] + 1
-        
-        new_task = {
-            "id": task_id,
-            "title": title,
-            "priority": priority,
-            "deadline": deadline,
-            "category": category,
-            "status": "my_task"
-        }
-        
-        self.tasks[email].append(new_task)
+        # Get next ID
+        biggest = 0
+        for t in self.tasks[email]:
+            if t["id"] > biggest:
+                biggest = t["id"]
+        new_id = biggest + 1
+        self.tasks[email].append({
+            "id": new_id, "title": title, "priority": priority,
+            "deadline": deadline, "category": cat, "status": "my_task"
+        })
         self.save_tasks()
-        return task_id
+        return new_id
 
     def get_tasks(self, email):
-        # Make sure tasks is a dictionary
-        if not isinstance(self.tasks, dict):
-            self.tasks = {}
-        
-        # Return empty list if email not found
-        if email not in self.tasks:
-            return []
-        
-        return self.tasks[email]
+        return self.tasks.get(email, [])
 
     def delete_task(self, email, task_id):
         if email in self.tasks:
-            new_list = []
-            for task in self.tasks[email]:
-                if task.get("id") != task_id:
-                    new_list.append(task)
-            self.tasks[email] = new_list
+            new = []
+            for t in self.tasks[email]:
+                if t["id"] != task_id:
+                    new.append(t)
+            self.tasks[email] = new
             self.save_tasks()
 
-    def update_task(self, email, task_id, title, priority, deadline, category):
-        if email in self.tasks:
-            for task in self.tasks[email]:
-                if task.get("id") == task_id:
-                    task["title"] = title
-                    task["priority"] = priority
-                    task["deadline"] = deadline
-                    task["category"] = category
-                    self.save_tasks()
-                    return True
+    def update_task(self, email, task_id, title, priority, deadline, cat):
+        for t in self.tasks.get(email, []):
+            if t["id"] == task_id:
+                t["title"] = title
+                t["priority"] = priority
+                t["deadline"] = deadline
+                t["category"] = cat
+                self.save_tasks()
+                return True
         return False
 
-    def update_task_status(self, email, task_id, status):
-        if email in self.tasks:
-            for task in self.tasks[email]:
-                if task.get("id") == task_id:
-                    task["status"] = status
-                    self.save_tasks()
-                    return True
+    def update_status(self, email, task_id, status):
+        for t in self.tasks.get(email, []):
+            if t["id"] == task_id:
+                t["status"] = status
+                self.save_tasks()
+                return True
         return False
-
-    def get_tasks_by_status(self, email, status):
-        tasks = self.get_tasks(email)
-        return [t for t in tasks if t.get("status") == status]
