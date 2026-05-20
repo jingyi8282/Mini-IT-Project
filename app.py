@@ -6,12 +6,9 @@ import PyPDF2
 import docx  
 import os
 import random
-<<<<<<< HEAD
 import time
-=======
 from werkzeug.utils import secure_filename
 import glob
->>>>>>> main
 
 app = Flask(__name__)
 app.secret_key = "abc123"
@@ -123,7 +120,7 @@ def focus_room():
     ]
     
     random_quote = random.choice(quotes)
-<<<<<<< HEAD
+
 
     return render_template("focus.html", result=ai_output, quotes=random_quote, time_string=time_string, timer_running=session.get("timer_running", False), timer_mode=session.get("timer_mode", "work"))
 
@@ -152,9 +149,7 @@ def reset_timer(mode):
     else:
         session["timer_remaining"] = 300
     return redirect(url_for('focus_room'))
-=======
-    return render_template("focus.html", result=ai_output, quotes=random_quote)
->>>>>>> main
+
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
