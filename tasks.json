@@ -45,11 +45,8 @@
       "status": "my_task"
     }
   ],
-<<<<<<< HEAD
-  "ratnajane0207@gmail.com": []
-=======
   "ratnajane0207@gmail.com": [],
-  "jingyi282828@gmail.com": [],
+  
   "jingyi2828@gmail.com": [
     {
       "id": 1,
@@ -68,5 +65,4 @@
       "status": "in_progress"
     }
   ]
->>>>>>> main
 }
