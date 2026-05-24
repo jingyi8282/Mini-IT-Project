@@ -1,0 +1,22 @@
+{% if results %}
+<div class="class_card">
+    <table>
+        <tr>
+            <th>Task Name</th>
+            <th>Priority</th>
+            <th>Category</th>
+            <th>Deadline</th>
+            <th>Task Status</th>
+        </tr>
+        {% for task in results %}
+        <tr>
+            <td>{{ task.title }}</td>
+            <td>{{ task.priority }}</td>
+            <td>{{ task.category }}</td>
+            <td>{{ task.deadline }}</td>
+            <td>{{ task.status }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endif %}
