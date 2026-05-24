@@ -371,6 +371,18 @@ def edit_task(task_id):
     ]
     return render_template("edit.html", task=task_list, task_id=task_id)
 
+@app.route("/search")
+def search():
+    search = request.args.get("search", "").lower()
+    user_email = session.get("email")
+    all_tasks = db.get_tasks(user_email)
+
+    if search:
+        results = [t for t in all_tasks if search in t['title'] .lower()]
+    else:
+        results = []
+    return render_template("task_cards.html", results=results)
+
 @app.route("/profile")
 def profile():
     if "email" not in session:
