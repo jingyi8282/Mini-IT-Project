@@ -56,7 +56,6 @@ class Database:
     def check_login(self, email, pw):
         user = self.users.get(email)
         if user and user["password"] == pw:
-            # Fix old accounts
             for field in ["joined", "points", "streak", "last_login", "pic", "bio"]:
                 if field not in user:
                     user[field] = 0 if field in ["points", "streak"] else (str(datetime.now().date()) if field == "joined" else None)

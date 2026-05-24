@@ -90,3 +90,22 @@ body {
     border-radius: 6px;
     font-size: 14px;
 }
+
+/* Admin login link on user login page */
+.admin-link {
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px solid #DFB6B2;
+    text-align: center;
+}
+
+.admin-link a {
+    color: #854F6C;
+    font-size: 14px;
+    text-decoration: none;
+}
+
+.admin-link a:hover {
+    color: #2B124C;
+    text-decoration: underline;
+}

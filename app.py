@@ -42,7 +42,34 @@ def calculate_days_remaining(deadline_str):
         return max(0, remaining)
     except ValueError:
         return 0
+
+# ============ ADMIN ROUTES ============
+
+@app.route("/admin/login", methods=["GET", "POST"])
+def admin_login():
+    if session.get("is_admin"):
+        return redirect(url_for("home"))
     
+    if request.method == "POST":
+        email = request.form.get("email")
+        password = request.form.get("password")
+        
+        if db.check_admin_login(email, password):
+            session["is_admin"] = True
+            session["admin_email"] = email
+            return redirect(url_for("home"))
+        else:
+            return render_template("admin_login.html", error="Invalid admin credentials")
+    
+    return render_template("admin_login.html")
+
+@app.route("/admin/logout")
+def admin_logout():
+    session.pop("is_admin", None)
+    session.pop("admin_email", None)
+    return redirect(url_for("admin_login"))
+
+
 # ROUTES 
 @app.route("/")
 def home():
@@ -123,7 +150,6 @@ def focus_room():
     
     random_quote = random.choice(quotes)
 
-
     return render_template("focus.html", result=ai_output, quotes=random_quote, time_string=time_string, timer_running=session.get("timer_running", False), timer_mode=session.get("timer_mode", "work"))
 
 @app.route("/focus/timer/start")
@@ -151,7 +177,6 @@ def reset_timer(mode):
     else:
         session["timer_remaining"] = 300
     return redirect(url_for('focus_room'))
-
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -257,36 +282,29 @@ def get_graph_data(filter_type):
     raw_data = []
     
     if filter_type == "category":
-        # Grouping by task['category']
         raw_data = [t.get("category", "Uncategorized").strip() or "Uncategorized" for t in all_tasks]
         
     elif filter_type == "priority":
-        # Grouping by task['priority'] (e.g., High, Medium, Low)
         raw_data = [t.get("priority", "Normal").strip() or "Normal" for t in all_tasks]
         
     elif filter_type == "deadline":
-        # Grouping tasks by their raw deadline string (YYYY-MM-DD)
         raw_data = [t.get("deadline", "No Deadline").strip() or "No Deadline" for t in all_tasks]
         
     elif filter_type == "weekly":
-        # Grouping tasks into days of the week based on their deadline calendar date
         for t in all_tasks:
             date_str = t.get("deadline")
             if date_str:
                 try:
                     task_date = datetime.strptime(date_str, "%Y-%m-%d")
-                    # Returns full day name (e.g., Monday, Tuesday)
                     raw_data.append(task_date.strftime("%A"))
                 except ValueError:
                     raw_data.append("No Deadline")
             else:
                 raw_data.append("No Deadline")
 
-    # If the user has no tasks yet, provide clean placeholder targets
     if not raw_data:
         return {"labels": ["No Data Available"], "values": [0]}
 
-    # Counter effortlessly tallies items: e.g., {"Assignment": 3, "Exam": 1}
     counts = Counter(raw_data)
     
     return {
