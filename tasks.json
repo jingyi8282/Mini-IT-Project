@@ -7,6 +7,14 @@
       "deadline": "2026-05-12",
       "category": "revision",
       "status": "completed"
+    },
+    {
+      "id": 2,
+      "title": "maths",
+      "priority": "Medium",
+      "deadline": "2026-05-17",
+      "category": "revision",
+      "status": "my_task"
     }
   ],
   "LALITHAMBIGAI.ANANDAN.RAJ@student.mmu.edu.my": [
@@ -14,13 +22,61 @@
       "id": 4,
       "title": "English ",
       "priority": "High",
-      "deadline": "2026-05-16",
+      "deadline": "2026-05-23",
+      "category": "assignments",
+      "status": "in_progress"
+    },
+    {
+      "id": 5,
+      "title": "assignment ",
+      "priority": "High",
+      "deadline": "2026-05-29",
+      "category": "personal",
+      "status": "my_task"
+    },
+    {
+      "id": 6,
+      "title": "English ",
+      "priority": "Medium",
+      "deadline": "2026-05-20",
       "category": "assignments",
       "status": "my_task"
     }
   ],
-  "ratnajane0207@gmail.com": [],
-  "jingyi282828@gmail.com": [],
+  "ratnajane0207@gmail.com": [
+    {
+      "id": 1,
+      "title": "english",
+      "priority": "Low",
+      "deadline": "2026-05-21",
+      "category": "assignments",
+      "status": "completed"
+    },
+    {
+      "id": 2,
+      "title": "Maths",
+      "priority": "Low",
+      "deadline": "2026-05-18",
+      "category": "assignments",
+      "status": "my_task"
+    },
+    {
+      "id": 3,
+      "title": "Digital Systems",
+      "priority": "Medium",
+      "deadline": "2026-05-22",
+      "category": "revision",
+      "status": "in_progress"
+    },
+    {
+      "id": 4,
+      "title": "Physics",
+      "priority": "High",
+      "deadline": "2026-05-22",
+      "category": "personal",
+      "status": "my_task"
+    }
+  ],
   "jingyi2828@gmail.com": [
     {
       "id": 1,

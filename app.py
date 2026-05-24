@@ -6,8 +6,11 @@ import PyPDF2
 import docx  
 import os
 import random
+import time
 from werkzeug.utils import secure_filename
 import glob
+from collections import Counter
+from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = "abc123"
@@ -49,6 +52,21 @@ def home():
 def focus_room():
     if "email" not in session:
         return redirect(url_for("login"))
+    
+    if "timer_end" in session and session.get("timer_running", False):
+        remaining = int(session["timer_end"] - time.time())
+        if remaining <= 0:
+            session["timer_running"] = False
+            session["timer_remaining"] = 0
+            rem_seconds = 0
+        else:
+            session["timer_remaining"] = remaining
+            rem_seconds = remaining 
+    else:   
+        rem_seconds = session.get("time_remaining", 1500)
+    minutes = rem_seconds // 60
+    seconds = rem_seconds % 60
+    time_string = f"{minutes:02d}:{seconds:02d}"
     
     ai_output = ""
     if request.method == "POST":
@@ -104,7 +122,36 @@ def focus_room():
     ]
     
     random_quote = random.choice(quotes)
-    return render_template("focus.html", result=ai_output, quotes=random_quote)
+
+
+    return render_template("focus.html", result=ai_output, quotes=random_quote, time_string=time_string, timer_running=session.get("timer_running", False), timer_mode=session.get("timer_mode", "work"))
+
+@app.route("/focus/timer/start")
+def start_timer():
+    if not session.get("timer_running", False):
+        remaining = session.get("timer_remaining", 1500)
+        session["timer_end"] = time.time() + remaining
+        session["timer_running"] = True
+    return redirect(url_for("focus_room"))
+
+@app.route("/focus/timer/pause")
+def pause_timer():
+    if session.get("timer_running", False):
+        remaining = int(session.get("timer_end", time.time()) - time.time())
+        session["timer_remaining"] = max(0, remaining)
+        session["timer_running"] = False
+    return redirect(url_for("focus_room"))
+
+@app.route("/focus/timer/reset/<mode>")
+def reset_timer(mode):
+    session["timer_running"] = False
+    session["timer_mode"] = mode
+    if mode == "work":
+        session["timer_remaining"] = 1500
+    else:
+        session["timer_remaining"] = 300
+    return redirect(url_for('focus_room'))
+
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -162,7 +209,90 @@ def forgot():
 def dashboard():
     if "email" not in session:
         return redirect(url_for("login"))
-    return render_template("dashboard.html", name=session.get("name"))
+    
+    user_email = session.get("email")
+
+    all_user_tasks = db.get_tasks(user_email)
+
+    completed_count = sum( 
+        1 for task in all_user_tasks 
+        if str(task.get('status', '')).lower() in ['completed', 'complete']
+    )
+    
+    incomplete_count = sum(
+        1 for task in all_user_tasks 
+        if str(task.get('status', '')).lower() in ['my_task', 'my tasks', 'in_progress', 'in progress']
+    )
+
+    total_tasks = completed_count + incomplete_count
+
+    today_str = datetime.today().strftime('%Y-%m-%d')
+    overdue_count = 0
+    
+    for task in all_user_tasks:
+        status_clean = str(task.get('status', '')).lower()
+        deadline = task.get('deadline') 
+       
+        if status_clean not in ['completed', 'complete'] and deadline:
+            if deadline < today_str:
+                overdue_count += 1
+
+    return render_template(
+        "dashboard.html", 
+        name=session.get("name"),
+        completed=completed_count,
+        incomplete=incomplete_count,
+        overdue=overdue_count,   
+        total=total_tasks
+    )
+
+@app.route("/api/graph-data/<filter_type>")
+def get_graph_data(filter_type):
+    if "email" not in session:
+        return {"labels": [], "values": []}, 401
+        
+    user_email = session.get("email")
+    all_tasks = db.get_tasks(user_email)
+    
+    raw_data = []
+    
+    if filter_type == "category":
+        # Grouping by task['category']
+        raw_data = [t.get("category", "Uncategorized").strip() or "Uncategorized" for t in all_tasks]
+        
+    elif filter_type == "priority":
+        # Grouping by task['priority'] (e.g., High, Medium, Low)
+        raw_data = [t.get("priority", "Normal").strip() or "Normal" for t in all_tasks]
+        
+    elif filter_type == "deadline":
+        # Grouping tasks by their raw deadline string (YYYY-MM-DD)
+        raw_data = [t.get("deadline", "No Deadline").strip() or "No Deadline" for t in all_tasks]
+        
+    elif filter_type == "weekly":
+        # Grouping tasks into days of the week based on their deadline calendar date
+        for t in all_tasks:
+            date_str = t.get("deadline")
+            if date_str:
+                try:
+                    task_date = datetime.strptime(date_str, "%Y-%m-%d")
+                    # Returns full day name (e.g., Monday, Tuesday)
+                    raw_data.append(task_date.strftime("%A"))
+                except ValueError:
+                    raw_data.append("No Deadline")
+            else:
+                raw_data.append("No Deadline")
+
+    # If the user has no tasks yet, provide clean placeholder targets
+    if not raw_data:
+        return {"labels": ["No Data Available"], "values": [0]}
+
+    # Counter effortlessly tallies items: e.g., {"Assignment": 3, "Exam": 1}
+    counts = Counter(raw_data)
+    
+    return {
+        "labels": list(counts.keys()),
+        "values": list(counts.values())
+    }
 
 @app.route("/tasks")
 def tasks():
@@ -212,7 +342,7 @@ def delete_task(task_id):
 def move_task(task_id):
     if "email" in session:
         new_status = request.form.get("status")
-        db.update_task_status(session["email"], task_id, new_status)
+        db.update_status(session["email"], task_id, new_status)
         if new_status == "completed":
             db.add_points(session["email"], 10)
     return redirect(url_for("tasks"))
@@ -258,12 +388,12 @@ def profile():
     return render_template("profile.html",
                          name=session.get("name"),
                          email=session["email"],
-                         joined_date=user.get("joined_date", "2025"),
+                         joined_date=user.get("joined", "2025"),
                          total_tasks=total_tasks,
                          completed_tasks=completed_tasks,
                          points=points,
                          streak=streak,
-                         profile_pic=user.get("profile_pic"),
+                         profile_pic=user.get("pic"),
                          bio=bio)
 
 @app.route("/upload_photo", methods=["POST"])

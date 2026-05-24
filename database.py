@@ -7,6 +7,9 @@ class Database:
         self.user_file = "users.json"
         self.task_file = "tasks.json"
         self.load()
+        
+        self.ADMIN_EMAIL = "admin@academicdiary.com"
+        self.ADMIN_PASSWORD = "admin123"
 
     def load(self):
         # load users
@@ -156,3 +159,15 @@ class Database:
                 self.save_tasks()
                 return True
         return False
+
+    # ============ ADMIN FUNCTIONS ============
+    
+    def check_admin_login(self, email, password):
+        """Check if entered credentials match hardcoded admin account"""
+        if email == self.ADMIN_EMAIL and password == self.ADMIN_PASSWORD:
+            return True
+        return False
+    
+    def get_admin_email(self):
+        """Return admin email (for display)"""
+        return self.ADMIN_EMAIL
