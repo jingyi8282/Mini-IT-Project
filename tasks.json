@@ -92,7 +92,7 @@
       "priority": "Low",
       "deadline": "2026-06-03",
       "category": "revision",
-      "status": "my_task"
+      "status": "in_progress"
     },
     {
       "id": 2,
@@ -100,7 +100,16 @@
       "priority": "Medium",
       "deadline": "2026-05-20",
       "category": "revision",
-      "status": "in_progress"
+      "status": "completed"
+    },
+    {
+      "id": 3,
+      "title": "coding",
+      "priority": "High",
+      "deadline": "2026-05-20",
+      "category": "assignments",
+      "status": "completed"
+
     }
   ]
 }

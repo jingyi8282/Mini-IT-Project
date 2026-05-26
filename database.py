@@ -7,6 +7,9 @@ class Database:
         self.user_file = "users.json"
         self.task_file = "tasks.json"
         self.load()
+        
+        self.admin_email = "admin@academicdiary.com"
+        self.admin_password = "admin123"
 
     def load(self):
         # load users
@@ -36,7 +39,7 @@ class Database:
         json.dump(self.tasks, f, indent=2)
         f.close()
 
-    # ============ USERS ============
+    #user func
     
     def create_user(self, name, email, pw):
         if email in self.users:
@@ -53,7 +56,6 @@ class Database:
     def check_login(self, email, pw):
         user = self.users.get(email)
         if user and user["password"] == pw:
-            # Fix old accounts
             for field in ["joined", "points", "streak", "last_login", "pic", "bio"]:
                 if field not in user:
                     user[field] = 0 if field in ["points", "streak"] else (str(datetime.now().date()) if field == "joined" else None)
@@ -68,7 +70,7 @@ class Database:
         self.save_users()
         return True
 
-    # ============ STREAK & POINTS ============
+    #points and streaks
     
     def update_streak(self, email):
         user = self.users.get(email)
@@ -108,12 +110,11 @@ class Database:
     def get_bio(self, email):
         return self.users.get(email, {}).get("bio", "")
 
-    # ============ TASKS ============
+    #tasks func
     
     def add_task(self, email, title, priority, deadline, cat):
         if email not in self.tasks:
             self.tasks[email] = []
-        # Get next ID
         biggest = 0
         for t in self.tasks[email]:
             if t["id"] > biggest:
@@ -156,3 +157,13 @@ class Database:
                 self.save_tasks()
                 return True
         return False
+
+    #admin func
+    
+    def check_admin_login(self, email, password):
+        if email == self.admin_email and password == self.admin_password:
+            return True
+        return False
+    
+    def get_admin_email(self):
+        return self.admin_email

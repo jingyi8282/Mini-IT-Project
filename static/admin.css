@@ -91,21 +91,24 @@ body {
     font-size: 14px;
 }
 
-/* Admin login link on user login page */
-.admin-link {
-    margin-top: 15px;
-    padding-top: 10px;
+/* Admin login specific styles */
+.admin-subtitle {
+    text-align: center;
+    font-size: 12px;
+    color: #854F6C;
+    margin-bottom: 20px;
+}
+
+.admin-note {
+    margin-top: 20px;
+    padding-top: 15px;
     border-top: 1px solid #DFB6B2;
     text-align: center;
+    font-size: 11px;
+    color: #999;
 }
 
-.admin-link a {
-    color: #854F6C;
-    font-size: 14px;
-    text-decoration: none;
-}
-
-.admin-link a:hover {
-    color: #2B124C;
-    text-decoration: underline;
+.admin-note span {
+    color: #e94560;
+    font-weight: bold;
 }

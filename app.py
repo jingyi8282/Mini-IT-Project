@@ -16,8 +16,8 @@ app = Flask(__name__)
 app.secret_key = "abc123"
 db = Database()
 
-# ai notes feature
-GROQ_API_KEY = "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"
+# our api key for notes feature
+GROQ_API_KEY = ""
 client = Groq(api_key=GROQ_API_KEY)
 
 def call_groq_ai(prompt):
@@ -42,8 +42,35 @@ def calculate_days_remaining(deadline_str):
         return max(0, remaining)
     except ValueError:
         return 0
+
+#admin routes
+
+@app.route("/admin/login", methods=["GET", "POST"])
+def admin_login():
+    if session.get("is_admin"):
+        return redirect(url_for("home"))
     
-# ROUTES 
+    if request.method == "POST":
+        email = request.form.get("email")
+        password = request.form.get("password")
+        
+        if db.check_admin_login(email, password):
+            session["is_admin"] = True
+            session["admin_email"] = email
+            return redirect(url_for("home"))
+        else:
+            return render_template("admin_login.html", error="Invalid admin credentials")
+    
+    return render_template("admin_login.html")
+
+@app.route("/admin/logout")
+def admin_logout():
+    session.pop("is_admin", None)
+    session.pop("admin_email", None)
+    return redirect(url_for("admin_login"))
+
+
+#normal route
 @app.route("/")
 def home():
     return render_template("home.html")
@@ -75,9 +102,36 @@ def focus_room():
             return render_template("focus.html", error="Please enter text or upload a file!")
 
         if action == "summarize":
-            prompt = f"Summarize this content into 5 key bullet points:\n\n{user_text}"
+            prompt = f"""
+You are a study assistant.
+
+Summarize the following notes into short and easy-to-understand bullet points.
+
+Rules:
+- Keep the explanation simple for students
+- Highlight important keywords
+- Use bullet points
+- Keep it concise but informative
+
+Notes:
+{user_text}
+"""
         elif action == "quiz":
-            prompt = f"Create 5 multiple choice questions based on this:\n\n{user_text}"
+            prompt = f"""
+You are a quiz generator for students.
+
+Create 5 multiple choice questions based on the notes below.
+
+Rules:
+- Each question must have 4 options
+- Show the correct answer
+- Questions should be simple and educational
+- Format clearly
+- Explain the correct answer
+
+Notes:
+{user_text}
+""" 
         else:
             prompt = f"Analyze these notes:\n\n{user_text}"
         
@@ -170,7 +224,6 @@ def reset_timer(mode):
     else:
         session["timer_remaining"] = 300
     return redirect(url_for('focus_room'))
-
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -276,36 +329,29 @@ def get_graph_data(filter_type):
     raw_data = []
     
     if filter_type == "category":
-        # Grouping by task['category']
         raw_data = [t.get("category", "Uncategorized").strip() or "Uncategorized" for t in all_tasks]
         
     elif filter_type == "priority":
-        # Grouping by task['priority'] (e.g., High, Medium, Low)
         raw_data = [t.get("priority", "Normal").strip() or "Normal" for t in all_tasks]
         
     elif filter_type == "deadline":
-        # Grouping tasks by their raw deadline string (YYYY-MM-DD)
         raw_data = [t.get("deadline", "No Deadline").strip() or "No Deadline" for t in all_tasks]
         
     elif filter_type == "weekly":
-        # Grouping tasks into days of the week based on their deadline calendar date
         for t in all_tasks:
             date_str = t.get("deadline")
             if date_str:
                 try:
                     task_date = datetime.strptime(date_str, "%Y-%m-%d")
-                    # Returns full day name (e.g., Monday, Tuesday)
                     raw_data.append(task_date.strftime("%A"))
                 except ValueError:
                     raw_data.append("No Deadline")
             else:
                 raw_data.append("No Deadline")
 
-    # If the user has no tasks yet, provide clean placeholder targets
     if not raw_data:
         return {"labels": ["No Data Available"], "values": [0]}
 
-    # Counter effortlessly tallies items: e.g., {"Assignment": 3, "Exam": 1}
     counts = Counter(raw_data)
     
     return {
