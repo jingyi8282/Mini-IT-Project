@@ -8,8 +8,8 @@ class Database:
         self.task_file = "tasks.json"
         self.load()
         
-        self.ADMIN_EMAIL = "admin@academicdiary.com"
-        self.ADMIN_PASSWORD = "admin123"
+        self.admin_email = "admin@academicdiary.com"
+        self.admin_password = "admin123"
 
     def load(self):
         # load users
@@ -39,7 +39,7 @@ class Database:
         json.dump(self.tasks, f, indent=2)
         f.close()
 
-    # ============ USERS ============
+    #user func
     
     def create_user(self, name, email, pw):
         if email in self.users:
@@ -70,7 +70,7 @@ class Database:
         self.save_users()
         return True
 
-    # ============ STREAK & POINTS ============
+    #points and streaks
     
     def update_streak(self, email):
         user = self.users.get(email)
@@ -110,12 +110,11 @@ class Database:
     def get_bio(self, email):
         return self.users.get(email, {}).get("bio", "")
 
-    # ============ TASKS ============
+    #tasks func
     
     def add_task(self, email, title, priority, deadline, cat):
         if email not in self.tasks:
             self.tasks[email] = []
-        # Get next ID
         biggest = 0
         for t in self.tasks[email]:
             if t["id"] > biggest:
@@ -159,14 +158,12 @@ class Database:
                 return True
         return False
 
-    # ============ ADMIN FUNCTIONS ============
+    #admin func
     
     def check_admin_login(self, email, password):
-        """Check if entered credentials match hardcoded admin account"""
         if email == self.ADMIN_EMAIL and password == self.ADMIN_PASSWORD:
             return True
         return False
     
     def get_admin_email(self):
-        """Return admin email (for display)"""
         return self.ADMIN_EMAIL

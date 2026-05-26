@@ -16,8 +16,8 @@ app = Flask(__name__)
 app.secret_key = "abc123"
 db = Database()
 
-# ai notes feature
-GROQ_API_KEY = "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"
+# our api key for notes feature
+GROQ_API_KEY = "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"
 client = Groq(api_key=GROQ_API_KEY)
 
 def call_groq_ai(prompt):
@@ -43,7 +43,7 @@ def calculate_days_remaining(deadline_str):
     except ValueError:
         return 0
 
-# ============ ADMIN ROUTES ============
+#admin routes
 
 @app.route("/admin/login", methods=["GET", "POST"])
 def admin_login():
@@ -70,7 +70,7 @@ def admin_logout():
     return redirect(url_for("admin_login"))
 
 
-# ROUTES 
+#normal route
 @app.route("/")
 def home():
     return render_template("home.html")
@@ -117,9 +117,36 @@ def focus_room():
             return render_template("focus.html", error="Please enter text or upload a file!")
 
         if action == "summarize":
-            prompt = f"Summarize this content into 5 key bullet points:\n\n{user_text}"
+            prompt = f"""
+You are a study assistant.
+
+Summarize the following notes into short and easy-to-understand bullet points.
+
+Rules:
+- Keep the explanation simple for students
+- Highlight important keywords
+- Use bullet points
+- Keep it concise but informative
+
+Notes:
+{user_text}
+"""
         elif action == "quiz":
-            prompt = f"Create 5 multiple choice questions based on this:\n\n{user_text}"
+            prompt = f"""
+You are a quiz generator for students.
+
+Create 5 multiple choice questions based on the notes below.
+
+Rules:
+- Each question must have 4 options
+- Show the correct answer
+- Questions should be simple and educational
+- Format clearly
+- Explain the correct answer
+
+Notes:
+{user_text}
+""" 
         else:
             prompt = f"Analyze these notes:\n\n{user_text}"
         
