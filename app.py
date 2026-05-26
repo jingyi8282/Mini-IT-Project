@@ -17,7 +17,7 @@ app.secret_key = "abc123"
 db = Database()
 
 # our api key for notes feature
-GROQ_API_KEY = "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"
+GROQ_API_KEY = ""
 client = Groq(api_key=GROQ_API_KEY)
 
 def call_groq_ai(prompt):
