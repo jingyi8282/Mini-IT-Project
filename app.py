@@ -52,22 +52,7 @@ def home():
 def focus_room():
     if "email" not in session:
         return redirect(url_for("login"))
-    
-    if "timer_end" in session and session.get("timer_running", False):
-        remaining = int(session["timer_end"] - time.time())
-        if remaining <= 0:
-            session["timer_running"] = False
-            session["timer_remaining"] = 0
-            rem_seconds = 0
-        else:
-            session["timer_remaining"] = remaining
-            rem_seconds = remaining 
-    else:   
-        rem_seconds = session.get("time_remaining", 1500)
-    minutes = rem_seconds // 60
-    seconds = rem_seconds % 60
-    time_string = f"{minutes:02d}:{seconds:02d}"
-    
+
     ai_output = ""
     if request.method == "POST":
         user_text = request.form.get("content")
@@ -98,6 +83,20 @@ def focus_room():
         
         ai_output = call_groq_ai(prompt)
 
+    if session.get("timer_running") and "timer_end" in session:
+        remaining = max(0, int(float(session.get("timer_end", 0)) - time.time()))
+        if remaining == 0:
+            session["timer_running"] = False
+            session["timer_remaining"] = 0
+        else:
+            session["timer_remaining"] = remaining
+    else:
+        remaining = session.get("timer_remaining", 1500)
+
+    minutes = remaining // 60
+    seconds = remaining % 60
+    time_string = f"{minutes:02d}:{seconds:02d}"
+
     quotes = [
         {
             "text" : "Success is no accident. It is hard work, perseverance, learning, studying, sacrifice and most of all, love of what you are doing or learning to do.",
@@ -124,20 +123,39 @@ def focus_room():
     random_quote = random.choice(quotes)
 
 
-    return render_template("focus.html", result=ai_output, quotes=random_quote, time_string=time_string, timer_running=session.get("timer_running", False), timer_mode=session.get("timer_mode", "work"))
+    return render_template("focus.html", result=ai_output, quotes=random_quote, timer_running=session.get("timer_running", False))
+
+@app.route('/focus/timer/update')
+def timer_update():
+    if "timer_end" in session and session.get("timer_running"):
+        end_time = float(session.get("timer_end", 0))
+        remaining = int(end_time - time.time())
+        if remaining <= 0:
+            session["timer_running"] = False
+            session["timer_remaining"] = 0
+            remaining = 0
+        else:
+            session["timer_remaining"] = remaining
+    else:   
+        remaining = session.get("timer_remaining", 1500)
+    minutes = remaining // 60
+    seconds = remaining % 60
+    session.modified = True
+    return f"{minutes:02d}:{seconds:02d}"
 
 @app.route("/focus/timer/start")
 def start_timer():
     if not session.get("timer_running", False):
         remaining = session.get("timer_remaining", 1500)
-        session["timer_end"] = time.time() + remaining
+        session["timer_end"] = time.time() + float(remaining)
         session["timer_running"] = True
+        session.modified = True
     return redirect(url_for("focus_room"))
 
 @app.route("/focus/timer/pause")
 def pause_timer():
-    if session.get("timer_running", False):
-        remaining = int(session.get("timer_end", time.time()) - time.time())
+    if session.get("timer_running", False) and "timer_end" in session:
+        remaining = int(float(session.get("timer_end", 0)) - time.time())
         session["timer_remaining"] = max(0, remaining)
         session["timer_running"] = False
     return redirect(url_for("focus_room"))
@@ -145,6 +163,7 @@ def pause_timer():
 @app.route("/focus/timer/reset/<mode>")
 def reset_timer(mode):
     session["timer_running"] = False
+    session.pop("timer_end", None)
     session["timer_mode"] = mode
     if mode == "work":
         session["timer_remaining"] = 1500
