@@ -84,7 +84,7 @@
       "priority": "Low",
       "deadline": "2026-06-03",
       "category": "revision",
-      "status": "my_task"
+      "status": "in_progress"
     },
     {
       "id": 2,
@@ -101,6 +101,7 @@
       "deadline": "2026-05-20",
       "category": "assignments",
       "status": "completed"
+
     }
   ]
 }
