@@ -3,7 +3,7 @@ from flask import Flask, render_template, request, redirect, url_for, session
 from database import Database
 from datetime import datetime
 import PyPDF2  
-import docx  
+import docx  # Added for Word document support
 import os
 import random
 import time
@@ -11,6 +11,7 @@ from werkzeug.utils import secure_filename
 import glob
 from collections import Counter
 from datetime import datetime
+import plotly.graph_objects as go
 
 app = Flask(__name__)
 app.secret_key = "abc123"
@@ -42,6 +43,7 @@ def calculate_days_remaining(deadline_str):
         return max(0, remaining)
     except ValueError:
         return 0
+
 
 #admin routes
 
@@ -289,13 +291,81 @@ def dashboard():
             if deadline < today_str:
                 overdue_count += 1
 
+    # ==========================================
+    # 2. GENERATE PLOTLY DOUGHNUT CHART
+    # ==========================================
+    donut_fig = go.Figure(data=[go.Pie(
+        labels=['Complete', 'Incomplete'],
+        values=[completed_count, incomplete_count],
+        hole=0.75,
+        marker=dict(colors=['#8A4FFF', '#E2D6FF']),
+        textinfo='none',  # Hides text on slices to keep it clean
+        hoverinfo='label+value'
+    )])
+    
+    # Add central total text and style layout
+    donut_fig.update_layout(
+        showlegend=True,
+        legend=dict(orientation="h", yanchor="bottom", y=-0.2, xanchor="center", x=0.5),
+        margin=dict(t=10, b=10, l=10, r=10),
+        height=220,
+        paper_bgcolor='rgba(0,0,0,0)',  # Transparent background
+        plot_bgcolor='rgba(0,0,0,0)',
+        annotations=[dict(text=f'<b>{total_tasks}</b><br>total', x=0.5, y=0.5, font_size=14, showarrow=False, font_color='#1F2937')]
+    )
+    
+    # Convert configuration to pure embedded HTML component block
+    donut_html = donut_fig.to_html(full_html=False, include_plotlyjs='cdn', config={'displayModeBar': False})
+
+    # ==========================================
+    # 3. GENERATE PLOTLY BAR CHART (Category)
+    # ==========================================
+    categories = {}
+    for task in all_user_tasks:
+        cat = task.get('category') or 'Uncategorized'
+        categories[cat] = categories.get(cat, 0) + 1
+        
+    if not categories:
+        categories = {'No Tasks': 0}
+
+    bar_fig = go.Figure(data=[go.Bar(
+        x=list(categories.keys()),
+        y=list(categories.values()),
+        marker_color='#8A4FFF',
+        marker_line_width=0,
+        width=0.3  # Keeps bars sleek and thin matching your image layout
+    )])
+    
+    bar_fig.update_layout(
+        margin=dict(t=20, b=20, l=40, r=20),
+        height=200,
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
+        yaxis=dict(
+            tickmode='linear',
+            tick0=0,
+            dtick=1,
+            gridcolor='rgba(243, 244, 246, 0.6)',
+            tickfont=dict(color='#9CA3AF')
+        ),
+        xaxis=dict(
+            showgrid=False,
+            tickfont=dict(color='#9CA3AF')
+        )
+    )
+    
+    bar_html = bar_fig.to_html(full_html=False, include_plotlyjs=False, config={'displayModeBar': False})
+
+    # Pass the raw chart HTML segments into your rendering structure context
     return render_template(
         "dashboard.html", 
         name=session.get("name"),
         completed=completed_count,
         incomplete=incomplete_count,
         overdue=overdue_count,   
-        total=total_tasks
+        total=total_tasks,
+        donut_chart=donut_html,
+        bar_chart=bar_html
     )
 
 @app.route("/api/graph-data/<filter_type>")
