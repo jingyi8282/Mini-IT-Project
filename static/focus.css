@@ -196,6 +196,19 @@ h3{
     cursor: pointer;  
 }
 
+.resume_btn{
+    border-radius: 14px;
+    background-color: #fbe4d8;  
+    color: #522b5b;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 5px;
+    margin-inline: 5px;
+    margin-bottom: 5px;
+    margin-top: 5px;
+    cursor: pointer;  
+}
+
 .reset_btn{
     border-radius: 14px;
     background-color: #fbe4d8;  
