@@ -161,9 +161,9 @@ class Database:
     #admin func
     
     def check_admin_login(self, email, password):
-        if email == self.ADMIN_EMAIL and password == self.ADMIN_PASSWORD:
+        if email == self.admin_email and password == self.admin_password:
             return True
         return False
     
     def get_admin_email(self):
-        return self.ADMIN_EMAIL
+        return self.admin_email
