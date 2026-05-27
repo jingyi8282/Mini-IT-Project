@@ -75,6 +75,14 @@
       "deadline": "2026-05-22",
       "category": "personal",
       "status": "my_task"
+    },
+    {
+      "id": 5,
+      "title": "Critical Thinking",
+      "priority": "Low",
+      "deadline": "2026-06-01",
+      "category": "revision",
+      "status": "my_task"
     }
   ],
   "jingyi2828@gmail.com": [
@@ -101,7 +109,6 @@
       "deadline": "2026-05-20",
       "category": "assignments",
       "status": "completed"
-
     }
   ]
 }

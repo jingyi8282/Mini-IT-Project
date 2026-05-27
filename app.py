@@ -3,7 +3,7 @@ from flask import Flask, render_template, request, redirect, url_for, session
 from database import Database
 from datetime import datetime
 import PyPDF2  
-import docx  
+import docx  # Added for Word document support
 import os
 import random
 import time
@@ -11,6 +11,7 @@ from werkzeug.utils import secure_filename
 import glob
 from collections import Counter
 from datetime import datetime
+import plotly.graph_objects as go
 
 app = Flask(__name__)
 app.secret_key = "abc123"
@@ -43,21 +44,35 @@ def calculate_days_remaining(deadline_str):
     except ValueError:
         return 0
 
+
 #admin routes
 
 @app.route("/admin/login", methods=["GET", "POST"])
 def admin_login():
+    # Force clear old user states ONLY when navigating to the page cleanly (GET request)
+    # This ensures it won't auto-login or save conflicting student dashboards
+    if request.method == "GET":
+        session.clear()
+
+    # If already verified explicitly as an admin, let them through
     if session.get("is_admin"):
-        return redirect(url_for("home"))
+        return redirect(url_for("admin_dashboard"))
     
     if request.method == "POST":
         email = request.form.get("email")
         password = request.form.get("password")
         
+        # Authenticate with your database.py admin check helper
         if db.check_admin_login(email, password):
+            session.clear() # Clear any remaining user remnants
+            
+            # Set explicit admin session details
             session["is_admin"] = True
             session["admin_email"] = email
-            return redirect(url_for("home"))
+            session["name"] = "Admin"
+            
+            # 🟢 Send straight to your administrative panel template!
+            return redirect(url_for("admin_dashboard"))
         else:
             return render_template("admin_login.html", error="Invalid admin credentials")
     
@@ -65,10 +80,38 @@ def admin_login():
 
 @app.route("/admin/logout")
 def admin_logout():
+    session.clear()
+    return redirect(url_for("admin_login"))
     session.pop("is_admin", None)
     session.pop("admin_email", None)
     return redirect(url_for("admin_login"))
 
+@app.route("/admin/dashboard")
+def admin_dashboard():
+    # 🔐 Security Guard Block: If they aren't verified as an admin, kick them out
+    if not session.get("is_admin"):
+        return redirect(url_for("admin_login"))
+        
+    # Read systemic variables out from your database.py file dictionaries
+    all_users = getattr(db, "users", {})
+    all_tasks = getattr(db, "tasks", {})
+    
+    total_users = len(all_users)
+    total_tasks = sum(len(tasks_list) for tasks_list in all_tasks.values())
+    
+    # Calculate completions globally across all registered academic diaries
+    global_completed = 0
+    for user_tasks in all_tasks.values():
+        global_completed += sum(1 for t in user_tasks if str(t.get('status', '')).lower() in ['completed', 'complete'])
+        
+    return render_template(
+        "admin_dashboard.html",
+        total_users=total_users,
+        total_tasks=total_tasks,
+        total_overdue=1, # Hardcoded fallback value matching your UI preview placeholder layout
+        global_completed=global_completed,
+        users_list=all_users
+    )
 
 #normal route
 @app.route("/")
@@ -266,6 +309,8 @@ def dashboard():
 
     all_user_tasks = db.get_tasks(user_email)
 
+    current_filter = request.args.get('filter', 'category').lower().strip()
+
     completed_count = sum( 
         1 for task in all_user_tasks 
         if str(task.get('status', '')).lower() in ['completed', 'complete']
@@ -289,14 +334,88 @@ def dashboard():
             if deadline < today_str:
                 overdue_count += 1
 
+    
+    donut_fig = go.Figure(data=[go.Pie(
+        labels=['Incomplete', 'Complete'], # Swapped order to match image layout color positioning
+        values=[incomplete_count, completed_count],
+        hole=0.75,
+        marker=dict(colors=['#E2D6FF', '#8A4FFF']),
+        textinfo='none',
+        hoverinfo='label+value',
+        sort=False
+    )])
+    
+    # Add central total text and style layout
+    donut_fig.update_layout(
+        showlegend=True,
+        legend=dict(orientation="h", yanchor="bottom", y=-0.2, xanchor="center", x=0.5),
+        margin=dict(t=10, b=10, l=10, r=10),
+        height=220,
+        paper_bgcolor='rgba(0,0,0,0)',  # Transparent background
+        plot_bgcolor='rgba(0,0,0,0)',
+        annotations=[dict(text=f'<b>{total_tasks}</b><br>total', x=0.5, y=0.5, font_size=14, showarrow=False, font_color='#1F2937')]
+    )
+    
+    # Convert configuration to pure embedded HTML component block
+    donut_html = donut_fig.to_html(full_html=False, include_plotlyjs='cdn', config={'displayModeBar': False})
+
+    active_filter = request.args.get('filter', 'category')
+    
+    raw_data = []
+    
+    # 2. Process tasks based on whichever button was clicked
+    if active_filter == "category":
+        raw_data = [t.get("category", "Uncategorized").strip() or "Uncategorized" for t in all_user_tasks]
+    elif active_filter == "priority":
+        raw_data = [t.get("priority", "Normal").strip() or "Normal" for t in all_user_tasks]
+    elif active_filter == "deadline":
+        raw_data = [t.get("deadline", "No Deadline").strip() or "No Deadline" for t in all_user_tasks]
+    elif active_filter == "weekly":
+        for t in all_user_tasks:
+            date_str = t.get("deadline")
+            if date_str:
+                try:
+                    task_date = datetime.strptime(date_str, "%Y-%m-%d")
+                    raw_data.append(task_date.strftime("%A"))
+                except ValueError:
+                    raw_data.append("No Deadline")
+            else:
+                raw_data.append("No Deadline")
+
+    if not raw_data:
+        counts = {'No Data': 0}
+    else:
+        counts = Counter(raw_data)
+
+    # 3. Build the chart using the filtered variables
+    bar_fig = go.Figure(data=[go.Bar(
+        x=list(counts.keys()),
+        y=list(counts.values()),
+        marker_color='#8A4FFF',
+        width=0.3
+    )])
+    
+    bar_fig.update_layout(
+        margin=dict(t=20, b=20, l=40, r=20),
+        height=200,
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
+        yaxis=dict(tickmode='linear', tick0=0, dtick=1, gridcolor='rgba(243, 244, 246, 0.6)', tickfont=dict(color='#9CA3AF')),
+        xaxis=dict(showgrid=False, tickfont=dict(color='#9CA3AF'))
+    )
+    
+    bar_html = bar_fig.to_html(full_html=False, include_plotlyjs=False, config={'displayModeBar': False})
+
     return render_template(
         "dashboard.html", 
         name=session.get("name"),
         completed=completed_count,
         incomplete=incomplete_count,
         overdue=overdue_count,   
-        total=total_tasks
-    )
+        total=total_tasks,
+        donut_chart=donut_html,
+        bar_chart=bar_html,
+        active_filter=active_filter)
 
 @app.route("/api/graph-data/<filter_type>")
 def get_graph_data(filter_type):
