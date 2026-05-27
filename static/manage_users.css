@@ -20,14 +20,18 @@ table{
     border: 2px solid #2B124C;
     border-radius: 14px;
     background-color: #dfb6b2;
+    font-size: 18px;
+    box-shadow: 0 4px 20px rgb(141, 115, 141)
 }
 
 table th{
+    padding: 10px;
     background-color: #ce918c;
     border-radius: 14px;
+    color: #2B124C;
 }
 
 table td{
-    padding: 2px;
-    text-align: center;
+    padding: 10px;
+    color: #522b5b;
 }
