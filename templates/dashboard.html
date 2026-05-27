@@ -45,14 +45,28 @@
         </div>
    
         <div class="chart-card bar-card">
-            <div class="chart-header-nav">
-                <span class="chart-title-main">Tasks by</span>
-                <div class="chart-tabs">
-                    <button class="tab-btn active">Category</button>
-                    <button class="tab-btn" style="opacity: 0.6; cursor: not-allowed;">Priority</button>
-                    <button class="tab-btn" style="opacity: 0.6; cursor: not-allowed;">Weekly</button>
-                    <button class="tab-btn" style="opacity: 0.6; cursor: not-allowed;">Deadline</button>
-                </div>
+            <div class="chart-header-container">
+                <h3 class="chart-title">Tasks by</h3>
+                 
+                <div class="chart-filter-nav">
+    
+                    <a href="{{ url_for('dashboard', filter='category') }}" class="chart-filter-link {% if active_filter == 'category' or not active_filter %}active-filter-tab{% endif %}">
+                        Category
+                    </a>
+                    
+                    <a href="{{ url_for('dashboard', filter='priority') }}"  class="chart-filter-link {% if active_filter == 'priority' %}active-filter-tab{% endif %}">
+                        Priority
+                     </a>
+                     
+                     <a href="{{ url_for('dashboard', filter='weekly') }}" class="chart-filter-link {% if active_filter == 'weekly' %}active-filter-tab{% endif %}">
+                        Weekly
+                     </a>
+                     
+                     <a href="{{ url_for('dashboard', filter='deadline') }}" class="chart-filter-link {% if active_filter == 'deadline' %}active-filter-tab{% endif %}">
+                         Deadline
+                        </a>
+                    
+                    </div>
             </div>
             <div class="chart-body" style="height: auto; width: 100%;">
                 {{ bar_chart | safe }}

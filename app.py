@@ -268,6 +268,8 @@ def dashboard():
 
     all_user_tasks = db.get_tasks(user_email)
 
+    current_filter = request.args.get('filter', 'category').lower().strip()
+
     completed_count = sum( 
         1 for task in all_user_tasks 
         if str(task.get('status', '')).lower() in ['completed', 'complete']
@@ -292,15 +294,16 @@ def dashboard():
                 overdue_count += 1
 
     # ==========================================
-    # 2. GENERATE PLOTLY DOUGHNUT CHART
+    # 2. PLOTLY DOUGHNUT CHART
     # ==========================================
     donut_fig = go.Figure(data=[go.Pie(
-        labels=['Complete', 'Incomplete'],
-        values=[completed_count, incomplete_count],
+        labels=['Incomplete', 'Complete'], # Swapped order to match image layout color positioning
+        values=[incomplete_count, completed_count],
         hole=0.75,
-        marker=dict(colors=['#8A4FFF', '#E2D6FF']),
-        textinfo='none',  # Hides text on slices to keep it clean
-        hoverinfo='label+value'
+        marker=dict(colors=['#E2D6FF', '#8A4FFF']),
+        textinfo='none',
+        hoverinfo='label+value',
+        sort=False
     )])
     
     # Add central total text and style layout
@@ -318,22 +321,42 @@ def dashboard():
     donut_html = donut_fig.to_html(full_html=False, include_plotlyjs='cdn', config={'displayModeBar': False})
 
     # ==========================================
-    # 3. GENERATE PLOTLY BAR CHART (Category)
+    # 3. PLOTLY BAR CHART (Category)
     # ==========================================
-    categories = {}
-    for task in all_user_tasks:
-        cat = task.get('category') or 'Uncategorized'
-        categories[cat] = categories.get(cat, 0) + 1
-        
-    if not categories:
-        categories = {'No Tasks': 0}
+    active_filter = request.args.get('filter', 'category')
+    
+    raw_data = []
+    
+    # 2. Process tasks based on whichever button was clicked
+    if active_filter == "category":
+        raw_data = [t.get("category", "Uncategorized").strip() or "Uncategorized" for t in all_user_tasks]
+    elif active_filter == "priority":
+        raw_data = [t.get("priority", "Normal").strip() or "Normal" for t in all_user_tasks]
+    elif active_filter == "deadline":
+        raw_data = [t.get("deadline", "No Deadline").strip() or "No Deadline" for t in all_user_tasks]
+    elif active_filter == "weekly":
+        for t in all_user_tasks:
+            date_str = t.get("deadline")
+            if date_str:
+                try:
+                    task_date = datetime.strptime(date_str, "%Y-%m-%d")
+                    raw_data.append(task_date.strftime("%A"))
+                except ValueError:
+                    raw_data.append("No Deadline")
+            else:
+                raw_data.append("No Deadline")
 
+    if not raw_data:
+        counts = {'No Data': 0}
+    else:
+        counts = Counter(raw_data)
+
+    # 3. Build the chart using the filtered variables
     bar_fig = go.Figure(data=[go.Bar(
-        x=list(categories.keys()),
-        y=list(categories.values()),
+        x=list(counts.keys()),
+        y=list(counts.values()),
         marker_color='#8A4FFF',
-        marker_line_width=0,
-        width=0.3  # Keeps bars sleek and thin matching your image layout
+        width=0.3
     )])
     
     bar_fig.update_layout(
@@ -341,22 +364,12 @@ def dashboard():
         height=200,
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)',
-        yaxis=dict(
-            tickmode='linear',
-            tick0=0,
-            dtick=1,
-            gridcolor='rgba(243, 244, 246, 0.6)',
-            tickfont=dict(color='#9CA3AF')
-        ),
-        xaxis=dict(
-            showgrid=False,
-            tickfont=dict(color='#9CA3AF')
-        )
+        yaxis=dict(tickmode='linear', tick0=0, dtick=1, gridcolor='rgba(243, 244, 246, 0.6)', tickfont=dict(color='#9CA3AF')),
+        xaxis=dict(showgrid=False, tickfont=dict(color='#9CA3AF'))
     )
     
     bar_html = bar_fig.to_html(full_html=False, include_plotlyjs=False, config={'displayModeBar': False})
 
-    # Pass the raw chart HTML segments into your rendering structure context
     return render_template(
         "dashboard.html", 
         name=session.get("name"),
@@ -365,8 +378,8 @@ def dashboard():
         overdue=overdue_count,   
         total=total_tasks,
         donut_chart=donut_html,
-        bar_chart=bar_html
-    )
+        bar_chart=bar_html,
+        active_filter=active_filter)
 
 @app.route("/api/graph-data/<filter_type>")
 def get_graph_data(filter_type):
