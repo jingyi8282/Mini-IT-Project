@@ -152,3 +152,92 @@ body {
     color: #9CA3AF;
     padding: 30px !important;
 }
+
+.chart-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    margin-top: 20px;
+}
+
+.chart-card h3 {
+    margin: 0 0 20px 0;
+    color: #4A154B;
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+/* Horizontal Track System */
+.progress-track-container {
+    padding: 10px 0;
+    width: 100%;
+}
+
+.progress-split-bar {
+    display: flex;
+    height: 35px;
+    width: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #E5E7EB;
+}
+
+/* Individual Data Blocks */
+.segment {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 0.9rem;
+    transition: width 0.3s ease;
+}
+
+.completed-seg {
+    background-color: #8A4FFF; /* Signature deep purple theme color */
+}
+
+.pending-seg {
+    background-color: #FFD1A9; /* Warm theme tint color */
+    color: #4A154B; /* Dark readable text contrast for background tint */
+}
+
+.empty-seg {
+    background-color: #9CA3AF;
+    color: #FFFFFF;
+}
+
+/* Informational Legend Rows */
+.progress-legend-row {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 20px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.95rem;
+}
+
+.legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.completed-dot {
+    background-color: #8A4FFF;
+}
+
+.pending-dot {
+    background-color: #FFD1A9;
+    border: 1px solid #E5E7EB;
+}
+
+.legend-text {
+    color: #4A4A4A;
+}
