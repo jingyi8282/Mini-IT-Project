@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block content %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='admin_dashboard.css') }}">
+
+<div class="dashboard-container">
+
+    <div class="dashboard-welcome">
+        <h1>Admin Control Panel</h1>
+        <p>System-wide overview, task statistics, and account management utilities.</p>
+    </div>
+
+    <div class="metrics-summary-row">
+        <div class="metric-box">
+            <span class="metric-number">{{ total_users }}</span>
+            <span class="metric-title">Total Registered Users</span>
+        </div>
+        <div class="metric-box-divider"></div>
+        
+        <div class="metric-box">
+            <span class="metric-number">{{ total_tasks }}</span>
+            <span class="metric-title">Total System Tasks</span>
+        </div>
+        <div class="metric-box-divider"></div>
+        
+        <div class="metric-box">
+            <span class="metric-number overdue-alert">{{ total_overdue }}</span>
+            <span class="metric-title">Global Overdue Tasks</span>
+        </div>
+        <div class="metric-box-divider"></div>
+        
+        <div class="metric-box">
+            <span class="metric-number">{{ global_completed }}</span>
+            <span class="metric-title">Completed Overall</span>
+        </div>
+    </div>
+    
+    <div class="admin-table-card">
+        <h3 class="admin-card-title">Registered User Management Directory</h3>
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>User Name</th>
+                    <th>Email Address</th>
+                    <th>Account Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for email, details in users_list.items() %}
+                <tr>
+                    <td class="user-name-cell">{{ details.get('name', 'N/A') }}</td>
+                    <td class="user-email-cell">{{ email }}</td>
+                    <td>
+                        <button class="action-btn manage-btn" onclick="alert('Viewing records for: {{ email }}')">Manage</button>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="3" class="empty-table-msg">No active student registrations found in the database.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+{% endblock %}

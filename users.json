@@ -21,8 +21,8 @@
     "password": "123456",
     "joined": "2026-05-21",
     "points": 0,
-    "streak": 1,
-    "last_login": "2026-05-27",
+    "streak": 2,
+    "last_login": "2026-05-28",
     "pic": null,
     "bio": null
   },
@@ -41,7 +41,7 @@
     "name": "jingyi",
     "password": "282828",
     "joined_date": "2026-05-19",
-    "points": 10,
+    "points": 20,
     "streak": 1,
     "last_login_date": "2026-05-20",
     "total_seconds": 0,
@@ -49,7 +49,7 @@
     "bio": "coding is fun but stress to debug",
     "current_session_start": "2026-05-19T01:10:03.988856",
     "joined": "2026-05-20",
-    "last_login": "2026-05-20",
-    "pic": null
+    "last_login": "2026-05-27",
+    "pic": "jingyi2828gmail.com_download.jfif"
   }
 }
