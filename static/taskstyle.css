@@ -301,6 +301,11 @@ table{
     background-color: #fbe4d8;
 }
 
+table th{
+    background-color: #ce918c;
+    border-radius: 14px;
+}
+
 table td{
     padding: 2px;
     text-align: center;
