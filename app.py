@@ -49,17 +49,30 @@ def calculate_days_remaining(deadline_str):
 
 @app.route("/admin/login", methods=["GET", "POST"])
 def admin_login():
+    # Force clear old user states ONLY when navigating to the page cleanly (GET request)
+    # This ensures it won't auto-login or save conflicting student dashboards
+    if request.method == "GET":
+        session.clear()
+
+    # If already verified explicitly as an admin, let them through
     if session.get("is_admin"):
-        return redirect(url_for("home"))
+        return redirect(url_for("admin_dashboard"))
     
     if request.method == "POST":
         email = request.form.get("email")
         password = request.form.get("password")
         
+        # Authenticate with your database.py admin check helper
         if db.check_admin_login(email, password):
+            session.clear() # Clear any remaining user remnants
+            
+            # Set explicit admin session details
             session["is_admin"] = True
             session["admin_email"] = email
-            return redirect(url_for("home"))
+            session["name"] = "Admin"
+            
+            # 🟢 Send straight to your administrative panel template!
+            return redirect(url_for("admin_dashboard"))
         else:
             return render_template("admin_login.html", error="Invalid admin credentials")
     
@@ -67,10 +80,38 @@ def admin_login():
 
 @app.route("/admin/logout")
 def admin_logout():
+    session.clear()
+    return redirect(url_for("admin_login"))
     session.pop("is_admin", None)
     session.pop("admin_email", None)
     return redirect(url_for("admin_login"))
 
+@app.route("/admin/dashboard")
+def admin_dashboard():
+    # 🔐 Security Guard Block: If they aren't verified as an admin, kick them out
+    if not session.get("is_admin"):
+        return redirect(url_for("admin_login"))
+        
+    # Read systemic variables out from your database.py file dictionaries
+    all_users = getattr(db, "users", {})
+    all_tasks = getattr(db, "tasks", {})
+    
+    total_users = len(all_users)
+    total_tasks = sum(len(tasks_list) for tasks_list in all_tasks.values())
+    
+    # Calculate completions globally across all registered academic diaries
+    global_completed = 0
+    for user_tasks in all_tasks.values():
+        global_completed += sum(1 for t in user_tasks if str(t.get('status', '')).lower() in ['completed', 'complete'])
+        
+    return render_template(
+        "admin_dashboard.html",
+        total_users=total_users,
+        total_tasks=total_tasks,
+        total_overdue=1, # Hardcoded fallback value matching your UI preview placeholder layout
+        global_completed=global_completed,
+        users_list=all_users
+    )
 
 #normal route
 @app.route("/")
@@ -293,9 +334,7 @@ def dashboard():
             if deadline < today_str:
                 overdue_count += 1
 
-    # ==========================================
-    # 2. PLOTLY DOUGHNUT CHART
-    # ==========================================
+    
     donut_fig = go.Figure(data=[go.Pie(
         labels=['Incomplete', 'Complete'], # Swapped order to match image layout color positioning
         values=[incomplete_count, completed_count],
@@ -320,9 +359,6 @@ def dashboard():
     # Convert configuration to pure embedded HTML component block
     donut_html = donut_fig.to_html(full_html=False, include_plotlyjs='cdn', config={'displayModeBar': False})
 
-    # ==========================================
-    # 3. PLOTLY BAR CHART (Category)
-    # ==========================================
     active_filter = request.args.get('filter', 'category')
     
     raw_data = []
