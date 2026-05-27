@@ -567,5 +567,12 @@ def logout():
     session.clear()
     return redirect(url_for("home"))
 
+@app.route("/admin/user")
+def manage_users():
+    if not session.get("is_admin"):
+        return redirect(url_for("admin_login"))
+    users = db.get_all_users()
+    return render_template("manage_users.html", users=users)
+
 if __name__ == "__main__":
     app.run(debug=True)
