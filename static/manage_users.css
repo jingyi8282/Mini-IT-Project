@@ -1,0 +1,33 @@
+body{
+    background-color: #fbe4d8;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+header{
+    color: #522b5b;
+    text-align: center;
+    font-size: 40px;
+    font-weight: bolder;
+}
+
+.users_table{
+   padding: 10px;
+   margin: 10px;
+}
+
+table{
+    width: 100%;
+    border: 2px solid #2B124C;
+    border-radius: 14px;
+    background-color: #dfb6b2;
+}
+
+table th{
+    background-color: #ce918c;
+    border-radius: 14px;
+}
+
+table td{
+    padding: 2px;
+    text-align: center;
+}
