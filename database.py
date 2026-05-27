@@ -167,3 +167,13 @@ class Database:
     
     def get_admin_email(self):
         return self.admin_email
+    
+    def get_all_users(self):
+        users_list = []
+        for email, user_data in self.users.items():
+            users_list.append({
+                "username": user_data.get("name", ""),
+                "email": email,
+                "joined_date": user_data.get("joined", "N/A")
+            })
+        return users_list
