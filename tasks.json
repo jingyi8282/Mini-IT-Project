@@ -1,22 +1,4 @@
 {
-  "jean2828@gmail.com": [
-    {
-      "id": 1,
-      "title": "physics",
-      "priority": "High",
-      "deadline": "2026-05-12",
-      "category": "revision",
-      "status": "completed"
-    },
-    {
-      "id": 2,
-      "title": "maths",
-      "priority": "Medium",
-      "deadline": "2026-05-17",
-      "category": "revision",
-      "status": "my_task"
-    }
-  ],
   "LALITHAMBIGAI.ANANDAN.RAJ@student.mmu.edu.my": [
     {
       "id": 1,
