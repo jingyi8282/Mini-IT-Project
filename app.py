@@ -99,19 +99,35 @@ def admin_dashboard():
     total_users = len(all_users)
     total_tasks = sum(len(tasks_list) for tasks_list in all_tasks.values())
     
-    # Calculate completions globally across all registered academic diaries
+   # Calculate completions manually
     global_completed = 0
     for user_tasks in all_tasks.values():
-        global_completed += sum(1 for t in user_tasks if str(t.get('status', '')).lower() in ['completed', 'complete'])
-        
+        for t in user_tasks:
+            if str(t.get('status', '')).lower() in ['completed', 'complete']:
+                global_completed += 1
+
+    # Calculate remaining pending tasks
+    global_pending = max(0, total_tasks - global_completed)
+
+    # 🟢 Calculate percentage for the pure CSS tracking bar layout
+    if total_tasks > 0:
+        completion_percentage = round((global_completed / total_tasks) * 100)
+        pending_percentage = 100 - completion_percentage
+    else:
+        completion_percentage = 0
+        pending_percentage = 0
+
     return render_template(
         "admin_dashboard.html",
         total_users=total_users,
         total_tasks=total_tasks,
-        total_overdue=1, # Hardcoded fallback value matching your UI preview placeholder layout
+        total_overdue=1, 
         global_completed=global_completed,
-        users_list=all_users
+        global_pending=global_pending,
+        completion_percentage=completion_percentage,
+        pending_percentage=pending_percentage
     )
+    
 
 #normal route
 @app.route("/")
