@@ -14,7 +14,13 @@
   },
   "LALITHAMBIGAI.ANANDAN.RAJ@student.mmu.edu.my": {
     "name": "Lalitha",
-    "password": "Lali@12"
+    "password": "Lali@12",
+    "joined": "2026-05-21",
+    "points": 20,
+    "streak": 4,
+    "last_login": "2026-05-27",
+    "pic": "LALITHAMBIGAI.ANANDAN.RAJstudent.mmu.edu.my_Screenshot_2024-06-26_172006.png",
+    "bio": "Hello"
   },
   "ratnajane0207@gmail.com": {
     "name": "Ratna Jane",
@@ -24,7 +30,7 @@
     "streak": 2,
     "last_login": "2026-05-28",
     "pic": null,
-    "bio": null
+    "bio": "Study smarter, not harder!"
   },
   "jingyi282828@gmail.com": {
     "name": "jingyi",

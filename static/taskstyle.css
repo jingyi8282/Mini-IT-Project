@@ -64,7 +64,23 @@ ul {
     border-radius: 14px;
     background-color: #fbe4d8;
     margin-bottom: 10px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
 
+.search_bar{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.search_input{
+    width: 80%;
+}
+
+.task_card:hover{
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
 }
 
 .add_button{
@@ -272,4 +288,25 @@ input{
 
 .status_move{
     display: flex;
+}
+
+.class_card{
+    margin-top: 25px;
+}
+
+table{
+    width: 100%;
+    border: 2px solid #2B124C;
+    border-radius: 14px;
+    background-color: #fbe4d8;
+}
+
+table th{
+    background-color: #ce918c;
+    border-radius: 14px;
+}
+
+table td{
+    padding: 2px;
+    text-align: center;
 }
