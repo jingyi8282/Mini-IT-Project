@@ -12,23 +12,6 @@ body {
     min-height: 100vh;
 }
 
-.back-btn {
-    display: inline-block;
-    margin: 20px;
-    color: #2B124C;
-    text-decoration: none;
-    font-weight: 500;
-    background: #dfb6b2;  
-    padding: 10px 20px;
-    border-radius: 30px;
-    transition: 0.3s;
-    border: 2px solid #2B124C;
-}
-
-.back-btn:hover {
-    background: #f5d4c3;
-}
-
 .profile-container {
     max-width: 500px;
     margin: 0 auto 50px;

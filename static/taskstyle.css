@@ -297,16 +297,40 @@ input{
 table{
     width: 100%;
     border: 2px solid #2B124C;
-    border-radius: 14px;
-    background-color: #fbe4d8;
+    border-collapse: separate;
+    border-radius: 12px;
+    background-color: #dfb6b2;
+    font-size: 14px;
+    padding: 10px;
+    margin-bottom: 10px;
+    box-shadow: 0 4px 20px rgb(141, 115, 141)
 }
 
 table th{
-    background-color: #ce918c;
-    border-radius: 14px;
+    padding: 10px;
+    background-color: #2B124C;
+    border-radius: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: white;
+    text-align: left;
 }
 
+table tr:nth-child(even) {
+    background-color: rgba(0, 0, 0, 0.03);
+}
+
+table tr:hover{
+    background-color: #d19792;
+    transition: 0.3s;
+}
+
+table tr td{
+    border-radius: 12px;
+}
+
+
 table td{
-    padding: 2px;
-    text-align: center;
+    padding: 10px;
+    color: #522b5b;
 }

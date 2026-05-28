@@ -1,12 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% extends "admin_base.html" %}
+{% block content %}
     <link rel="stylesheet" href="{{ url_for('static', filename='manage_users.css') }}">
-    <title>Manage Users</title>
-</head>
-<body>
+    
     <header>USERS LIST</header>
 
     <div class="users_table">
@@ -31,6 +26,4 @@
             {% endif %}
         </table>
     </div>
-
-</body>
-</html>
+{% endblock %}
