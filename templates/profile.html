@@ -1,13 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>My Profile</title>
+{% extends "base.html" %}
+{% block content %}
     <link rel="stylesheet" href="{{ url_for('static', filename='profile.css') }}">
-</head>
-<body>
-    <!-- Back button -->
-    <a href="/dashboard" class="back-btn">← Back to Dashboard</a>
+
 
     <!-- Main profile card -->
     <div class="profile-container">
@@ -92,5 +86,4 @@
         </div>
         
     </div>
-</body>
-</html>
+{% endblock %}

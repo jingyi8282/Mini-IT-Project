@@ -1,0 +1,74 @@
+{% extends "admin_base.html" %}
+{% block content %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='admin_dashboard.css') }}">
+
+<div class="dashboard-container">
+
+    <div class="dashboard-welcome">
+        <h1>Admin Control Panel</h1>
+        <p>System-wide overview, task statistics, and account management utilities.</p>
+    </div>
+
+    <div class="metrics-summary-row">
+        <div class="metric-box">
+            <span class="metric-number">{{ total_users }}</span>
+            <span class="metric-title">Total Registered Users</span>
+        </div>
+        <div class="metric-box-divider"></div>
+        
+        <div class="metric-box">
+            <span class="metric-number">{{ total_tasks }}</span>
+            <span class="metric-title">Total System Tasks</span>
+        </div>
+        <div class="metric-box-divider"></div>
+        
+        <div class="metric-box">
+            <span class="metric-number overdue-alert">{{ total_overdue }}</span>
+            <span class="metric-title">Global Overdue Tasks</span>
+        </div>
+        <div class="metric-box-divider"></div>
+        
+        <div class="metric-box">
+            <span class="metric-number">{{ global_completed }}</span>
+            <span class="metric-title">Completed Overall</span>
+        </div>
+    </div>
+    
+  <div class="chart-card">
+    <h3>Global Task Completion Trend</h3>
+    
+    <div class="progress-track-container">
+        <div class="progress-split-bar">
+            {% if total_tasks > 0 %}
+                <div class="segment completed-seg" style="width: {{ completion_percentage }}%;">
+                    <span>{{ completion_percentage }}%</span>
+                </div>
+                <div class="segment pending-seg" style="width: {{ pending_percentage }}%;">
+                    <span>{{ pending_percentage }}%</span>
+                </div>
+            {% else %}
+                <div class="segment empty-seg" style="width: 100%;">
+                    <span>No Tasks Registered</span>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="progress-legend-row">
+        <div class="legend-item">
+            <span class="legend-dot completed-dot"></span>
+            <span class="legend-text">Completed Overall (<strong>{{ global_completed }}</strong>)</span>
+        </div>
+        <div class="legend-item">
+            <span class="legend-dot pending-dot"></span>
+            <span class="legend-text">Pending Assignments (<strong>{{ global_pending }}</strong>)</span>
+        </div>
+    </div>
+    
+    <p style="text-align: center; color: #6B7280; margin-top: 15px; font-size: 0.9rem;">
+        Overview of platform-wide progress.
+    </p>
+</div>
+
+</div>
+{% endblock %}

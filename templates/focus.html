@@ -1,10 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
-{% if timer_running %}
-    <meta http-equiv="refresh" content="1">
-{% endif %}
 
     <link rel="stylesheet" href="{{ url_for('static', filename='focus.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.10/dist/htmx.min.js"></script>
     
 <header>Focus Room</header>
 <section class="focus_layout">
@@ -20,15 +18,17 @@
     <div class="focus_card">
         <h2>Deep Work Mode</h2>
         <div class="pomo_timer">
-           <h3> Timer : {{ timer_mode }} </h3>
-           <div class="timer_display"> {{ time_string }} </div>
+           <h3> Pomodoro Timer </h3>
+           <div class="timer_display" hx-get="/focus/timer/update" hx-trigger="every 1s" hx-swap="innerHTML">{{ time_string }}</div>
            <div class="timer_btn">
-                {% if not timer_running %}
-                    <a href="{{url_for('start_timer')}}"><button type="button" class="start_btn"> Start </button></a>
+                {% if session.get('timer_running') %}
+                    <button hx-get="{{ url_for('pause_timer') }}" hx-target=".pomo_timer" hx-select=".pomo_timer" class="pause_btn"> Pause </button>
+                {% elif session.get('timer_remaining', 1500) < 1500 %}
+                    <button hx-get="{{ url_for('start_timer') }}" hx-target=".pomo_timer" hx-select=".pomo_timer" class="resume_btn"> Resume </button>
                 {% else %}
-                    <a href="{{url_for('pause_timer')}}"><button type="button" class="pause_btn"> Pause </button></a>
+                    <button hx-get="{{ url_for('start_timer') }}" hx-target=".pomo_timer" hx-select=".pomo_timer" class="start_btn"> Start </button>
                 {% endif %}
-                <a href="{{url_for('reset_timer', mode=timer_mode)}}"><button type="button" class="reset_btn"> Reset </button></a>
+                <button hx-get="{{ url_for('reset_timer', mode=session.get('timer_mode', 'work')) }}" hx-target=".pomo_timer" hx-select=".pomo_timer" class="reset_btn"> Reset </button>
            </div>
         </div>
     </div>  

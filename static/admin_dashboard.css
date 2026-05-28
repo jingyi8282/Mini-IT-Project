@@ -1,0 +1,243 @@
+/* Inherit core light peach backdrop rules and custom document variables */
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #fbe4d8; /* Light peach theme tint */
+    color: #4A4A4A;
+}
+
+/* Base structural row alignment blocks */
+.dashboard-container {
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    max-width: 1250px;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+.dashboard-welcome h1 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #4A154B; /* Signature deep purple color tint */
+    margin: 0 0 6px 0;
+}
+
+.dashboard-welcome p {
+    font-size: 1.1rem;
+    color: #6B7280;
+    margin: 0;
+}
+
+/* Transparent Summary Metrics Alignment Engine */
+.metrics-summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: transparent;
+    box-shadow: none;
+    padding: 10px 0px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.metric-box {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.metric-number {
+    font-size: 32px;
+    font-weight: bold;
+    color: #4A154B;
+}
+
+.metric-number.overdue-alert {
+    color: #DC2626; /* Deep Red warning indicator for overdue */
+}
+
+.metric-title {
+    font-size: 14px;
+    color: #6B7280;
+    font-weight: 500;
+    margin-top: 4px;
+}
+
+.metric-box-divider {
+    width: 1px;
+    height: 35px;
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Admin Table Data Sheets Card wrapper */
+.admin-table-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: 10px;
+}
+
+.admin-card-title {
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: #4A154B;
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.admin-table th {
+    padding: 14px 16px;
+    background-color: #F9FAFB;
+    color: #1F2937;
+    font-weight: 600;
+    font-size: 0.95rem;
+    border-bottom: 2px solid #E5E7EB;
+}
+
+.admin-table td {
+    padding: 16px;
+    border-bottom: 1px solid #F3F4F6;
+    color: #4A4A4A;
+    font-size: 0.95rem;
+}
+
+.user-name-cell {
+    font-weight: 600;
+    color: #1F2937;
+}
+
+.user-email-cell {
+    color: #4B5563;
+}
+
+/* Smooth row focus trigger hover overlay styles */
+.admin-table tbody tr:hover {
+    background-color: rgba(138, 79, 255, 0.02);
+}
+
+/* Management operational command buttons */
+.action-btn {
+    padding: 6px 14px;
+    border-radius: 6px;
+    border: 1px solid #8A4FFF; /* Clean signature purple border accent */
+    background: transparent;
+    color: #8A4FFF;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.action-btn:hover {
+    background: #8A4FFF;
+    color: #FFFFFF;
+}
+
+.empty-table-msg {
+    text-align: center;
+    color: #9CA3AF;
+    padding: 30px !important;
+}
+
+.chart-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    margin-top: 20px;
+}
+
+.chart-card h3 {
+    margin: 0 0 20px 0;
+    color: #4A154B;
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+/* Horizontal Track System */
+.progress-track-container {
+    padding: 10px 0;
+    width: 100%;
+}
+
+.progress-split-bar {
+    display: flex;
+    height: 35px;
+    width: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #E5E7EB;
+}
+
+/* Individual Data Blocks */
+.segment {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 0.9rem;
+    transition: width 0.3s ease;
+}
+
+.completed-seg {
+    background-color: #8A4FFF; /* Signature deep purple theme color */
+}
+
+.pending-seg {
+    background-color: #FFD1A9; /* Warm theme tint color */
+    color: #4A154B; /* Dark readable text contrast for background tint */
+}
+
+.empty-seg {
+    background-color: #9CA3AF;
+    color: #FFFFFF;
+}
+
+/* Informational Legend Rows */
+.progress-legend-row {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 20px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.95rem;
+}
+
+.legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.completed-dot {
+    background-color: #8A4FFF;
+}
+
+.pending-dot {
+    background-color: #FFD1A9;
+    border: 1px solid #E5E7EB;
+}
+
+.legend-text {
+    color: #4A4A4A;
+}
