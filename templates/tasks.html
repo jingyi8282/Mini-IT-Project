@@ -1,13 +1,14 @@
 {% extends "base.html" %}
 {% block content %}
     <link rel="stylesheet" href="{{ url_for('static', filename='taskstyle.css') }}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=search" />
     <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.10/dist/htmx.min.js"></script>
     
 <header>TASKS PAGE</header>
 
 <section>
     <form class="add_form" method="POST" action="/add">
-        <input type="text" name="tasks" placeholder="Enter task" required>
+        <input class="int_tasks" type="text" name="tasks" placeholder="Enter task" required>
         <input class="int_date" type="date" name="deadline">
         <select name="priority" class="priority">
             <option value="Low">Low</option>
@@ -24,7 +25,8 @@
 </section>
 
 <div class="search_bar">
-    <input class="search_input" type="text" placeholder="Search tasks" name="search" hx-get="/search" hx-trigger="keyup changed delay:500ms" hx-target="#results">
+    <span class="material-symbols-outlined">search</span>
+    <input class="search_input" type="text" placeholder= "Search tasks" name="search" hx-get="/search" hx-trigger="keyup changed delay:500ms" hx-target="#results">
 </div>
 
 <div id="results">
