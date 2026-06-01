@@ -7,16 +7,24 @@
     <div class="users_table">
         <table>
             <tr>
+                <th>Id</th>
                 <th>Username</th>
                 <th>Email</th>
                 <th>Joined Date</th>
+                <th>Delete</th>
             </tr>
             {% if users %}
                 {% for user in users %}
                 <tr>
+                    <td>{{ loop.index }}</td>
                     <td>{{ user.username }}</td>
                     <td>{{ user.email }}</td>
                     <td>{{ user.joined_date }}</td>
+                    <td>
+                        <form action="{{url_for('delete_users', email=user.email)}}" method="POST">
+                                <button type="submit" class="del_btn">Delete</button>
+                        </form>
+                    </td>
                 </tr>
                 {% endfor %}
             {% else %}
