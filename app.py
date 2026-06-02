@@ -626,6 +626,14 @@ def upload_photo():
     
     return render_template("profile.html", error="Invalid file type. Use PNG, JPG, or GIF.")
 
+@app.context_processor
+def inject_user_profile():
+    profile_pic = None
+    if "email" in session:
+        user = db.users.get(session["email"], {})
+        profile_pic = user.get("pic")
+    return {"profile_pic": profile_pic, "user_image": bool(profile_pic)}
+
 @app.route("/edit_profile", methods=["GET", "POST"])
 def edit_profile():
     if "email" not in session:
@@ -702,12 +710,21 @@ def logout():
     session.clear()
     return redirect(url_for("home"))
 
+
 @app.route("/admin/user")
 def manage_users():
     if not session.get("is_admin"):
         return redirect(url_for("admin_login"))
     users = db.get_all_users()
     return render_template("manage_users.html", users=users)
+
+@app.route("/delete_users/<email>", methods=["POST"])
+def delete_users(email):
+    if not session.get("is_admin"):
+        return redirect(url_for("admin_login"))
+        
+    db.delete_user(email)
+    return redirect(url_for("manage_users"))
 
 if __name__ == "__main__":
     app.run(debug=True)

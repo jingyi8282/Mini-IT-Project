@@ -49,3 +49,10 @@ table td{
     padding: 10px;
     color: #522b5b;
 }
+
+.del_btn{
+    background: transparent;
+    border: none;
+    color: #522b5b;
+    cursor: pointer;
+}

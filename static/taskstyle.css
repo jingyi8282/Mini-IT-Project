@@ -69,13 +69,27 @@ ul {
 
 .search_bar{
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
     justify-content: center;
+    border: 2px solid #854f6c;
+    border-radius: 14px;
+    width: 60%;
+    margin: 20px auto;
+    padding: 5px 15px;
+}
+
+.search_bar:hover{
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
 }
 
 .search_input{
-    width: 80%;
+    width: 100%;
+    border: none;
+    background: transparent;
+    padding: 10px;
+    outline: none;
 }
 
 .task_card:hover{
@@ -95,7 +109,7 @@ ul {
     background-color: #f5d4c3;
 }
 
-input{
+.int_tasks{
     border-radius: 14px;
     background-color: #fbe4d8;
     color: #522b5b;
