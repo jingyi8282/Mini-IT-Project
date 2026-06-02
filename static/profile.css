@@ -13,13 +13,12 @@ body {
 }
 
 .profile-container {
-    max-width: 500px;
+    max-width: 1000px;
     margin: 0 auto 50px;
     background: #dfb6b2;  
     border-radius: 14px;
     overflow: hidden;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-    border-left: 10px solid #854f6c;  
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); 
 }
 
 .profile-header {

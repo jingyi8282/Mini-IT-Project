@@ -1,0 +1,93 @@
+{% extends "admin_base.html" %}
+{% block content %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='admin_tasks.css') }}">
+    
+    <header>TASKS LIST</header>
+
+    <!-- Stats Summary -->
+    <div class="stats-summary">
+        <div class="stat-box">
+            <span class="stat-number">{{ stats.total }}</span>
+            <span class="stat-label">Total Tasks</span>
+        </div>
+        <div class="stat-box">
+            <span class="stat-number">{{ stats.completed }}</span>
+            <span class="stat-label">Completed</span>
+        </div>
+        <div class="stat-box">
+            <span class="stat-number">{{ stats.pending }}</span>
+            <span class="stat-label">Pending</span>
+        </div>
+        <div class="stat-box">
+            <span class="stat-number">{{ stats.completion_rate }}%</span>
+            <span class="stat-label">Completion Rate</span>
+        </div>
+    </div>
+
+    <!-- Filter Section -->
+    <div class="filter-section">
+        <form method="GET" action="{{ url_for('admin_tasks') }}">
+            <label>Filter by User:</label>
+            <select name="filter_user" onchange="this.form.submit()">
+                <option value="">All Users</option>
+                {% for user in users %}
+                    <option value="{{ user.email }}" {% if filter_user == user.email %}selected{% endif %}>
+                        {{ user.name }} ({{ user.email }})
+                    </option>
+                {% endfor %}
+            </select>
+            {% if filter_user %}
+                <a href="{{ url_for('admin_tasks') }}" class="clear-filter">Clear Filter</a>
+            {% endif %}
+        </form>
+    </div>
+
+    <!-- Tasks Table -->
+    <div class="tasks_table">
+        <table>
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Task Title</th>
+                    <th>Priority</th>
+                    <th>Due Date</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if tasks %}
+                    {% for task in tasks %}
+                        <tr>
+                            <td>{{ task.user_name }}</td>
+                            <td>{{ task.user_email }}</td>
+                            <td class="task-title">{{ task.title }}</td>
+                            <td>
+                                <span class="priority {{ task.priority|lower }}">
+                                    {{ task.priority }}
+                                </span>
+                            </td>
+                            <td>{{ task.deadline if task.deadline else "No deadline" }}</td>
+                            <td>
+                                <span class="status {{ task.status|replace('_', '-') }}">
+                                    {{ task.status|replace('_', ' ')|title }}
+                                </span>
+                            </td>
+                            <td>
+                                <form method="POST" action="{{ url_for('admin_delete_task', task_id=task.id) }}" 
+                                      onsubmit="return confirm('Delete this task? This cannot be undone.')">
+                                    <button type="submit" class="delete-btn">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="7" class="no-data">No tasks found</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

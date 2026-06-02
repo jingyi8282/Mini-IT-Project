@@ -49,12 +49,9 @@ def calculate_days_remaining(deadline_str):
 
 @app.route("/admin/login", methods=["GET", "POST"])
 def admin_login():
-    # Force clear old user states ONLY when navigating to the page cleanly (GET request)
-    # This ensures it won't auto-login or save conflicting student dashboards
     if request.method == "GET":
         session.clear()
 
-    # If already verified explicitly as an admin, let them through
     if session.get("is_admin"):
         return redirect(url_for("admin_dashboard"))
     
@@ -62,16 +59,13 @@ def admin_login():
         email = request.form.get("email")
         password = request.form.get("password")
         
-        # Authenticate with your database.py admin check helper
         if db.check_admin_login(email, password):
-            session.clear() # Clear any remaining user remnants
+            session.clear() 
             
-            # Set explicit admin session details
             session["is_admin"] = True
             session["admin_email"] = email
             session["name"] = "Admin"
             
-            # 🟢 Send straight to your administrative panel template!
             return redirect(url_for("admin_dashboard"))
         else:
             return render_template("admin_login.html", error="Invalid admin credentials")
@@ -88,28 +82,23 @@ def admin_logout():
 
 @app.route("/admin/dashboard")
 def admin_dashboard():
-    # 🔐 Security Guard Block: If they aren't verified as an admin, kick them out
     if not session.get("is_admin"):
         return redirect(url_for("admin_login"))
-        
-    # Read systemic variables out from your database.py file dictionaries
+    
     all_users = getattr(db, "users", {})
     all_tasks = getattr(db, "tasks", {})
     
     total_users = len(all_users)
     total_tasks = sum(len(tasks_list) for tasks_list in all_tasks.values())
-    
-   # Calculate completions manually
+  
     global_completed = 0
     for user_tasks in all_tasks.values():
         for t in user_tasks:
             if str(t.get('status', '')).lower() in ['completed', 'complete']:
                 global_completed += 1
 
-    # Calculate remaining pending tasks
     global_pending = max(0, total_tasks - global_completed)
 
-    # 🟢 Calculate percentage for the pure CSS tracking bar layout
     if total_tasks > 0:
         completion_percentage = round((global_completed / total_tasks) * 100)
         pending_percentage = 100 - completion_percentage
@@ -128,6 +117,54 @@ def admin_dashboard():
         pending_percentage=pending_percentage
     )
     
+@app.route("/admin/tasks")
+def admin_tasks():
+    if not session.get("is_admin"):
+        return redirect(url_for("admin_login"))
+
+    filter_user = request.args.get("filter_user", "")
+    
+    all_tasks = db.get_all_users_tasks()
+    
+    if filter_user:
+        all_tasks = [t for t in all_tasks if t["user_email"] == filter_user]
+  
+    all_users = []
+    for email, user in db.users.items():
+        all_users.append({
+            "email": email,
+            "name": user.get("name", email)
+        })
+   
+    stats = db.get_task_stats()
+    
+    return render_template("admin_tasks.html", 
+                         tasks=all_tasks,
+                         users=all_users,
+                         filter_user=filter_user,
+                         stats=stats)
+
+#admin delete tasks
+@app.route("/admin/delete_task/<int:task_id>", methods=["POST"])
+def admin_delete_task(task_id):
+    if not session.get("is_admin"):
+        return redirect(url_for("admin_login"))
+    
+    db.delete_any_task(task_id)
+    return redirect(url_for("admin_tasks"))
+
+#admin delete users
+@app.route("/admin/delete_user/<string:email>", methods=["POST"])
+def admin_delete_user(email):
+    if not session.get("is_admin"):
+        return redirect(url_for("admin_login"))
+    
+    #admin cannot delete themselves
+    if email == session.get("admin_email"):
+        return redirect(url_for("manage_users"))
+    
+    db.delete_user_by_admin(email)
+    return redirect(url_for("manage_users"))
 
 #normal route
 @app.route("/")
