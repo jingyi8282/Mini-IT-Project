@@ -12,7 +12,7 @@ class Database:
         self.admin_password = "admin123"
 
     def load(self):
-        # load users
+        #load users
         if os.path.exists(self.user_file):
             f = open(self.user_file, "r")
             self.users = json.load(f)
@@ -20,7 +20,7 @@ class Database:
         else:
             self.users = {}
 
-        # load tasks
+        #load tasks
         if os.path.exists(self.task_file):
             f = open(self.task_file, "r")
             data = json.load(f)
@@ -39,8 +39,7 @@ class Database:
         json.dump(self.tasks, f, indent=2)
         f.close()
 
-    #user func
-    
+    #user data func
     def create_user(self, name, email, pw):
         if email in self.users:
             return False
@@ -70,8 +69,7 @@ class Database:
         self.save_users()
         return True
 
-    #points and streaks
-    
+    # user points and streaks func
     def update_streak(self, email):
         user = self.users.get(email)
         if not user:
@@ -110,8 +108,7 @@ class Database:
     def get_bio(self, email):
         return self.users.get(email, {}).get("bio", "")
 
-    #tasks func
-    
+    #user tasks func
     def add_task(self, email, title, priority, deadline, cat):
         if email not in self.tasks:
             self.tasks[email] = []
@@ -158,8 +155,7 @@ class Database:
                 return True
         return False
 
-    #admin func
-    
+    #admin login func
     def check_admin_login(self, email, password):
         if email == self.admin_email and password == self.admin_password:
             return True
@@ -177,3 +173,81 @@ class Database:
                 "joined_date": user_data.get("joined", "N/A")
             })
         return users_list
+    
+    def delete_user_by_admin(self, email):
+        """Admin can delete any user and all their tasks"""
+        if email in self.users:
+            if email == self.admin_email:
+                return False
+           
+            del self.users[email]
+            if email in self.tasks:
+                del self.tasks[email]
+            self.save_users()
+            self.save_tasks()
+            return True
+        return False
+    
+
+    #admin tasks func
+    
+    def get_all_users_tasks(self):
+        """Get all tasks from all users for admin panel"""
+        all_tasks = []
+        
+        for email, tasks in self.tasks.items():
+            user_name = self.users.get(email, {}).get("name", email)
+            
+            for task in tasks:
+                all_tasks.append({
+                    "id": task.get("id"),
+                    "title": task.get("title"),
+                    "priority": task.get("priority"),
+                    "deadline": task.get("deadline"),
+                    "category": task.get("category"),
+                    "status": task.get("status"),
+                    "user_email": email,
+                    "user_name": user_name
+                })
+        
+        return all_tasks
+
+    def delete_any_task(self, task_id):
+        for email, tasks in self.tasks.items():
+            for i, task in enumerate(tasks):
+                if task.get("id") == task_id:
+                    del self.tasks[email][i]
+                    self.save_tasks()
+                    return True
+        return False
+
+    def get_all_users_list(self):
+        users_list = []
+        for email, user in self.users.items():
+            users_list.append({
+                "email": email,
+                "name": user.get("name", email)
+            })
+        return users_list
+
+    def get_task_stats(self):
+        total = 0
+        completed = 0
+        pending = 0
+        
+        for tasks in self.tasks.values():
+            total += len(tasks)
+            for task in tasks:
+                if task.get("status") == "completed":
+                    completed += 1
+                else:
+                    pending += 1
+        
+        completion_rate = round((completed / total) * 100) if total > 0 else 0
+        
+        return {
+            "total": total,
+            "completed": completed,
+            "pending": pending,
+            "completion_rate": completion_rate
+        }

@@ -6,32 +6,37 @@
 
     <div class="users_table">
         <table>
-            <tr>
-                <th>Id</th>
-                <th>Username</th>
-                <th>Email</th>
-                <th>Joined Date</th>
-                <th>Delete</th>
-            </tr>
-            {% if users %}
-                {% for user in users %}
+            <thead>
                 <tr>
-                    <td>{{ loop.index }}</td>
-                    <td>{{ user.username }}</td>
-                    <td>{{ user.email }}</td>
-                    <td>{{ user.joined_date }}</td>
-                    <td>
-                        <form action="{{url_for('delete_users', email=user.email)}}" method="POST">
-                                <button type="submit" class="del_btn">Delete</button>
-                        </form>
-                    </td>
+                    <th>Id</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Joined Date</th>
+                    <th>Delete</th>
                 </tr>
-                {% endfor %}
-            {% else %}
-                <tr>
-                    <td colspan="3">No users found</td>
-                </tr>
-            {% endif %}
+            </thead>
+            <tbody>
+                {% if users %}
+                    {% for user in users %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td>{{ user.username }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>{{ user.joined_date }}</td>
+                            <td>
+                                <form action="{{ url_for('admin_delete_user', email=user.email) }}" method="POST" 
+                                      onsubmit="return confirm('⚠️ WARNING: Delete {{ user.username }}? This will delete their account permanently and cannot be undone!')">
+                                    <button type="submit" class="del_btn">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="5">No users found</td>
+                    </tr>
+                {% endif %}
+            </tbody>
         </table>
     </div>
 {% endblock %}
