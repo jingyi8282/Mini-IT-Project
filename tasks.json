@@ -61,20 +61,20 @@
   ],
   "jingyi2828@gmail.com": [
     {
-      "id": 2,
-      "title": "digital system",
+      "id": 1,
+      "title": "maths",
       "priority": "Medium",
-      "deadline": "2026-05-20",
+      "deadline": "2026-06-03",
       "category": "revision",
-      "status": "completed"
+      "status": "my_task"
     },
     {
-      "id": 3,
+      "id": 2,
       "title": "coding",
-      "priority": "High",
-      "deadline": "2026-05-20",
+      "priority": "Low",
+      "deadline": "2026-06-04",
       "category": "assignments",
-      "status": "completed"
+      "status": "in_progress"
     }
   ]
 }

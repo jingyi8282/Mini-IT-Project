@@ -20,18 +20,13 @@
     "bio": "Study smarter, not harder!"
   },
   "jingyi2828@gmail.com": {
-    "name": "jingyi",
+    "name": "jingyi2828",
     "password": "282828",
-    "joined_date": "2026-05-19",
-    "points": 20,
+    "joined": "2026-06-02",
+    "points": 0,
     "streak": 1,
-    "last_login_date": "2026-05-20",
-    "total_seconds": 0,
-    "profile_pic": "jingyi2828gmail.com_download.jfif",
-    "bio": "coding is fun but stress to debug",
-    "current_session_start": "2026-05-19T01:10:03.988856",
-    "joined": "2026-05-20",
-    "last_login": "2026-05-27",
-    "pic": "jingyi2828gmail.com_download.jfif"
+    "last_login": "2026-06-02",
+    "pic": null,
+    "bio": "life is tough"
   }
 }

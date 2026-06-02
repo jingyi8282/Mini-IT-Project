@@ -174,6 +174,21 @@ class Database:
             })
         return users_list
     
+    def delete_user_by_admin(self, email):
+        """Admin can delete any user and all their tasks"""
+        if email in self.users:
+            if email == self.admin_email:
+                return False
+           
+            del self.users[email]
+            if email in self.tasks:
+                del self.tasks[email]
+            self.save_users()
+            self.save_tasks()
+            return True
+        return False
+    
+
     #admin tasks func
     
     def get_all_users_tasks(self):

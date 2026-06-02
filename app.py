@@ -49,12 +49,9 @@ def calculate_days_remaining(deadline_str):
 
 @app.route("/admin/login", methods=["GET", "POST"])
 def admin_login():
-    # Force clear old user states ONLY when navigating to the page cleanly (GET request)
-    # This ensures it won't auto-login or save conflicting student dashboards
     if request.method == "GET":
         session.clear()
 
-    # If already verified explicitly as an admin, let them through
     if session.get("is_admin"):
         return redirect(url_for("admin_dashboard"))
     
@@ -62,16 +59,13 @@ def admin_login():
         email = request.form.get("email")
         password = request.form.get("password")
         
-        # Authenticate with your database.py admin check helper
         if db.check_admin_login(email, password):
-            session.clear() # Clear any remaining user remnants
+            session.clear() 
             
-            # Set explicit admin session details
             session["is_admin"] = True
             session["admin_email"] = email
             session["name"] = "Admin"
             
-            # 🟢 Send straight to your administrative panel template!
             return redirect(url_for("admin_dashboard"))
         else:
             return render_template("admin_login.html", error="Invalid admin credentials")
@@ -150,6 +144,7 @@ def admin_tasks():
                          filter_user=filter_user,
                          stats=stats)
 
+#admin delete tasks
 @app.route("/admin/delete_task/<int:task_id>", methods=["POST"])
 def admin_delete_task(task_id):
     if not session.get("is_admin"):
@@ -158,7 +153,18 @@ def admin_delete_task(task_id):
     db.delete_any_task(task_id)
     return redirect(url_for("admin_tasks"))
 
-
+#admin delete users
+@app.route("/admin/delete_user/<string:email>", methods=["POST"])
+def admin_delete_user(email):
+    if not session.get("is_admin"):
+        return redirect(url_for("admin_login"))
+    
+    #admin cannot delete themselves
+    if email == session.get("admin_email"):
+        return redirect(url_for("manage_users"))
+    
+    db.delete_user_by_admin(email)
+    return redirect(url_for("manage_users"))
 
 #normal route
 @app.route("/")
@@ -657,14 +663,6 @@ def upload_photo():
     
     return render_template("profile.html", error="Invalid file type. Use PNG, JPG, or GIF.")
 
-@app.context_processor
-def inject_user_profile():
-    profile_pic = None
-    if "email" in session:
-        user = db.users.get(session["email"], {})
-        profile_pic = user.get("pic")
-    return {"profile_pic": profile_pic, "user_image": bool(profile_pic)}
-
 @app.route("/edit_profile", methods=["GET", "POST"])
 def edit_profile():
     if "email" not in session:
@@ -741,21 +739,12 @@ def logout():
     session.clear()
     return redirect(url_for("home"))
 
-
 @app.route("/admin/user")
 def manage_users():
     if not session.get("is_admin"):
         return redirect(url_for("admin_login"))
     users = db.get_all_users()
     return render_template("manage_users.html", users=users)
-
-@app.route("/delete_users/<email>", methods=["POST"])
-def delete_users(email):
-    if not session.get("is_admin"):
-        return redirect(url_for("admin_login"))
-        
-    db.delete_user(email)
-    return redirect(url_for("manage_users"))
 
 if __name__ == "__main__":
     app.run(debug=True)

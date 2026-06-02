@@ -1,158 +1,6 @@
-/* ========== ADMIN BASE STYLES ========== */
+/* ========== ADMIN TASKS PAGE STYLES ========== */
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #fbe4d8;
-}
-
-/* Admin Navbar */
-.admin-navbar {
-    background: #2B124C;
-    color: white;
-    padding: 15px 30px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-}
-
-.admin-nav-links a {
-    color: white;
-    text-decoration: none;
-    margin-left: 20px;
-    padding: 8px 15px;
-    border-radius: 8px;
-}
-
-.admin-nav-links a:hover {
-    background: #522B5B;
-}
-
-.admin-container {
-    max-width: 1400px;
-    margin: 30px auto;
-    padding: 0 20px;
-}
-
-/* ========== ADMIN LOGIN PAGE ========== */
-.admin-login-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-}
-
-.admin-login-card {
-    background: white;
-    padding: 40px;
-    border-radius: 20px;
-    width: 400px;
-    text-align: center;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-}
-
-.admin-icon {
-    font-size: 60px;
-    margin-bottom: 10px;
-}
-
-.admin-login-card h2 {
-    color: #2B124C;
-    margin-bottom: 20px;
-}
-
-.input-group {
-    margin-bottom: 20px;
-    text-align: left;
-}
-
-.input-group label {
-    display: block;
-    margin-bottom: 8px;
-    color: #333;
-    font-weight: 600;
-    font-size: 14px;
-}
-
-.input-group input {
-    width: 100%;
-    padding: 12px 15px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    font-size: 14px;
-    transition: 0.3s;
-}
-
-.input-group input:focus {
-    outline: none;
-    border-color: #2B124C;
-    box-shadow: 0 0 0 3px rgba(43, 18, 76, 0.1);
-}
-
-.login-btn {
-    width: 100%;
-    padding: 12px;
-    background: #2B124C;
-    color: white;
-    border: none;
-    border-radius: 10px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.3s;
-    margin-top: 10px;
-}
-
-.login-btn:hover {
-    background: #522B5B;
-    transform: translateY(-2px);
-}
-
-.error {
-    background: #ffebee;
-    color: #d32f2f;
-    padding: 12px;
-    border-radius: 10px;
-    margin-bottom: 20px;
-    font-size: 14px;
-    text-align: center;
-}
-
-.back-link {
-    margin-top: 20px;
-}
-
-.back-link a {
-    color: #854F6C;
-    text-decoration: none;
-    font-size: 14px;
-}
-
-.back-link a:hover {
-    text-decoration: underline;
-}
-
-.admin-note {
-    margin-top: 20px;
-    padding-top: 15px;
-    border-top: 1px solid #eee;
-    font-size: 11px;
-    color: #999;
-}
-
-.admin-note span {
-    color: #e94560;
-    font-weight: bold;
-}
-
-/* ========== ADMIN TASKS PAGE ========== */
+/* Header - Card style */
 header {
     font-size: 26px;
     font-weight: bold;
@@ -161,23 +9,12 @@ header {
     padding: 15px 20px;
     border-radius: 14px;
     margin-bottom: 20px;
-    display: block;
     width: 100%;
     text-align: center;
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 
-
-header {
-    font-size: 24px;
-    font-weight: bold;
-    color: #2B124C;
-    margin-bottom: 20px;
-    padding-bottom: 10px;
-    border-bottom: 3px solid #854F6C;
-    display: inline-block;
-}
-
+/* Stats Cards - Full width, no gaps */
 .stats-summary {
     display: flex;
     width: 100%;
@@ -214,6 +51,7 @@ header {
     margin-top: 8px;
 }
 
+/* Filter Section */
 .filter-section {
     background: #fbe4d8;
     padding: 15px 20px;
@@ -249,6 +87,7 @@ header {
     text-decoration: underline;
 }
 
+/* Tasks Table */
 .tasks_table {
     background: white;
     border-radius: 14px;
@@ -280,22 +119,8 @@ header {
     background: #fbe4d8;
 }
 
-.user-name {
-    font-weight: 600;
-    color: #2B124C;
-}
-
-.user-email {
-    color: #666;
-    font-size: 12px;
-}
-
-.task-title {
-    font-weight: 500;
-    color: #2B124C;
-}
-
-.priority.high {
+/* Priority Badges */
+.priority-high {
     background: #ffebee;
     color: #c62828;
     padding: 4px 10px;
@@ -305,7 +130,7 @@ header {
     display: inline-block;
 }
 
-.priority.medium {
+.priority-medium {
     background: #fff3e0;
     color: #ef6c00;
     padding: 4px 10px;
@@ -315,7 +140,7 @@ header {
     display: inline-block;
 }
 
-.priority.low {
+.priority-low {
     background: #e8f5e9;
     color: #2e7d32;
     padding: 4px 10px;
@@ -325,7 +150,8 @@ header {
     display: inline-block;
 }
 
-.status.my-task {
+/* Status Badges */
+.status-my-task {
     background: #e3f2fd;
     color: #1565c0;
     padding: 4px 10px;
@@ -334,7 +160,7 @@ header {
     display: inline-block;
 }
 
-.status.in-progress {
+.status-in-progress {
     background: #fff8e1;
     color: #f57c00;
     padding: 4px 10px;
@@ -343,7 +169,7 @@ header {
     display: inline-block;
 }
 
-.status.completed {
+.status-completed {
     background: #e8f5e9;
     color: #2e7d32;
     padding: 4px 10px;
@@ -352,6 +178,7 @@ header {
     display: inline-block;
 }
 
+/* Delete Button */
 .delete-btn {
     background: #ffebee;
     color: #c62828;
@@ -367,6 +194,7 @@ header {
     background: #ffcdd2;
 }
 
+/* No Data Message */
 .no-data {
     text-align: center;
     padding: 40px;
