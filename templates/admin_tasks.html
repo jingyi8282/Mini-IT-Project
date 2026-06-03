@@ -4,19 +4,18 @@
     
     <header>TASKS LIST</header>
 
-    <!-- Stats Summary -->
     <div class="stats-summary">
         <div class="stat-box">
-            <span class="stat-number">{{ stats.total }}</span>
-            <span class="stat-label">Total Tasks</span>
+            <span class="stat-number">{{ stats.my_tasks }}</span>
+            <span class="stat-label">My Task</span>
+        </div>
+        <div class="stat-box">
+            <span class="stat-number">{{ stats.in_progress }}</span>
+            <span class="stat-label">In Progress</span>
         </div>
         <div class="stat-box">
             <span class="stat-number">{{ stats.completed }}</span>
             <span class="stat-label">Completed</span>
-        </div>
-        <div class="stat-box">
-            <span class="stat-number">{{ stats.pending }}</span>
-            <span class="stat-label">Pending</span>
         </div>
         <div class="stat-box">
             <span class="stat-number">{{ stats.completion_rate }}%</span>
@@ -24,7 +23,6 @@
         </div>
     </div>
 
-    <!-- Filter Section -->
     <div class="filter-section">
         <form method="GET" action="{{ url_for('admin_tasks') }}">
             <label>Filter by User:</label>
@@ -42,7 +40,6 @@
         </form>
     </div>
 
-    <!-- Tasks Table -->
     <div class="tasks_table">
         <table>
             <thead>
