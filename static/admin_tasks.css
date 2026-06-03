@@ -89,7 +89,7 @@ header {
 
 /* Tasks Table */
 .tasks_table {
-    background: white;
+    background: #dfb6b2;
     border-radius: 14px;
     overflow-x: auto;
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
@@ -116,7 +116,7 @@ header {
 }
 
 .tasks_table tr:hover {
-    background: #fbe4d8;
+    background: #d19792;
 }
 
 /* Priority Badges */
@@ -191,7 +191,7 @@ header {
 }
 
 .delete-btn:hover {
-    background: #ffcdd2;
+    background: #ffffff;
 }
 
 /* No Data Message */
