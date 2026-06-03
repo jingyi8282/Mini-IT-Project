@@ -3,7 +3,7 @@ from flask import Flask, render_template, request, redirect, url_for, session
 from database import Database
 from datetime import datetime
 import PyPDF2  
-import docx  # Added for Word document support
+import docx  
 import os
 import random
 import time
@@ -76,9 +76,6 @@ def admin_login():
 def admin_logout():
     session.clear()
     return redirect(url_for("admin_login"))
-    session.pop("is_admin", None)
-    session.pop("admin_email", None)
-    return redirect(url_for("admin_login"))
 
 @app.route("/admin/dashboard")
 def admin_dashboard():
@@ -135,8 +132,21 @@ def admin_tasks():
             "email": email,
             "name": user.get("name", email)
         })
-   
-    stats = db.get_task_stats()
+    
+    #calculate stats 
+    my_tasks_count = sum(1 for t in all_tasks if t.get("status") == "my_task")
+    in_progress_count = sum(1 for t in all_tasks if t.get("status") == "in_progress")
+    completed_count = sum(1 for t in all_tasks if t.get("status") == "completed")
+    
+    total = len(all_tasks)
+    completion_rate = round((completed_count / total) * 100) if total > 0 else 0
+    
+    stats = {
+        "my_tasks": my_tasks_count,
+        "in_progress": in_progress_count,
+        "completed": completed_count,
+        "completion_rate": completion_rate
+    }
     
     return render_template("admin_tasks.html", 
                          tasks=all_tasks,
@@ -409,7 +419,7 @@ def dashboard():
 
     
     donut_fig = go.Figure(data=[go.Pie(
-        labels=['Incomplete', 'Complete'], # Swapped order to match image layout color positioning
+        labels=['Incomplete', 'Complete'],
         values=[incomplete_count, completed_count],
         hole=0.75,
         marker=dict(colors=['#E2D6FF', '#8A4FFF']),
@@ -418,25 +428,22 @@ def dashboard():
         sort=False
     )])
     
-    # Add central total text and style layout
     donut_fig.update_layout(
         showlegend=True,
         legend=dict(orientation="h", yanchor="bottom", y=-0.2, xanchor="center", x=0.5),
         margin=dict(t=10, b=10, l=10, r=10),
         height=220,
-        paper_bgcolor='rgba(0,0,0,0)',  # Transparent background
+        paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)',
         annotations=[dict(text=f'<b>{total_tasks}</b><br>total', x=0.5, y=0.5, font_size=14, showarrow=False, font_color='#1F2937')]
     )
     
-    # Convert configuration to pure embedded HTML component block
     donut_html = donut_fig.to_html(full_html=False, include_plotlyjs='cdn', config={'displayModeBar': False})
 
     active_filter = request.args.get('filter', 'category')
     
     raw_data = []
     
-    # 2. Process tasks based on whichever button was clicked
     if active_filter == "category":
         raw_data = [t.get("category", "Uncategorized").strip() or "Uncategorized" for t in all_user_tasks]
     elif active_filter == "priority":
@@ -460,7 +467,6 @@ def dashboard():
     else:
         counts = Counter(raw_data)
 
-    # 3. Build the chart using the filtered variables
     bar_fig = go.Figure(data=[go.Bar(
         x=list(counts.keys()),
         y=list(counts.values()),
