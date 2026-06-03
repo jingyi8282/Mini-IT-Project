@@ -276,7 +276,7 @@ html {
 
 .features-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 3 columns layout */
+    grid-template-columns: repeat(2, 1fr); /* 3 columns layout */
     gap: 30px;
     margin-top: 20px;
     width: 100%;
