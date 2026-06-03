@@ -43,6 +43,14 @@ def calculate_days_remaining(deadline_str):
         return max(0, remaining)
     except ValueError:
         return 0
+    
+@app.context_processor
+def inject_user_profile():
+    profile_pic = None
+    if "email" in session:
+        user = db.users.get(session["email"], {})
+        profile_pic = user.get("pic")
+    return {"profile_pic": profile_pic, "user_image": bool(profile_pic)}
 
 
 #admin routes

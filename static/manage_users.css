@@ -51,8 +51,14 @@ table td{
 }
 
 .del_btn{
-    background: transparent;
-    border: none;
+    background: #ffebee;
+    border-radius: 12px;
+    border: 1px solid #2B124C;
+    padding: 5px;
     color: #522b5b;
     cursor: pointer;
+}
+
+.del_btn:hover {
+    background: #ffffff;
 }
