@@ -97,10 +97,21 @@ def admin_dashboard():
     total_tasks = sum(len(tasks_list) for tasks_list in all_tasks.values())
   
     global_completed = 0
+    global_overdue = 0
+    today_str = datetime.today().strftime('%Y-%m-%d') # Get platform tracking date matching student dashboard
+
+    # Calculate global tracking metrics across ALL user task dictionaries
     for user_tasks in all_tasks.values():
         for t in user_tasks:
-            if str(t.get('status', '')).lower() in ['completed', 'complete']:
+            status_clean = str(t.get('status', '')).lower()
+            deadline = t.get('deadline')
+            
+            if status_clean in ['completed', 'complete']:
                 global_completed += 1
+            else:
+                # If incomplete, check if the deadline date string is in the past
+                if deadline and deadline < today_str:
+                    global_overdue += 1
 
     global_pending = max(0, total_tasks - global_completed)
 
@@ -111,15 +122,42 @@ def admin_dashboard():
         completion_percentage = 0
         pending_percentage = 0
 
+    admin_user_tracking = []
+    for email, user_info in all_users.items():
+        user_tasks_list = all_tasks.get(email, [])
+        user_total = len(user_tasks_list)
+        
+        user_completed = sum(1 for t in user_tasks_list if str(t.get('status', '')).lower() in ['completed', 'complete'])
+        
+        # Calculate individual percentage safely
+        if user_total > 0:
+            user_percent = round((user_completed / user_total) * 100)
+        else:
+            user_percent = 0 
+            
+        # 🟢 FIX: Changed from 'profile_pic' to 'pic' to sync perfectly with database values
+        profile_pic = user_info.get('pic') or 'default_profile.png'
+        username = user_info.get('name') or 'Student'
+        
+        admin_user_tracking.append({
+            'username': username,
+            'email': email,
+            'profile_pic': profile_pic,
+            'completed_percent': user_percent,
+            'pending_percent': 100 - user_percent if user_total > 0 else 0,
+            'total_tasks': user_total
+        })
+
     return render_template(
         "admin_dashboard.html",
         total_users=total_users,
         total_tasks=total_tasks,
-        total_overdue=1, 
+        total_overdue=global_overdue,  # 🟢 FIX: Sending calculated real-time global sum variable
         global_completed=global_completed,
         global_pending=global_pending,
         completion_percentage=completion_percentage,
-        pending_percentage=pending_percentage
+        pending_percentage=pending_percentage,
+        user_tracking_list=admin_user_tracking
     )
     
 @app.route("/admin/tasks")

@@ -70,5 +70,38 @@
     </p>
 </div>
 
+<div class="user-progress-panel">
+    <h3>Student Progress Monitoring Matrix</h3>
+    <div class="user-grid-container">
+        {% for student in user_tracking_list %}
+       <div class="student-card-wrapper" style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 12px; padding: 16px; margin-bottom: 12px; display: flex; align-items: center; gap: 20px; transition: all 0.3s ease; cursor: pointer;" onmouseover="this.style.backgroundColor='#FDF2F8'; this.style.borderColor='#D1D5DB'; this.style.transform='translateY(-2px)';" onmouseout="this.style.backgroundColor='#FFFFFF'; this.style.borderColor='#E5E7EB'; this.style.transform='none';">
+    
+    <div class="student-profile-badge" style="display: flex; flex-direction: column; align-items: center; width: 110px; text-align: center;">
+        <div class="avatar-frame" style="width: 55px; height: 55px; border-radius: 50%; overflow: hidden; border: 2px solid #4A154B; background: #E5E7EB; margin-bottom: 6px; display: flex; align-items: center; justify-content: center;">
+            {% if student.profile_pic and student.profile_pic != 'default_profile.png' %}
+                <img src="{{ url_for('static', filename='uploads/' + student.profile_pic) }}" alt="Profile" style="width: 100%; height: 100%; object-fit: cover;">
+            {% else %}
+                <span style="font-size: 1.6rem; user-select: none;">👤</span>
+            {% endif %}
+        </div>
+        <span class="student-username" style="font-size: 0.85rem; font-weight: 600; color: #4A154B;">{{ student.username }}</span>
+    </div>
+
+    <div class="student-progress-metrics" style="flex: 1;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 0.85rem;">
+            <span style="color: #6B7280; font-weight: 500;">Task Completion: <strong style="color: #4A154B;">{{ student.completed_percent }}%</strong></span>
+            <span style="color: #9CA3AF;">Total: {{ student.total_tasks }}</span>
+        </div>
+        
+        <div class="progress-track-bg" style="width: 100%; height: 12px; background-color: #E5E7EB; border-radius: 6px; overflow: hidden; display: flex;">
+            <div class="completed-segment" style="width: {{ student.completed_percent }}%; background-color: #4A154B; height: 100%; transition: width 0.4s ease;"></div>
+            <div class="pending-segment" style="width: {{ student.pending_percent }}%; background-color: #F3E8FF; height: 100%;"></div>
+        </div>
+    </div>
+</div>
+        {% endfor %}
+    </div>
+</div>
+
 </div>
 {% endblock %}

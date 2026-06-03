@@ -195,12 +195,12 @@ body {
 }
 
 .completed-seg {
-    background-color: #8A4FFF; /* Signature deep purple theme color */
+    background-color: #4A154B; /* Signature deep purple theme color */
 }
 
 .pending-seg {
-    background-color: #FFD1A9; /* Warm theme tint color */
-    color: #4A154B; /* Dark readable text contrast for background tint */
+    background-color: #8A4FFF; /* Warm theme tint color */
+    color: #ffffff; /* Dark readable text contrast for background tint */
 }
 
 .empty-seg {
@@ -230,14 +230,139 @@ body {
 }
 
 .completed-dot {
-    background-color: #8A4FFF;
+    background-color: #4A154B;
 }
 
 .pending-dot {
-    background-color: #FFD1A9;
+    background-color: #8A4FFF;
     border: 1px solid #E5E7EB;
 }
 
 .legend-text {
     color: #4A4A4A;
+}
+
+/* Container Panel layout matching notebook sketch layout */
+.user-progress-panel {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    margin-top: 24px;
+}
+
+.user-progress-panel h3 {
+    margin: 0 0 20px 0;
+    color: #4A154B;
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.user-grid-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Row wrapper layout item box structure */
+.student-monitor-card {
+    display: flex;
+    align-items: center;
+    background: #FAFAFA;
+    border: 1px solid #E5E7EB;
+    border-radius: 10px;
+    padding: 16px;
+    gap: 24px;
+}
+
+/* Profile elements sizing */
+.student-profile-badge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.student-avatar {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #8A4FFF;
+    margin-bottom: 6px;
+    background-color: #E5E7EB;
+}
+
+.student-username {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #4A154B;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+}
+
+/* Individual user mini-bar horizontal tracks */
+.student-track-wrapper {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.student-mini-bar {
+    display: flex;
+    height: 18px;
+    width: 100%;
+    border-radius: 6px;
+    overflow: hidden;
+    background-color: #E5E7EB;
+}
+
+.student-seg {
+    height: 100%;
+}
+
+.fill-completed {
+    background-color: #8A4FFF; /* Purple complete segment block */
+}
+
+.fill-pending {
+    background-color: #FFD1A9; /* Tinted incomplete task segment track block */
+}
+
+.fill-empty {
+    background-color: #D1D5DB;
+}
+
+.student-bar-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: #6B7280;
+}
+.student-card-wrapper {
+    background: #FFFFFF;
+    border: 1px solid #E5E7EB;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    
+    /* Smooth transition for the hover effect */
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+/* Hover state matching the plum/rose accent tone of the task list row */
+.student-card-wrapper:hover {
+    background-color: #FDF2F8; /* Soft plum/rose accent tint */
+    border-color: #D1D5DB;
+    transform: translateY(-2px); /* Subtle elevate card look */
+    box-shadow: 0 4px 12px rgba(74, 21, 75, 0.08); /* Shadow with matching deep purple hue */
 }
