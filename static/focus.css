@@ -156,9 +156,11 @@ h3{
     align-items: center;
     background-color: #fbe4d8;
     border-radius: 14px;
-    font-size: 50px;
+    font-size: 64px;
+    color: #2B124C;
     border: 2px solid #2B124C;
-    width: 200px;
+    width: 240px;
+    height: 100px;
     padding: 15px 30px;
     margin: auto;
     box-shadow: 0 4px 20px rgb(247, 106, 247)
@@ -176,7 +178,7 @@ h3{
     color: #522b5b;
     font-size: 12px;
     font-weight: bold;
-    padding: 5px;
+    padding: 8px;
     margin-inline: 5px;
     margin-bottom: 5px;
     margin-top: 5px;
@@ -189,7 +191,7 @@ h3{
     color: #522b5b;
     font-size: 12px;
     font-weight: bold;
-    padding: 5px;
+    padding: 8px;
     margin-inline: 5px;
     margin-bottom: 5px;
     margin-top: 5px;
@@ -202,7 +204,7 @@ h3{
     color: #522b5b;
     font-size: 12px;
     font-weight: bold;
-    padding: 5px;
+    padding: 8px;
     margin-inline: 5px;
     margin-bottom: 5px;
     margin-top: 5px;
@@ -215,7 +217,7 @@ h3{
     color: #522b5b;
     font-size: 12px;
     font-weight: bold;
-    padding: 5px;
+    padding: 8px;
     margin-inline: 5px;
     margin-bottom: 5px;
     margin-top: 5px;

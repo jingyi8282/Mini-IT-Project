@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+         <img src="{{ url_for('static', filename='AD_Logo.png') }}" class="logo_img">
+        <ul>
+            <li><a href="{{url_for('admin_dashboard')}}"> Admin Dashboard </a></li>
+            <li><a href="{{url_for('manage_users')}}"> User Management </a></li>
+            <li><a href="{{ url_for('admin_tasks') }}">Task Management</a></li>
+        </ul>
+        <div class="right_bar">
+            <ul>
+                <li><a href="{{url_for('home')}}"> Logout </a></li>
+            </ul>
+        </div>
+    </nav>
+    <main> {% block content %}{% endblock %} </main>
+    
+    
+</body>
+</html>

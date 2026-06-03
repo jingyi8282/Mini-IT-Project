@@ -69,13 +69,27 @@ ul {
 
 .search_bar{
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
     justify-content: center;
+    border: 2px solid #854f6c;
+    border-radius: 14px;
+    width: 60%;
+    margin: 20px auto;
+    padding: 5px 15px;
+}
+
+.search_bar:hover{
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
 }
 
 .search_input{
-    width: 80%;
+    width: 100%;
+    border: none;
+    background: transparent;
+    padding: 10px;
+    outline: none;
 }
 
 .task_card:hover{
@@ -95,7 +109,7 @@ ul {
     background-color: #f5d4c3;
 }
 
-input{
+.int_tasks{
     border-radius: 14px;
     background-color: #fbe4d8;
     color: #522b5b;
@@ -297,16 +311,40 @@ input{
 table{
     width: 100%;
     border: 2px solid #2B124C;
-    border-radius: 14px;
-    background-color: #fbe4d8;
+    border-collapse: separate;
+    border-radius: 12px;
+    background-color: #dfb6b2;
+    font-size: 14px;
+    padding: 10px;
+    margin-bottom: 10px;
+    box-shadow: 0 4px 20px rgb(141, 115, 141)
 }
 
 table th{
-    background-color: #ce918c;
-    border-radius: 14px;
+    padding: 10px;
+    background-color: #2B124C;
+    border-radius: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: white;
+    text-align: left;
 }
 
+table tr:nth-child(even) {
+    background-color: rgba(0, 0, 0, 0.03);
+}
+
+table tr:hover{
+    background-color: #d19792;
+    transition: 0.3s;
+}
+
+table tr td{
+    border-radius: 12px;
+}
+
+
 table td{
-    padding: 2px;
-    text-align: center;
+    padding: 10px;
+    color: #522b5b;
 }

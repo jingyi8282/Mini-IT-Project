@@ -40,3 +40,27 @@ body{
     align-items: center;
     
 }
+
+.prf_pic, .default_avatar{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin: auto;
+    border: 3px solid #2B124C;
+    box-shadow: 0 4px 20px rgb(250, 145, 255);
+    display: inline-block;
+    box-sizing: border-box;
+    vertical-align: middle;
+}
+
+.prf_pic{
+    background-color: #fbe4d8;
+    object-fit: cover;
+}
+
+.default_avatar{
+    background: #fbe4d8;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}

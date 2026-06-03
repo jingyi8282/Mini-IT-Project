@@ -1,0 +1,202 @@
+/* ========== ADMIN TASKS PAGE STYLES ========== */
+
+/* Header - Card style */
+header {
+    font-size: 26px;
+    font-weight: bold;
+    color: #2B124C;
+    background: #dfb6b2;
+    padding: 15px 20px;
+    border-radius: 14px;
+    margin-bottom: 20px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+/* Stats Cards - Full width, no gaps */
+.stats-summary {
+    display: flex;
+    width: 100%;
+    margin-bottom: 30px;
+}
+
+.stat-box {
+    background: #dfb6b2;
+    padding: 25px 20px;
+    text-align: center;
+    flex: 1;
+    border-left: 1px solid #854F6C;
+}
+
+.stat-box:first-child {
+    border-radius: 14px 0 0 14px;
+    border-left: none;
+}
+
+.stat-box:last-child {
+    border-radius: 0 14px 14px 0;
+}
+
+.stat-number {
+    display: block;
+    font-size: 36px;
+    font-weight: bold;
+    color: #2B124C;
+}
+
+.stat-label {
+    font-size: 14px;
+    color: #522B5B;
+    margin-top: 8px;
+}
+
+/* Filter Section */
+.filter-section {
+    background: #fbe4d8;
+    padding: 15px 20px;
+    border-radius: 14px;
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    border: 1px solid #DFB6B2;
+}
+
+.filter-section label {
+    font-weight: bold;
+    color: #2B124C;
+}
+
+.filter-section select {
+    padding: 8px 12px;
+    border-radius: 10px;
+    border: 1px solid #DFB6B2;
+    background: white;
+    color: #522B5B;
+}
+
+.clear-filter {
+    color: #854F6C;
+    text-decoration: none;
+    font-size: 13px;
+}
+
+.clear-filter:hover {
+    text-decoration: underline;
+}
+
+/* Tasks Table */
+.tasks_table {
+    background: #dfb6b2;
+    border-radius: 14px;
+    overflow-x: auto;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border: 1px solid #DFB6B2;
+}
+
+.tasks_table table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.tasks_table th {
+    background: #2B124C;
+    color: white;
+    padding: 14px 15px;
+    text-align: left;
+}
+
+.tasks_table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #DFB6B2;
+    vertical-align: middle;
+}
+
+.tasks_table tr:hover {
+    background: #d19792;
+}
+
+/* Priority Badges */
+.priority-high {
+    background: #ffebee;
+    color: #c62828;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    display: inline-block;
+}
+
+.priority-medium {
+    background: #fff3e0;
+    color: #ef6c00;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    display: inline-block;
+}
+
+.priority-low {
+    background: #e8f5e9;
+    color: #2e7d32;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    display: inline-block;
+}
+
+/* Status Badges */
+.status-my-task {
+    background: #e3f2fd;
+    color: #1565c0;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    display: inline-block;
+}
+
+.status-in-progress {
+    background: #fff8e1;
+    color: #f57c00;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    display: inline-block;
+}
+
+.status-completed {
+    background: #e8f5e9;
+    color: #2e7d32;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    display: inline-block;
+}
+
+/* Delete Button */
+.delete-btn {
+    background: #ffebee;
+    color: #c62828;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.delete-btn:hover {
+    background: #ffffff;
+}
+
+/* No Data Message */
+.no-data {
+    text-align: center;
+    padding: 40px;
+    color: #999;
+}

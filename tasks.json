@@ -1,39 +1,5 @@
 {
-  "jean2828@gmail.com": [
-    {
-      "id": 1,
-      "title": "physics",
-      "priority": "High",
-      "deadline": "2026-05-12",
-      "category": "revision",
-      "status": "completed"
-    },
-    {
-      "id": 2,
-      "title": "maths",
-      "priority": "Medium",
-      "deadline": "2026-05-17",
-      "category": "revision",
-      "status": "my_task"
-    }
-  ],
   "LALITHAMBIGAI.ANANDAN.RAJ@student.mmu.edu.my": [
-    {
-      "id": 1,
-      "title": "DS topic 3",
-      "priority": "Medium",
-      "deadline": "2026-05-27",
-      "category": "revision",
-      "status": "in_progress"
-    },
-    {
-      "id": 2,
-      "title": "English Essay",
-      "priority": "High",
-      "deadline": "2026-05-28",
-      "category": "assignments",
-      "status": "my_task"
-    },
     {
       "id": 3,
       "title": "maths quiz 2",
@@ -52,14 +18,6 @@
     }
   ],
   "ratnajane0207@gmail.com": [
-    {
-      "id": 1,
-      "title": "english",
-      "priority": "Low",
-      "deadline": "2026-05-21",
-      "category": "assignments",
-      "status": "completed"
-    },
     {
       "id": 2,
       "title": "Maths",
@@ -96,27 +54,20 @@
   "jingyi2828@gmail.com": [
     {
       "id": 1,
-      "title": "math",
-      "priority": "Low",
+      "title": "maths",
+      "priority": "Medium",
       "deadline": "2026-06-03",
       "category": "revision",
-      "status": "in_progress"
+      "status": "my_task"
     },
     {
       "id": 2,
-      "title": "digital system",
-      "priority": "Medium",
-      "deadline": "2026-05-20",
-      "category": "revision",
-      "status": "completed"
-    },
-    {
-      "id": 3,
       "title": "coding",
-      "priority": "High",
-      "deadline": "2026-05-20",
+      "priority": "Low",
+      "deadline": "2026-06-04",
       "category": "assignments",
-      "status": "completed"
+      "status": "in_progress"
     }
-  ]
+  ],
+  "lalithambigai8449@gmail.com": []
 }

@@ -3,7 +3,7 @@ from flask import Flask, render_template, request, redirect, url_for, session
 from database import Database
 from datetime import datetime
 import PyPDF2  
-import docx  # Added for Word document support
+import docx  
 import os
 import random
 import time
@@ -43,18 +43,23 @@ def calculate_days_remaining(deadline_str):
         return max(0, remaining)
     except ValueError:
         return 0
+    
+@app.context_processor
+def inject_user_profile():
+    profile_pic = None
+    if "email" in session:
+        user = db.users.get(session["email"], {})
+        profile_pic = user.get("pic")
+    return {"profile_pic": profile_pic, "user_image": bool(profile_pic)}
 
 
 #admin routes
 
 @app.route("/admin/login", methods=["GET", "POST"])
 def admin_login():
-    # Force clear old user states ONLY when navigating to the page cleanly (GET request)
-    # This ensures it won't auto-login or save conflicting student dashboards
     if request.method == "GET":
         session.clear()
 
-    # If already verified explicitly as an admin, let them through
     if session.get("is_admin"):
         return redirect(url_for("admin_dashboard"))
     
@@ -62,16 +67,13 @@ def admin_login():
         email = request.form.get("email")
         password = request.form.get("password")
         
-        # Authenticate with your database.py admin check helper
         if db.check_admin_login(email, password):
-            session.clear() # Clear any remaining user remnants
+            session.clear() 
             
-            # Set explicit admin session details
             session["is_admin"] = True
             session["admin_email"] = email
             session["name"] = "Admin"
             
-            # 🟢 Send straight to your administrative panel template!
             return redirect(url_for("admin_dashboard"))
         else:
             return render_template("admin_login.html", error="Invalid admin credentials")
@@ -82,34 +84,26 @@ def admin_login():
 def admin_logout():
     session.clear()
     return redirect(url_for("admin_login"))
-    session.pop("is_admin", None)
-    session.pop("admin_email", None)
-    return redirect(url_for("admin_login"))
 
 @app.route("/admin/dashboard")
 def admin_dashboard():
-    # 🔐 Security Guard Block: If they aren't verified as an admin, kick them out
     if not session.get("is_admin"):
         return redirect(url_for("admin_login"))
-        
-    # Read systemic variables out from your database.py file dictionaries
+    
     all_users = getattr(db, "users", {})
     all_tasks = getattr(db, "tasks", {})
     
     total_users = len(all_users)
     total_tasks = sum(len(tasks_list) for tasks_list in all_tasks.values())
-    
-   # Calculate completions manually
+  
     global_completed = 0
     for user_tasks in all_tasks.values():
         for t in user_tasks:
             if str(t.get('status', '')).lower() in ['completed', 'complete']:
                 global_completed += 1
 
-    # Calculate remaining pending tasks
     global_pending = max(0, total_tasks - global_completed)
 
-    # 🟢 Calculate percentage for the pure CSS tracking bar layout
     if total_tasks > 0:
         completion_percentage = round((global_completed / total_tasks) * 100)
         pending_percentage = 100 - completion_percentage
@@ -128,6 +122,67 @@ def admin_dashboard():
         pending_percentage=pending_percentage
     )
     
+@app.route("/admin/tasks")
+def admin_tasks():
+    if not session.get("is_admin"):
+        return redirect(url_for("admin_login"))
+
+    filter_user = request.args.get("filter_user", "")
+    
+    all_tasks = db.get_all_users_tasks()
+    
+    if filter_user:
+        all_tasks = [t for t in all_tasks if t["user_email"] == filter_user]
+  
+    all_users = []
+    for email, user in db.users.items():
+        all_users.append({
+            "email": email,
+            "name": user.get("name", email)
+        })
+    
+    #calculate stats 
+    my_tasks_count = sum(1 for t in all_tasks if t.get("status") == "my_task")
+    in_progress_count = sum(1 for t in all_tasks if t.get("status") == "in_progress")
+    completed_count = sum(1 for t in all_tasks if t.get("status") == "completed")
+    
+    total = len(all_tasks)
+    completion_rate = round((completed_count / total) * 100) if total > 0 else 0
+    
+    stats = {
+        "my_tasks": my_tasks_count,
+        "in_progress": in_progress_count,
+        "completed": completed_count,
+        "completion_rate": completion_rate
+    }
+    
+    return render_template("admin_tasks.html", 
+                         tasks=all_tasks,
+                         users=all_users,
+                         filter_user=filter_user,
+                         stats=stats)
+
+#admin delete tasks
+@app.route("/admin/delete_task/<int:task_id>", methods=["POST"])
+def admin_delete_task(task_id):
+    if not session.get("is_admin"):
+        return redirect(url_for("admin_login"))
+    
+    db.delete_any_task(task_id)
+    return redirect(url_for("admin_tasks"))
+
+#admin delete users
+@app.route("/admin/delete_user/<string:email>", methods=["POST"])
+def admin_delete_user(email):
+    if not session.get("is_admin"):
+        return redirect(url_for("admin_login"))
+    
+    #admin cannot delete themselves
+    if email == session.get("admin_email"):
+        return redirect(url_for("manage_users"))
+    
+    db.delete_user_by_admin(email)
+    return redirect(url_for("manage_users"))
 
 #normal route
 @app.route("/")
@@ -372,7 +427,7 @@ def dashboard():
 
     
     donut_fig = go.Figure(data=[go.Pie(
-        labels=['Incomplete', 'Complete'], # Swapped order to match image layout color positioning
+        labels=['Incomplete', 'Complete'],
         values=[incomplete_count, completed_count],
         hole=0.75,
         marker=dict(colors=['#E2D6FF', '#8A4FFF']),
@@ -381,25 +436,22 @@ def dashboard():
         sort=False
     )])
     
-    # Add central total text and style layout
     donut_fig.update_layout(
         showlegend=True,
         legend=dict(orientation="h", yanchor="bottom", y=-0.2, xanchor="center", x=0.5),
         margin=dict(t=10, b=10, l=10, r=10),
         height=220,
-        paper_bgcolor='rgba(0,0,0,0)',  # Transparent background
+        paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)',
         annotations=[dict(text=f'<b>{total_tasks}</b><br>total', x=0.5, y=0.5, font_size=14, showarrow=False, font_color='#1F2937')]
     )
     
-    # Convert configuration to pure embedded HTML component block
     donut_html = donut_fig.to_html(full_html=False, include_plotlyjs='cdn', config={'displayModeBar': False})
 
     active_filter = request.args.get('filter', 'category')
     
     raw_data = []
     
-    # 2. Process tasks based on whichever button was clicked
     if active_filter == "category":
         raw_data = [t.get("category", "Uncategorized").strip() or "Uncategorized" for t in all_user_tasks]
     elif active_filter == "priority":
@@ -423,7 +475,6 @@ def dashboard():
     else:
         counts = Counter(raw_data)
 
-    # 3. Build the chart using the filtered variables
     bar_fig = go.Figure(data=[go.Bar(
         x=list(counts.keys()),
         y=list(counts.values()),
