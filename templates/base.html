@@ -17,11 +17,11 @@
         <div class="right_bar">
             <ul>
                 <li><a href="{{url_for('home')}}"> Logout </a></li>
-                <li><a href="{{url_for('profile')}}" class="profile_pic"> 
+                <li><a href="{{url_for('profile')}}"> 
                         {% if profile_pic %}
                             <img src="{{ url_for('static', filename='uploads/' + profile_pic) }}" alt="Profile Picture" class="prf_pic">
                         {% else %}
-                            <div class="default-avatar">👤</div>
+                            <div class="default_avatar">👤</div>
                         {% endif %}
                     </a>
                 </li>

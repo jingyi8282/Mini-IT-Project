@@ -1,14 +1,6 @@
 {
   "LALITHAMBIGAI.ANANDAN.RAJ@student.mmu.edu.my": [
     {
-      "id": 2,
-      "title": "English Essay",
-      "priority": "High",
-      "deadline": "2026-05-28",
-      "category": "assignments",
-      "status": "my_task"
-    },
-    {
       "id": 3,
       "title": "maths quiz 2",
       "priority": "High",
@@ -48,7 +40,7 @@
       "priority": "High",
       "deadline": "2026-05-22",
       "category": "personal",
-      "status": "my_task"
+      "status": "completed"
     },
     {
       "id": 5,
@@ -56,7 +48,7 @@
       "priority": "Low",
       "deadline": "2026-06-01",
       "category": "revision",
-      "status": "my_task"
+      "status": "completed"
     }
   ],
   "jingyi2828@gmail.com": [
@@ -76,5 +68,6 @@
       "category": "assignments",
       "status": "in_progress"
     }
-  ]
+  ],
+  "lalithambigai8449@gmail.com": []
 }

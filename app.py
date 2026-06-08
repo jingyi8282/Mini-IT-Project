@@ -1,9 +1,9 @@
 from groq import Groq
 from flask import Flask, render_template, request, redirect, url_for, session
 from database import Database
-from datetime import datetime
+from datetime import datetime, timedelta
 import PyPDF2  
-import docx  # Added for Word document support
+import docx  
 import os
 import random
 import time
@@ -43,6 +43,14 @@ def calculate_days_remaining(deadline_str):
         return max(0, remaining)
     except ValueError:
         return 0
+    
+@app.context_processor
+def inject_user_profile():
+    profile_pic = None
+    if "email" in session:
+        user = db.users.get(session["email"], {})
+        profile_pic = user.get("pic")
+    return {"profile_pic": profile_pic, "user_image": bool(profile_pic)}
 
 
 #admin routes
@@ -76,9 +84,6 @@ def admin_login():
 def admin_logout():
     session.clear()
     return redirect(url_for("admin_login"))
-    session.pop("is_admin", None)
-    session.pop("admin_email", None)
-    return redirect(url_for("admin_login"))
 
 @app.route("/admin/dashboard")
 def admin_dashboard():
@@ -92,10 +97,19 @@ def admin_dashboard():
     total_tasks = sum(len(tasks_list) for tasks_list in all_tasks.values())
   
     global_completed = 0
+    global_overdue = 0
+    today_str = datetime.today().strftime('%Y-%m-%d')
+
     for user_tasks in all_tasks.values():
         for t in user_tasks:
-            if str(t.get('status', '')).lower() in ['completed', 'complete']:
+            status_clean = str(t.get('status', '')).lower()
+            deadline = t.get('deadline')
+            
+            if status_clean in ['completed', 'complete']:
                 global_completed += 1
+            else:
+                if deadline and deadline < today_str:
+                    global_overdue += 1
 
     global_pending = max(0, total_tasks - global_completed)
 
@@ -106,15 +120,40 @@ def admin_dashboard():
         completion_percentage = 0
         pending_percentage = 0
 
+    admin_user_tracking = []
+    for email, user_info in all_users.items():
+        user_tasks_list = all_tasks.get(email, [])
+        user_total = len(user_tasks_list)
+        
+        user_completed = sum(1 for t in user_tasks_list if str(t.get('status', '')).lower() in ['completed', 'complete'])
+        
+        if user_total > 0:
+            user_percent = round((user_completed / user_total) * 100)
+        else:
+            user_percent = 0 
+            
+        profile_pic = user_info.get('pic') or 'default_profile.png'
+        username = user_info.get('name') or 'Student'
+        
+        admin_user_tracking.append({
+            'username': username,
+            'email': email,
+            'profile_pic': profile_pic,
+            'completed_percent': user_percent,
+            'pending_percent': 100 - user_percent if user_total > 0 else 0,
+            'total_tasks': user_total
+        })
+
     return render_template(
         "admin_dashboard.html",
         total_users=total_users,
         total_tasks=total_tasks,
-        total_overdue=1, 
+        total_overdue=global_overdue,
         global_completed=global_completed,
         global_pending=global_pending,
         completion_percentage=completion_percentage,
-        pending_percentage=pending_percentage
+        pending_percentage=pending_percentage,
+        user_tracking_list=admin_user_tracking
     )
     
 @app.route("/admin/tasks")
@@ -135,8 +174,20 @@ def admin_tasks():
             "email": email,
             "name": user.get("name", email)
         })
-   
-    stats = db.get_task_stats()
+    
+    my_tasks_count = sum(1 for t in all_tasks if t.get("status") == "my_task")
+    in_progress_count = sum(1 for t in all_tasks if t.get("status") == "in_progress")
+    completed_count = sum(1 for t in all_tasks if t.get("status") == "completed")
+    
+    total = len(all_tasks)
+    completion_rate = round((completed_count / total) * 100) if total > 0 else 0
+    
+    stats = {
+        "my_tasks": my_tasks_count,
+        "in_progress": in_progress_count,
+        "completed": completed_count,
+        "completion_rate": completion_rate
+    }
     
     return render_template("admin_tasks.html", 
                          tasks=all_tasks,
@@ -333,6 +384,8 @@ def register():
         if password != confirm:
             return render_template("register.html", error="Passwords do not match")
         if db.create_user(name, email, password):
+            # welcome notification
+            db.add_notification(email, "Welcome!", "Thanks for joining Academic Diary! Start by adding your first task.", "success")
             return redirect(url_for("login"))
         else:
             return render_template("register.html", error="Email already exists")
@@ -348,6 +401,22 @@ def login():
             session["email"] = user[0]
             session["name"] = user[1]
             db.update_streak(email)
+            
+            # check their streak 
+            streak = db.get_streak(email)
+            if streak == 5:
+                db.add_notification(email, "5 Day Streak! 🔥", "You've studied 5 days in a row! Amazing! Keep it up!", "success")
+            elif streak == 10:
+                db.add_notification(email, "10 Day Streak! 🏆", "10 days straight! You're on fire! Double digits!", "success")
+            elif streak == 20:
+                db.add_notification(email, "20 Day Streak! ⭐", "20 days! You're a study machine!", "success")
+            elif streak == 30:
+                db.add_notification(email, "30 Day Streak! 🎉", "30 days! One whole month! Incredible!", "success")
+            elif streak == 50:
+                db.add_notification(email, "50 Day Streak! 👑", "50 days! Legendary status unlocked!", "success")
+            elif streak == 100:
+                db.add_notification(email, "100 Day Streak! 🏅", "ONE HUNDRED DAYS! You're a study champion!", "success")
+            
             return redirect(url_for("dashboard"))
         else:
             return render_template("login.html", error="Wrong email or password")
@@ -399,17 +468,33 @@ def dashboard():
     today_str = datetime.today().strftime('%Y-%m-%d')
     overdue_count = 0
     
+    # check for tasks due tomorrow 
+    tomorrow_str = (datetime.now().date() + timedelta(days=1)).strftime('%Y-%m-%d')
+    
     for task in all_user_tasks:
         status_clean = str(task.get('status', '')).lower()
         deadline = task.get('deadline') 
-       
+        
+        # check overdue
         if status_clean not in ['completed', 'complete'] and deadline:
             if deadline < today_str:
                 overdue_count += 1
+        
+        # check for tomorrow deadline
+        if status_clean not in ['completed', 'complete'] and deadline == tomorrow_str:
+            # check if already notified today
+            already_notified = False
+            notifs = db.get_notifications(user_email)
+            for n in notifs:
+                if "due tomorrow" in n.get("title", "").lower() and task.get("title") in n.get("message", ""):
+                    already_notified = True
+                    break
+            if not already_notified:
+                db.add_notification(user_email, "Task Due Tomorrow ⚠️", f"'{task.get('title')}' is due tomorrow! Don't forget!", "warning")
 
     
     donut_fig = go.Figure(data=[go.Pie(
-        labels=['Incomplete', 'Complete'], # Swapped order to match image layout color positioning
+        labels=['Incomplete', 'Complete'],
         values=[incomplete_count, completed_count],
         hole=0.75,
         marker=dict(colors=['#E2D6FF', '#8A4FFF']),
@@ -418,25 +503,22 @@ def dashboard():
         sort=False
     )])
     
-    # Add central total text and style layout
     donut_fig.update_layout(
         showlegend=True,
         legend=dict(orientation="h", yanchor="bottom", y=-0.2, xanchor="center", x=0.5),
         margin=dict(t=10, b=10, l=10, r=10),
         height=220,
-        paper_bgcolor='rgba(0,0,0,0)',  # Transparent background
+        paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)',
         annotations=[dict(text=f'<b>{total_tasks}</b><br>total', x=0.5, y=0.5, font_size=14, showarrow=False, font_color='#1F2937')]
     )
     
-    # Convert configuration to pure embedded HTML component block
     donut_html = donut_fig.to_html(full_html=False, include_plotlyjs='cdn', config={'displayModeBar': False})
 
     active_filter = request.args.get('filter', 'category')
     
     raw_data = []
     
-    # 2. Process tasks based on whichever button was clicked
     if active_filter == "category":
         raw_data = [t.get("category", "Uncategorized").strip() or "Uncategorized" for t in all_user_tasks]
     elif active_filter == "priority":
@@ -460,7 +542,6 @@ def dashboard():
     else:
         counts = Counter(raw_data)
 
-    # 3. Build the chart using the filtered variables
     bar_fig = go.Figure(data=[go.Bar(
         x=list(counts.keys()),
         y=list(counts.values()),
@@ -581,7 +662,16 @@ def move_task(task_id):
         new_status = request.form.get("status")
         db.update_status(session["email"], task_id, new_status)
         if new_status == "completed":
+            # get task title
+            user_tasks = db.get_tasks(session["email"])
+            task_title = ""
+            for t in user_tasks:
+                if t["id"] == task_id:
+                    task_title = t.get("title", "")
+                    break
+            
             db.add_points(session["email"], 10)
+            db.add_notification(session["email"], "Task Completed! 🎉", f"You completed '{task_title}' and earned 10 XP!", "success")
     return redirect(url_for("tasks"))
 
 @app.route("/edit/<int:task_id>", methods=["GET", "POST"])
@@ -745,6 +835,46 @@ def manage_users():
         return redirect(url_for("admin_login"))
     users = db.get_all_users()
     return render_template("manage_users.html", users=users)
+
+#notifs route
+
+@app.route("/api/notifications")
+def get_notifications():
+    if "email" not in session:
+        return {"error": "not logged in"}, 401
+    
+    notifs = db.get_notifications(session["email"])
+    unread_count = db.get_unread_count(session["email"])
+    
+    return {
+        "notifications": notifs,
+        "unread_count": unread_count
+    }
+
+@app.route("/api/notifications/mark_read/<int:notif_id>", methods=["POST"])
+def mark_notification_read(notif_id):
+    if "email" not in session:
+        return {"error": "not logged in"}, 401
+    
+    db.mark_notification_read(session["email"], notif_id)
+    return {"success": True}
+
+@app.route("/api/notifications/mark_all_read", methods=["POST"])
+def mark_all_notifications_read():
+    if "email" not in session:
+        return {"error": "not logged in"}, 401
+    
+    db.mark_all_read(session["email"])
+    return {"success": True}
+
+@app.route("/notifications")
+def view_notifications_page():
+    if "email" not in session:
+        return redirect(url_for("login"))
+    
+    notifs = db.get_notifications(session["email"])
+    return render_template("notifications.html", notifications=notifs)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
