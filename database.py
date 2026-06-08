@@ -175,7 +175,6 @@ class Database:
         return users_list
     
     def delete_user_by_admin(self, email):
-        """Admin can delete any user and all their tasks"""
         if email in self.users:
             if email == self.admin_email:
                 return False
@@ -192,7 +191,6 @@ class Database:
     #admin tasks func
     
     def get_all_users_tasks(self):
-        """Get all tasks from all users for admin panel"""
         all_tasks = []
         
         for email, tasks in self.tasks.items():
@@ -251,3 +249,106 @@ class Database:
             "pending": pending,
             "completion_rate": completion_rate
         }
+
+    #notifs
+    
+    def add_notification(self, email, title, msg):
+        """add a notification for a user"""
+        try:
+            f = open("notifications.json", "r")
+            data = json.load(f)
+            f.close()
+        except:
+            data = {}
+        
+        if email not in data:
+            data[email] = []
+        
+        # get next id number
+        if len(data[email]) == 0:
+            new_id = 1
+        else:
+            biggest = 0
+            for n in data[email]:
+                if n["id"] > biggest:
+                    biggest = n["id"]
+            new_id = biggest + 1
+        
+        new_notif = {
+            "id": new_id,
+            "title": title,
+            "message": msg,
+            "read": False,
+            "time": str(datetime.now())
+        }
+        
+        data[email].append(new_notif)
+        
+        f = open("notifications.json", "w")
+        json.dump(data, f, indent=2)
+        f.close()
+    
+    def get_notifications(self, email):
+        try:
+            f = open("notifications.json", "r")
+            data = json.load(f)
+            f.close()
+            
+            if email in data:
+                # reverse so newest shows first
+                notifs = data[email][::-1]
+                return notifs
+            return []
+        except:
+            return []
+    
+    def get_unread_count(self, email):
+        try:
+            f = open("notifications.json", "r")
+            data = json.load(f)
+            f.close()
+            
+            if email not in data:
+                return 0
+            
+            count = 0
+            for n in data[email]:
+                if not n["read"]:
+                    count = count + 1
+            return count
+        except:
+            return 0
+    
+    def mark_notification_read(self, email, notif_id):
+        try:
+            f = open("notifications.json", "r")
+            data = json.load(f)
+            f.close()
+            
+            if email in data:
+                for n in data[email]:
+                    if n["id"] == notif_id:
+                        n["read"] = True
+                        break
+            
+            f = open("notifications.json", "w")
+            json.dump(data, f, indent=2)
+            f.close()
+        except:
+            pass
+    
+    def mark_all_read(self, email):
+        try:
+            f = open("notifications.json", "r")
+            data = json.load(f)
+            f.close()
+            
+            if email in data:
+                for n in data[email]:
+                    n["read"] = True
+            
+            f = open("notifications.json", "w")
+            json.dump(data, f, indent=2)
+            f.close()
+        except:
+            pass

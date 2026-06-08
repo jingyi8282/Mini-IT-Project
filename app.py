@@ -1,7 +1,7 @@
 from groq import Groq
 from flask import Flask, render_template, request, redirect, url_for, session
 from database import Database
-from datetime import datetime
+from datetime import datetime, timedelta
 import PyPDF2  
 import docx  
 import os
@@ -98,9 +98,8 @@ def admin_dashboard():
   
     global_completed = 0
     global_overdue = 0
-    today_str = datetime.today().strftime('%Y-%m-%d') # Get platform tracking date matching student dashboard
+    today_str = datetime.today().strftime('%Y-%m-%d')
 
-    # Calculate global tracking metrics across ALL user task dictionaries
     for user_tasks in all_tasks.values():
         for t in user_tasks:
             status_clean = str(t.get('status', '')).lower()
@@ -109,7 +108,6 @@ def admin_dashboard():
             if status_clean in ['completed', 'complete']:
                 global_completed += 1
             else:
-                # If incomplete, check if the deadline date string is in the past
                 if deadline and deadline < today_str:
                     global_overdue += 1
 
@@ -129,13 +127,11 @@ def admin_dashboard():
         
         user_completed = sum(1 for t in user_tasks_list if str(t.get('status', '')).lower() in ['completed', 'complete'])
         
-        # Calculate individual percentage safely
         if user_total > 0:
             user_percent = round((user_completed / user_total) * 100)
         else:
             user_percent = 0 
             
-        # 🟢 FIX: Changed from 'profile_pic' to 'pic' to sync perfectly with database values
         profile_pic = user_info.get('pic') or 'default_profile.png'
         username = user_info.get('name') or 'Student'
         
@@ -152,7 +148,7 @@ def admin_dashboard():
         "admin_dashboard.html",
         total_users=total_users,
         total_tasks=total_tasks,
-        total_overdue=global_overdue,  # 🟢 FIX: Sending calculated real-time global sum variable
+        total_overdue=global_overdue,
         global_completed=global_completed,
         global_pending=global_pending,
         completion_percentage=completion_percentage,
@@ -179,7 +175,6 @@ def admin_tasks():
             "name": user.get("name", email)
         })
     
-    #calculate stats 
     my_tasks_count = sum(1 for t in all_tasks if t.get("status") == "my_task")
     in_progress_count = sum(1 for t in all_tasks if t.get("status") == "in_progress")
     completed_count = sum(1 for t in all_tasks if t.get("status") == "completed")
@@ -389,6 +384,8 @@ def register():
         if password != confirm:
             return render_template("register.html", error="Passwords do not match")
         if db.create_user(name, email, password):
+            # welcome notification
+            db.add_notification(email, "Welcome!", "Thanks for joining Academic Diary! Start by adding your first task.", "success")
             return redirect(url_for("login"))
         else:
             return render_template("register.html", error="Email already exists")
@@ -404,6 +401,22 @@ def login():
             session["email"] = user[0]
             session["name"] = user[1]
             db.update_streak(email)
+            
+            # check their streak 
+            streak = db.get_streak(email)
+            if streak == 5:
+                db.add_notification(email, "5 Day Streak! 🔥", "You've studied 5 days in a row! Amazing! Keep it up!", "success")
+            elif streak == 10:
+                db.add_notification(email, "10 Day Streak! 🏆", "10 days straight! You're on fire! Double digits!", "success")
+            elif streak == 20:
+                db.add_notification(email, "20 Day Streak! ⭐", "20 days! You're a study machine!", "success")
+            elif streak == 30:
+                db.add_notification(email, "30 Day Streak! 🎉", "30 days! One whole month! Incredible!", "success")
+            elif streak == 50:
+                db.add_notification(email, "50 Day Streak! 👑", "50 days! Legendary status unlocked!", "success")
+            elif streak == 100:
+                db.add_notification(email, "100 Day Streak! 🏅", "ONE HUNDRED DAYS! You're a study champion!", "success")
+            
             return redirect(url_for("dashboard"))
         else:
             return render_template("login.html", error="Wrong email or password")
@@ -455,13 +468,29 @@ def dashboard():
     today_str = datetime.today().strftime('%Y-%m-%d')
     overdue_count = 0
     
+    # check for tasks due tomorrow 
+    tomorrow_str = (datetime.now().date() + timedelta(days=1)).strftime('%Y-%m-%d')
+    
     for task in all_user_tasks:
         status_clean = str(task.get('status', '')).lower()
         deadline = task.get('deadline') 
-       
+        
+        # check overdue
         if status_clean not in ['completed', 'complete'] and deadline:
             if deadline < today_str:
                 overdue_count += 1
+        
+        # check for tomorrow deadline
+        if status_clean not in ['completed', 'complete'] and deadline == tomorrow_str:
+            # check if already notified today
+            already_notified = False
+            notifs = db.get_notifications(user_email)
+            for n in notifs:
+                if "due tomorrow" in n.get("title", "").lower() and task.get("title") in n.get("message", ""):
+                    already_notified = True
+                    break
+            if not already_notified:
+                db.add_notification(user_email, "Task Due Tomorrow ⚠️", f"'{task.get('title')}' is due tomorrow! Don't forget!", "warning")
 
     
     donut_fig = go.Figure(data=[go.Pie(
@@ -633,7 +662,16 @@ def move_task(task_id):
         new_status = request.form.get("status")
         db.update_status(session["email"], task_id, new_status)
         if new_status == "completed":
+            # get task title
+            user_tasks = db.get_tasks(session["email"])
+            task_title = ""
+            for t in user_tasks:
+                if t["id"] == task_id:
+                    task_title = t.get("title", "")
+                    break
+            
             db.add_points(session["email"], 10)
+            db.add_notification(session["email"], "Task Completed! 🎉", f"You completed '{task_title}' and earned 10 XP!", "success")
     return redirect(url_for("tasks"))
 
 @app.route("/edit/<int:task_id>", methods=["GET", "POST"])
@@ -797,6 +835,46 @@ def manage_users():
         return redirect(url_for("admin_login"))
     users = db.get_all_users()
     return render_template("manage_users.html", users=users)
+
+#notifs route
+
+@app.route("/api/notifications")
+def get_notifications():
+    if "email" not in session:
+        return {"error": "not logged in"}, 401
+    
+    notifs = db.get_notifications(session["email"])
+    unread_count = db.get_unread_count(session["email"])
+    
+    return {
+        "notifications": notifs,
+        "unread_count": unread_count
+    }
+
+@app.route("/api/notifications/mark_read/<int:notif_id>", methods=["POST"])
+def mark_notification_read(notif_id):
+    if "email" not in session:
+        return {"error": "not logged in"}, 401
+    
+    db.mark_notification_read(session["email"], notif_id)
+    return {"success": True}
+
+@app.route("/api/notifications/mark_all_read", methods=["POST"])
+def mark_all_notifications_read():
+    if "email" not in session:
+        return {"error": "not logged in"}, 401
+    
+    db.mark_all_read(session["email"])
+    return {"success": True}
+
+@app.route("/notifications")
+def view_notifications_page():
+    if "email" not in session:
+        return redirect(url_for("login"))
+    
+    notifs = db.get_notifications(session["email"])
+    return render_template("notifications.html", notifications=notifs)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
