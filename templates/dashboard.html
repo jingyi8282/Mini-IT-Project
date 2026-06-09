@@ -34,6 +34,16 @@
             <span class="metric-title">Total tasks</span>
         </div>
     </div>
+
+    <div class="notification">
+        {% for notif in notifications %}
+        <div class="notif">
+            <strong>{{ notif.title }}:</strong>{{ notif.message }}
+        </div>
+        {% else %}
+        <div class="no_notif">No notifications 😊</div>
+        {% endfor %}
+    </div>
     
     <div class="charts-row">
 

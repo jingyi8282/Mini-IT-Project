@@ -242,4 +242,29 @@ body {
     border-bottom: 2px solid #8A4FFF; /* Purple bottom line indicator */
 }
 
+.notification{
+   display: flex;
+   flex-direction: column;
+   margin: 20px;
+}
+
+.notif{
+    display: flex;
+    background-color: #fbe4d8;
+    border-radius: 8px;
+    padding: 10px;
+    border: 2px solid #2B124C;
+    color: #DC2626;
+    box-shadow: 0 4px 20px rgb(250, 145, 255);
+}
+
+.no_notif{
+    display: flex;
+    background-color: #fbe4d8;
+    border-radius: 8px;
+    padding: 10px;
+    color: #2B124C;
+    border: 2px solid #2B124C;
+    box-shadow: 0 4px 20px rgb(250, 145, 255);
+}
 

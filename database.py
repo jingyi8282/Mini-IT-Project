@@ -252,7 +252,7 @@ class Database:
 
     #notifs
     
-    def add_notification(self, email, title, msg):
+    def add_notification(self, email, title, msg, notif_type=None):
         """add a notification for a user"""
         try:
             f = open("notifications.json", "r")
@@ -278,6 +278,7 @@ class Database:
             "id": new_id,
             "title": title,
             "message": msg,
+            "type": notif_type,
             "read": False,
             "time": str(datetime.now())
         }

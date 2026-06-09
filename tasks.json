@@ -4,15 +4,15 @@
       "id": 3,
       "title": "maths quiz 2",
       "priority": "High",
-      "deadline": "2026-05-25",
+      "deadline": "2026-06-11",
       "category": "revision",
-      "status": "my_task"
+      "status": "completed"
     },
     {
       "id": 4,
       "title": "essay outline submission ",
       "priority": "High",
-      "deadline": "2026-05-20",
+      "deadline": "2026-05-21",
       "category": "assignments",
       "status": "completed"
     }
