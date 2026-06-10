@@ -559,6 +559,7 @@ def dashboard():
     )
     
     bar_html = bar_fig.to_html(full_html=False, include_plotlyjs=False, config={'displayModeBar': False})
+    notifications = db.get_notifications(user_email)
 
     return render_template(
         "dashboard.html", 
@@ -569,7 +570,8 @@ def dashboard():
         total=total_tasks,
         donut_chart=donut_html,
         bar_chart=bar_html,
-        active_filter=active_filter)
+        active_filter=active_filter,
+        notifications=notifications)
 
 @app.route("/api/graph-data/<filter_type>")
 def get_graph_data(filter_type):
@@ -875,6 +877,21 @@ def view_notifications_page():
     notifs = db.get_notifications(session["email"])
     return render_template("notifications.html", notifications=notifs)
 
+@app.route("/notifications/delete/<int:notif_id>", methods=["POST"])
+def delete_notification(notif_id):
+    if "email" not in session:
+        return redirect(url_for("login"))
+    
+    db.delete_notification(session["email"], notif_id)
+    return redirect(url_for("dashboard"))
+
+@app.route("/notifications/delete_all", methods=["POST"])
+def delete_all_notifications():
+    if "email" not in session:
+        return redirect(url_for("login"))
+    
+    db.delete_all_notifications(session["email"])
+    return redirect(url_for("dashboard"))
 
 if __name__ == "__main__":
     app.run(debug=True)

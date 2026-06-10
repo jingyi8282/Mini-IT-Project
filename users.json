@@ -3,9 +3,9 @@
     "name": "Lalitha",
     "password": "Lali@12",
     "joined": "2026-05-21",
-    "points": 20,
-    "streak": 1,
-    "last_login": "2026-06-03",
+    "points": 30,
+    "streak": 2,
+    "last_login": "2026-06-10",
     "pic": "LALITHAMBIGAI.ANANDAN.RAJstudent.mmu.edu.my_Screenshot_2024-06-26_172006.png",
     "bio": "Hello"
   },
@@ -23,10 +23,23 @@
     "name": "jingyi2828",
     "password": "282828",
     "joined": "2026-06-02",
-    "points": 0,
+    "points": 30,
     "streak": 1,
-    "last_login": "2026-06-02",
+    "last_login": "2026-06-10",
     "pic": null,
     "bio": "life is tough"
+<<<<<<< HEAD
+=======
+  },
+  "lalithambigai8449@gmail.com": {
+    "name": "Lali",
+    "password": "lali123",
+    "joined": "2026-06-03",
+    "points": 0,
+    "streak": 1,
+    "last_login": "2026-06-10",
+    "pic": null,
+    "bio": ""
+>>>>>>> main
   }
 }

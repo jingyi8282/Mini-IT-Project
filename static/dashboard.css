@@ -242,4 +242,70 @@ body {
     border-bottom: 2px solid #8A4FFF; /* Purple bottom line indicator */
 }
 
+.notif_title{
+    text-align: center;
+}
 
+.notification{
+   display: flex;
+   flex-direction: column;
+   gap: 20px;
+   margin: 20px;
+   padding: 25px;
+   background-color: #ffffff;
+   border: 2px solid #2B124C;
+   border-radius: 12px;
+}
+
+.notif{
+    display: flex;
+    gap: 10px;
+    background-color: #fbe4d8;
+    border-radius: 8px;
+    padding: 10px;
+    border: 2px solid #2B124C;
+    color: #DC2626;
+    box-shadow: 0 4px 20px rgb(250, 145, 255);
+}
+
+.del_notif{
+    border: none;
+    background: none;
+    margin-left: 45%;
+    cursor: pointer;
+}
+
+.no_notif{
+    display: flex;
+    background-color: #fbe4d8;
+    border-radius: 8px;
+    padding: 10px;
+    color: #2B124C;
+    border: 2px solid #2B124C;
+    box-shadow: 0 4px 20px rgb(250, 145, 255);
+}
+
+.delete-all-form {
+    margin-bottom: 15px;
+    text-align: right;
+}
+
+.delete-all-btn {
+    background: #ffebee;
+    color: #c62828;
+    border: none;
+    padding: 5px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.delete-notif-form {
+    display: inline;
+    margin-left: auto;
+}
+
+.del_notif {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
