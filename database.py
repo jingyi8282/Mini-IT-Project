@@ -253,7 +253,7 @@ class Database:
     #notifs stuffs
     
     def add_notification(self, email, title, msg, notif_type=None):
-        """add a notification for a user"""
+        #add a notif for user
         try:
             f = open("notifications.json", "r")
             data = json.load(f)
@@ -355,7 +355,7 @@ class Database:
             pass
     
     def delete_notification(self, email, notif_id):
-        """delete a single notification"""
+        #delete one notif
         try:
             f = open("notifications.json", "r")
             data = json.load(f)
@@ -375,7 +375,7 @@ class Database:
             pass
     
     def delete_all_notifications(self, email):
-        """delete all notifications for a user"""
+        #delete all notifs
         try:
             f = open("notifications.json", "r")
             data = json.load(f)

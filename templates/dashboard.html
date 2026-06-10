@@ -39,7 +39,6 @@
     <div class="notification">
         <h2 class="notif_title">Notifications 🔔</h2>
         
-        <!-- Delete All button -->
         <form method="POST" action="{{ url_for('delete_all_notifications') }}" style="margin-bottom: 15px; text-align: right;">
             <button type="submit" class="delete-all-btn" style="background: #ffebee; color: #c62828; border: none; padding: 5px 12px; border-radius: 8px; cursor: pointer;">Delete All</button>
         </form>
@@ -48,7 +47,6 @@
         <div class="notif">
             <strong>{{ notif.title }}: </strong>{{ notif.message }}
             
-            <!-- Delete single notification form -->
             <form method="POST" action="{{ url_for('delete_notification', notif_id=notif.id) }}" style="display: inline; margin-left: auto;">
                 <button type="submit" class="del_notif" style="background: none; border: none; cursor: pointer;">
                     <span class="material-symbols-outlined">delete</span>
