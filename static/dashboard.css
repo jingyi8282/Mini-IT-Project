@@ -285,3 +285,27 @@ body {
     box-shadow: 0 4px 20px rgb(250, 145, 255);
 }
 
+.delete-all-form {
+    margin-bottom: 15px;
+    text-align: right;
+}
+
+.delete-all-btn {
+    background: #ffebee;
+    color: #c62828;
+    border: none;
+    padding: 5px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.delete-notif-form {
+    display: inline;
+    margin-left: auto;
+}
+
+.del_notif {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
