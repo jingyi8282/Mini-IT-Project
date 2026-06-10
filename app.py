@@ -559,6 +559,7 @@ def dashboard():
     )
     
     bar_html = bar_fig.to_html(full_html=False, include_plotlyjs=False, config={'displayModeBar': False})
+    notifications = db.get_notifications(user_email)
 
     return render_template(
         "dashboard.html", 
@@ -569,7 +570,8 @@ def dashboard():
         total=total_tasks,
         donut_chart=donut_html,
         bar_chart=bar_html,
-        active_filter=active_filter)
+        active_filter=active_filter,
+        notifications=notifications)
 
 @app.route("/api/graph-data/<filter_type>")
 def get_graph_data(filter_type):
