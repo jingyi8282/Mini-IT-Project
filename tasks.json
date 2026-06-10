@@ -58,7 +58,7 @@
       "priority": "Medium",
       "deadline": "2026-06-03",
       "category": "revision",
-      "status": "my_task"
+      "status": "completed"
     },
     {
       "id": 2,
@@ -66,7 +66,15 @@
       "priority": "Low",
       "deadline": "2026-06-04",
       "category": "assignments",
-      "status": "in_progress"
+      "status": "completed"
+    },
+    {
+      "id": 3,
+      "title": "english",
+      "priority": "Low",
+      "deadline": "2026-06-13",
+      "category": "assignments",
+      "status": "completed"
     }
   ],
   "lalithambigai8449@gmail.com": []

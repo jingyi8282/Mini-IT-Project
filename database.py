@@ -250,10 +250,10 @@ class Database:
             "completion_rate": completion_rate
         }
 
-    #notifs
+    #notifs stuffs
     
     def add_notification(self, email, title, msg, notif_type=None):
-        """add a notification for a user"""
+        #add a notif for user
         try:
             f = open("notifications.json", "r")
             data = json.load(f)
@@ -347,6 +347,42 @@ class Database:
             if email in data:
                 for n in data[email]:
                     n["read"] = True
+            
+            f = open("notifications.json", "w")
+            json.dump(data, f, indent=2)
+            f.close()
+        except:
+            pass
+    
+    def delete_notification(self, email, notif_id):
+        #delete one notif
+        try:
+            f = open("notifications.json", "r")
+            data = json.load(f)
+            f.close()
+            
+            if email in data:
+                new_list = []
+                for n in data[email]:
+                    if n["id"] != notif_id:
+                        new_list.append(n)
+                data[email] = new_list
+            
+            f = open("notifications.json", "w")
+            json.dump(data, f, indent=2)
+            f.close()
+        except:
+            pass
+    
+    def delete_all_notifications(self, email):
+        #delete all notifs
+        try:
+            f = open("notifications.json", "r")
+            data = json.load(f)
+            f.close()
+            
+            if email in data:
+                data[email] = []
             
             f = open("notifications.json", "w")
             json.dump(data, f, indent=2)
