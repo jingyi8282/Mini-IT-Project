@@ -312,15 +312,47 @@ Notes:
             "author" : "David Bly"
         },
         {
-            "text" : "Success isn’t overnight. It’s when every day you get a little better than the day before. It all adds up.",
+            "text" : "Success isn't overnight. It's when every day you get a little better than the day before. It all adds up.",
             "author" : "Dwayne Johnson"
         },
         {
             "text" : "Nothing is impossible. The word itself says 'I'm Possible.",
             "author" : "Audrey Hepburn"
+        },
+        {
+            "text": "The secret of getting ahead is getting started.", 
+            "author": "Mark Twain"
+        },
+        {
+            "text": "It always seems impossible until it's done.", 
+            "author": "Nelson Mandela"
+        },
+        {
+            "text": "You don't have to be great to start, but you have to start to be great.", 
+            "author": "Zig Ziglar"
+        },
+        {
+            "text": "Focus is a matter of deciding what things you're not going to do.", 
+            "author": "John Carmack"
+        },
+        {
+            "text": "There are no secrets to success. It is the result of preparation, hard work, and learning from failure.", 
+            "author": "Colin Powell"
+        },
+        {
+            "text": "Amateurs sit and wait for inspiration, the rest of us just get up and go to work.", 
+            "author": "Stephen King"
+        },
+        {
+            "text": "The beautiful thing about learning is that no one can take it away from you.",
+            "author": "B.B. King"
+        },
+        {
+            "text": "Don't count the days, make the days count.", 
+            "author": "Muhammad Ali"
         }
-    ]
-    
+        ]
+
     random_quote = random.choice(quotes)
 
 
