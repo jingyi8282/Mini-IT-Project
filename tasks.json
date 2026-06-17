@@ -49,6 +49,14 @@
       "deadline": "2026-06-01",
       "category": "revision",
       "status": "completed"
+    },
+    {
+      "id": 6,
+      "title": "Maths",
+      "priority": "Low",
+      "deadline": "2026-06-12",
+      "category": "assignments",
+      "status": "completed"
     }
   ],
   "jingyi2828@gmail.com": [
