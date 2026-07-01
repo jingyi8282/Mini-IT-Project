@@ -1,25 +1,39 @@
+import os
+from dotenv import load_dotenv
 from groq import Groq
 from flask import Flask, render_template, request, redirect, url_for, session
 from database import Database
 from datetime import datetime, timedelta
 import PyPDF2  
 import docx  
-import os
 import random
 import time
 from werkzeug.utils import secure_filename
 import glob
 from collections import Counter
-from datetime import datetime
 import plotly.graph_objects as go
 
+load_dotenv()
+
 app = Flask(__name__)
-app.secret_key = "abc123"
+app.secret_key = os.getenv("SECRET_KEY", "abc123") # added inside our .env file instaed
 db = Database()
 
-# our api key for notes feature
-GROQ_API_KEY = ""
-client = Groq(api_key=GROQ_API_KEY)
+# our api key inside .env
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+
+# only initialize client if key exists
+if GROQ_API_KEY:
+    try:
+        client = Groq(api_key=GROQ_API_KEY)
+        print("✅ Groq client initialized successfully")
+    except Exception as e:
+        print(f"❌ Failed to initialize Groq client: {e}")
+        client = None
+else:
+    print("⚠️ GROQ_API_KEY not found in environment variables!")
+    client = None
+
 
 def call_groq_ai(prompt):
     try:
@@ -312,47 +326,15 @@ Notes:
             "author" : "David Bly"
         },
         {
-            "text" : "Success isn't overnight. It's when every day you get a little better than the day before. It all adds up.",
+            "text" : "Success isn’t overnight. It’s when every day you get a little better than the day before. It all adds up.",
             "author" : "Dwayne Johnson"
         },
         {
             "text" : "Nothing is impossible. The word itself says 'I'm Possible.",
             "author" : "Audrey Hepburn"
-        },
-        {
-            "text": "The secret of getting ahead is getting started.", 
-            "author": "Mark Twain"
-        },
-        {
-            "text": "It always seems impossible until it's done.", 
-            "author": "Nelson Mandela"
-        },
-        {
-            "text": "You don't have to be great to start, but you have to start to be great.", 
-            "author": "Zig Ziglar"
-        },
-        {
-            "text": "Focus is a matter of deciding what things you're not going to do.", 
-            "author": "John Carmack"
-        },
-        {
-            "text": "There are no secrets to success. It is the result of preparation, hard work, and learning from failure.", 
-            "author": "Colin Powell"
-        },
-        {
-            "text": "Amateurs sit and wait for inspiration, the rest of us just get up and go to work.", 
-            "author": "Stephen King"
-        },
-        {
-            "text": "The beautiful thing about learning is that no one can take it away from you.",
-            "author": "B.B. King"
-        },
-        {
-            "text": "Don't count the days, make the days count.", 
-            "author": "Muhammad Ali"
         }
-        ]
-
+    ]
+    
     random_quote = random.choice(quotes)
 
 
