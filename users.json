@@ -5,7 +5,7 @@
     "joined": "2026-05-21",
     "points": 30,
     "streak": 2,
-    "last_login": "2026-06-10",
+    "last_login": "2026-06-18",
     "pic": "LALITHAMBIGAI.ANANDAN.RAJstudent.mmu.edu.my_Screenshot_2024-06-26_172006.png",
     "bio": "Hello"
   },
@@ -25,7 +25,11 @@
     "joined": "2026-06-02",
     "points": 30,
     "streak": 1,
+<<<<<<< HEAD
     "last_login": "2026-07-01",
+=======
+    "last_login": "2026-07-02",
+>>>>>>> auth
     "pic": null,
     "bio": "life is tough"
   },
