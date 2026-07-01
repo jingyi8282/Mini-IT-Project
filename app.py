@@ -704,12 +704,12 @@ def edit_task(task_id):
 
 @app.route("/search")
 def search():
-    search = request.args.get("search", "").lower()
+    search = request.args.get("search", "").lower().strip()
     user_email = session.get("email")
     all_tasks = db.get_tasks(user_email)
 
     if search:
-        results = [t for t in all_tasks if search in t['title'] .lower()]
+        results = [t for t in all_tasks if t['title'].lower().startswith(search)]
     else:
         results = []
     return render_template("task_cards.html", results=results)
