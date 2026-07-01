@@ -31,6 +31,14 @@
       "deadline": "2026-06-19",
       "category": "revision",
       "status": "my_task"
+    },
+    {
+      "id": 6,
+      "title": "Maths quiz 1",
+      "priority": "High",
+      "deadline": "2026-06-19",
+      "category": "revision",
+      "status": "in_progress"
     }
   ],
   "ratnajane0207@gmail.com": [
@@ -92,6 +100,5 @@
       "category": "assignments",
       "status": "completed"
     }
-  ],
-  "lalithambigai8449@gmail.com": []
+  ]
 }

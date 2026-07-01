@@ -1,89 +1,121 @@
 {% extends "base.html" %}
 {% block content %}
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='focus.css') }}">
-    <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.10/dist/htmx.min.js"></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='focus.css') }}">
+<script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.10/dist/htmx.min.js"></script>
     
 <header>Focus Room</header>
-<section class="focus_layout">
-    <div class="focus_card">
-        <h2>Daily Motivation</h2>
-        <div class="quote_section">
-            <blockquote>"{{ quotes.text }}"</blockquote>
-            <p>- {{ quotes.author }}</p>
-        </div>
-        <a href="{{url_for('focus_room')}}" class="new_quote">New Quote</a>
+
+<div class="dashboard_container">
+    <input type="radio" name="focus_tabs" id="tab_motivation" checked>
+    <input type="radio" name="focus_tabs" id="tab_timer">
+    <input type="radio" name="focus_tabs" id="tab_notes">
+    <input type="radio" name="focus_tabs" id="tab_break">
+
+    <div class="tab_menu_row">
+        <label for="tab_motivation" class="circle_tab" title="Daily Motivation">
+            <span class="tab_label">Daily Motivation</span>
+        </label>
+        <label for="tab_timer" class="circle_tab" title="Deep Work Mode">
+            <span class="tab_label">Deep Work Mode</span>
+        </label>
+        <label for="tab_notes" class="circle_tab" title="Quick Notes & AI">
+            <span class="tab_label">Quick Notes AI</span>
+        </label>
+        <label for="tab_break" class="circle_tab" title="Break Zone">
+            <span class="tab_label">Break Zone</span>
+        </label>
     </div>
 
-    <div class="focus_card">
-        <h2>Deep Work Mode</h2>
-        <div class="pomo_timer">
-           <h3> Pomodoro Timer </h3>
-           <div class="timer_display" hx-get="/focus/timer/update" hx-trigger="every 1s" hx-swap="innerHTML">{{ time_string }}</div>
-           <div class="timer_btn">
-                {% if session.get('timer_running') %}
-                    <button hx-get="{{ url_for('pause_timer') }}" hx-target=".pomo_timer" hx-select=".pomo_timer" class="pause_btn"> Pause </button>
-                {% elif session.get('timer_remaining', 1500) < 1500 %}
-                    <button hx-get="{{ url_for('start_timer') }}" hx-target=".pomo_timer" hx-select=".pomo_timer" class="resume_btn"> Resume </button>
-                {% else %}
-                    <button hx-get="{{ url_for('start_timer') }}" hx-target=".pomo_timer" hx-select=".pomo_timer" class="start_btn"> Start </button>
-                {% endif %}
-                <button hx-get="{{ url_for('reset_timer', mode=session.get('timer_mode', 'work')) }}" hx-target=".pomo_timer" hx-select=".pomo_timer" class="reset_btn"> Reset </button>
-           </div>
+    <section class="focus_layout">
+        
+        <div class="focus_card content_motivation">
+            <h2>Daily Motivation</h2>
+            <div class="quote_section">
+                <blockquote>"{{ quotes.text }}"</blockquote>
+                <p>- {{ quotes.author }}</p>
+            </div>
+            <a href="{{url_for('focus_room')}}" class="new_quote">New Quote</a>
         </div>
-    </div>  
-    
-    <div class="focus_card">
-        <h2>Quick Notes & AI</h2>
-        <div class="notes-area">
-            {% if error %}<p style="color: red; font-size: 11px;">⚠️ {{ error }}</p>{% endif %}
-            
-            <form action="{{ url_for('focus_room') }}" method="POST" enctype="multipart/form-data">
-                <textarea name="content" placeholder="Paste notes here..."></textarea>
-                <input type="file" name="pdf_file" class="file-input" accept=".pdf, .docx">
+
+        <div class="focus_card content_timer">
+            <h2>Deep Work Mode</h2>
+            <div class="pomo_timer">
+               <h3> Pomodoro Timer </h3>
+               <div class="timer_display" hx-get="/focus/timer/update" hx-trigger="every 1s" hx-swap="innerHTML">{{ time_string }}</div>
+               <div class="timer_btn">
+                    {% if session.get('timer_running') %}
+                        <button hx-get="{{ url_for('pause_timer') }}" hx-target=".pomo_timer" hx-select=".pomo_timer" class="pause_btn"> Pause </button>
+                    {% elif session.get('timer_remaining', 1500) < 1500 %}
+                        <button hx-get="{{ url_for('start_timer') }}" hx-target=".pomo_timer" hx-select=".pomo_timer" class="resume_btn"> Resume </button>
+                    {% else %}
+                        <button hx-get="{{ url_for('start_timer') }}" hx-target=".pomo_timer" hx-select=".pomo_timer" class="start_btn"> Start </button>
+                    {% endif %}
+                    <button hx-get="{{ url_for('reset_timer', mode=session.get('timer_mode', 'work')) }}" hx-target=".pomo_timer" hx-select=".pomo_timer" class="reset_btn"> Reset </button>
+               </div>
+            </div>
+        </div>  
+        
+        <div class="focus_card content_notes">
+            <h2>Quick Notes & AI</h2>
+            <div class="notes-area">
+                {% if error %}<p style="color: red; font-size: 11px;">⚠️ {{ error }}</p>{% endif %}
                 
-                <div class="btn-row">
-                    <button type="submit" name="action" value="summarize">Summarize</button>
-                    <button type="submit" name="action" value="quiz">Quiz</button>
-                </div>
-            </form>
+                <form action="{{ url_for('focus_room') }}" method="POST" enctype="multipart/form-data">
+                    <textarea name="content" placeholder="Paste notes here..."></textarea>
+                    <input type="file" name="pdf_file" class="file-input" accept=".pdf, .docx">
+                    
+                    <div class="btn-row">
+                        <button type="submit" name="action" value="summarize">Summarize</button>
+                        <button type="submit" name="action" value="quiz">Quiz</button>
+                    </div>
+                </form>
 
-            {% if result %}
-                <div class="ai-result">
-                    <strong>🤖 AI Result:</strong><br>
-                    {{ result | replace('\n', '<br>') | safe }}
-                </div>
-            {% endif %}
-        </div>
-    </div>
-
-    <div class="focus_card">
-        <h2>Break Zone</h2>
-        <div class="break_zone">
-            <div class="vid_column">
-                <h3>Lofi-Music</h3>
-                <ul>
-                    <li><iframe class="vid" width="300" height="150" src="https://www.youtube.com/embed/BCxTQq0UiFs?si=lG3h7BEwlG9Oypfn" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></li>
-                    <li><iframe class="vid" width="300" height="150" src="https://www.youtube.com/embed/VUQfT3gNT3g?si=3EcCEKpKX5q5_Hym" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></li>
-                </ul>
+                {% if result %}
+                    <div class="ai-result">
+                        <strong>🤖 AI Result:</strong><br>
+                        {{ result | replace('\n', '<br>') | safe }}
+                    </div>
+                {% endif %}
             </div>
-            <div class="vid_column">
-                <h3>Nature Sounds</h3>
-                <ul>
-                    <li><iframe class="vid" width="300" height="150" src="https://www.youtube.com/embed/xAmop8CSZ2g?si=Wahl5PRl65DCH_HD" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></li>
-                    <li><iframe class="vid" width="300" height="150" src="https://www.youtube.com/embed/nta1YhicoGw?si=7S6DatfNIfl994e2" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></li>
-                </ul>
-            </div>
-            <div class="vid_column">
-                <h3>Motivational Videos</h3>
-                <ul>
-                    <li><iframe class="vid" width="300" height="150" src="https://www.youtube.com/embed/g6BtbIiJ_rc?si=dZv19IUkWgMeIfGG" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></li>
-                    <li><iframe class="vid" width="300" height="150" src="https://www.youtube.com/embed/CFiCdpnn-jo?si=mi82VftmBPl42GcG" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></li>
-                </ul>
-            </div>  
         </div>
-    </div>
-</section>
 
+        <div class="focus_card content_break">
+            <h2>Break Zone</h2>
+            <div class="break_zone">
+                <div class="vid_column">
+                    <h3>Lofi-Music</h3>
+                    <ul>
+                        <li><iframe class="vid" width="300" height="150" src="https://www.youtube.com/embed/BCxTQq0UiFs?si=lG3h7BEwlG9Oypfn" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></li>
+                        <li><iframe class="vid" width="300" height="150" src="https://www.youtube.com/embed/VUQfT3gNT3g?si=3EcCEKpKX5q5_Hym" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></li>
+                        <li><iframe class="vid" width="300" height="150" src="https://www.youtube.com/embed/lTRiuFIWV54" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></li>
+                        <li><iframe class="vid" width="300" height="150" src="https://www.youtube.com/embed/p_LcrQeZzwI?si=W17exyiXRgo6Z8eT" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></li>
+                        <li><iframe class="vid" width="300" height="150" src="https://www.youtube.com/embed/-DfHaOYeaqk?si=HM84l72ipdCixHPD" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></li>
+                    </ul>
+                </div>
+                <div class="vid_column">
+                    <h3>Nature Sounds</h3>
+                    <ul>
+                        <li><iframe class="vid" width="300" height="150" src="https://www.youtube.com/embed/xAmop8CSZ2g?si=Wahl5PRl65DCH_HD" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></li>
+                        <li><iframe class="vid" width="300" height="150" src="https://www.youtube.com/embed/nta1YhicoGw?si=7S6DatfNIfl994e2" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></li>
+                        <li><iframe class="vid" width="300" height="150" src="https://www.youtube.com/embed/mPZkdNFkNps" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></li>
+                        <li><iframe class="vid" width="300" height="150" src="https://www.youtube.com/embed/Nep1qytq9JM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></li>
+                        <li><iframe class="vid" width="300" height="150" src="https://www.youtube.com/embed/VKSEG8Xr-RQ?si=PG1wDujlO-V1qqdB" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></li>
+                    </ul>
+                </div>
+                <div class="vid_column">
+                    <h3>Motivational Videos</h3>
+                    <ul>
+                        <li><iframe class="vid" width="300" height="150" src="https://www.youtube.com/embed/g6BtbIiJ_rc?si=dZv19IUkWgMeIfGG" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></li>
+                        <li><iframe class="vid" width="300" height="150" src="https://www.youtube.com/embed/CFiCdpnn-jo?si=mi82VftmBPl42GcG" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></li>
+                        <li><iframe class="vid" width="300" height="150" src="https://www.youtube.com/embed/w77zPAtVTuI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></li>
+                        <li><iframe class="vid" width="300" height="150" src="https://www.youtube.com/embed/d9gwmyPMByM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></li>
+                        <li><iframe class="vid" width="300" height="150" src="https://www.youtube.com/embed/SZ6uuFUVSOQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></li>
+                    </ul>
+                </div>  
+            </div>
+        </div>
+    </section>
+</div>
 
 {% endblock %}
