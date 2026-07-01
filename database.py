@@ -15,7 +15,8 @@ class Database:
         #load users
         if os.path.exists(self.user_file):
             f = open(self.user_file, "r")
-            self.users = json.load(f)
+            self.users =
+             json.load(f)
             f.close()
         else:
             self.users = {}
