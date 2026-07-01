@@ -19,11 +19,6 @@ app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY", "abc123") # added inside our .env file instaed
 db = Database()
 
-<<<<<<< HEAD
-# our api key for notes feature
-GROQ_API_KEY = "gsk_Njzs4q25t03oJymjMPvtWGdyb3FYhRYp6MvJrde"
-client = Groq(api_key=GROQ_API_KEY)
-=======
 # our api key inside .env
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
@@ -39,7 +34,6 @@ else:
     print("⚠️ GROQ_API_KEY not found in environment variables!")
     client = None
 
->>>>>>> auth
 
 def call_groq_ai(prompt):
     try:
