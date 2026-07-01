@@ -1,88 +1,143 @@
-body{
+/* ==========================================================
+   GLOBAL BODY & HEADER STYLE (RESTORED FROM IMAGE 1)
+   ========================================================== */
+body {
     background-color: #fbe4d8;
     font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    padding: 0;
 }
 
-header{
+header {
     color: #522b5b;
     text-align: center;
     font-size: 40px;
     font-weight: bold;
+    margin-top: 25px;
+    margin-bottom: 15px;
 }
 
-h2{
+h2 {
     text-align: center;
     color: #2B124C;
-}
-
-.focus_layout{
-    display: grid;
-    gap: 20px ;
-    padding: 25px;
-}
-
-.focus_card{
-    background-color: #dfb6b2;
-    border-radius: 14px;
-    padding: 8px;
-}
-
-.notes-area {
-    padding: 15px;
-    border-radius: 12px;
     margin-top: 10px;
+    margin-bottom: 20px;
 }
-.notes-area textarea {
+
+h3 {
+    color: #2B124C;
+    text-align: center;
+}
+
+/* ==========================================================
+   TAB NAVIGATION LAYOUT CONTROL (RADIO ENGINE)
+   ========================================================== */
+.dashboard_container {
     width: 100%;
-    height: 100px;
-    padding: 10px;
-    border-radius: 8px;
-    border: 2px solid #2B124C;
-    background: #fbe4d8;
+    max-width: 1400px; /* Expands wider to replicate layout 1 & 2 full scale */
+    margin: 0 auto;
+    padding: 0 25px;
     box-sizing: border-box;
-    resize: none;
-    box-shadow: 0 4px 20px rgb(247, 106, 247);
 }
-.file-input::file-selector-button {
-    font-size: 11px;
-    margin: 5px;
-    display: block;
-    background-color: #fbe4d8;
-    border: 2px solid #2B124C;
-    border-radius: 14px;
-    padding: 8px;
-    cursor: pointer;
+
+/* Completely hides radio controls */
+input[name="focus_tabs"] {
+    display: none;
 }
-.btn-row {
+
+/* Row wrapper for navigation pills */
+.tab_menu_row {
     display: flex;
-    gap: 10px;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 25px;
+    position: relative;
+    z-index: 3;
 }
-.btn-row button {
-    flex: 1;
-    padding: 8px;
-    background: #522b5b;
-    color: white;
-    border: none;
-    border-radius: 6px;
+
+/* Pill Button Tabs styling */
+.circle_tab {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 24px;
+    background-color: #c99b97; /* A slightly darker shade so inactive tabs look "behind" */
+    border: 2px solid #2B124C;
+    border-top-left-radius: 14px;  /* Rounded top corners like image_978d5f.png */
+    border-top-right-radius: 14px;
+    border-bottom-left-radius: 0px; /* Flat bottom so it connects seamlessly */
+    border-bottom-right-radius: 0px;
     cursor: pointer;
+    transition: all 0.2s ease;
+    margin-bottom: -2px; /* Pulls all tabs down by 2px to overlap the card's border */
+}
+
+.tab_label {
+    font-size: 13px;
     font-weight: bold;
-}
-.btn-row button:hover {
-    background: #854f6c;
-}
-.ai-result {
-    margin-top: 15px;
-    padding: 10px;
-    background: #fbe4d8;
-    border-radius: 8px;
-    font-size: 12px;
-    text-align: left;
-    max-height: 150px;
-    overflow-y: auto;
     color: #2B124C;
 }
 
-.quote_section{
+/* Active tab selection glow & colors */
+#tab_motivation:checked ~ .tab_menu_row label[for="tab_motivation"],
+#tab_timer:checked ~ .tab_menu_row label[for="tab_timer"],
+#tab_notes:checked ~ .tab_menu_row label[for="tab_notes"],
+#tab_break:checked ~ .tab_menu_row label[for="tab_break"] {
+    background-color: #dfb6b2;    
+    border-bottom-color:2px solid #dfb6b2; 
+    z-index: 4;            
+    padding-top: 15px;
+}
+
+#tab_motivation:checked ~ .tab_menu_row label[for="tab_motivation"] .tab_label,
+#tab_timer:checked ~ .tab_menu_row label[for="tab_timer"] .tab_label,
+#tab_notes:checked ~ .tab_menu_row label[for="tab_notes"] .tab_label,
+#tab_break:checked ~ .tab_menu_row label[for="tab_break"] .tab_label {
+    color: #fbe4d8;
+    font-size: 14px;
+}
+
+/* ==========================================================
+   DYNAMIC MAIN CONTAINER CARDS (RESTORED EXACT STYLES)
+   ========================================================== */
+.focus_layout {
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: 0px;
+    padding: 0;
+}
+
+/* Hide all tabs by default */
+.focus_layout .focus_card {
+    display: none;
+    background-color: #dfb6b2;
+    border-radius: 14px;
+    padding: 25px; /* Restored spacious inside container padding */
+    box-sizing: border-box;
+    width: 100%;
+    border: 2px solid #2B124C; /* Adds the crisp outline showing off the tab connection */
+    position: relative;
+    z-index: 1;
+}
+
+/* Active Selector Actions */
+#tab_motivation:checked ~ .focus_layout .content_motivation,
+#tab_timer:checked ~ .focus_layout .content_timer,
+#tab_notes:checked ~ .focus_layout .content_notes,
+#tab_break:checked ~ .focus_layout .content_break {
+    display: block;
+    animation: tabFadeIn 0.4s ease-in-out;
+}
+
+@keyframes tabFadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================================================
+   FEATURE 1: DAILY MOTIVATION ORIGINAL COMPONENTS
+   ========================================================== */
+.quote_section {
     background-color: #fbe4d8;
     border: 2px solid #2B124C;
     border-radius: 14px;
@@ -95,7 +150,7 @@ h2{
     box-shadow: 0 4px 20px rgb(247, 106, 247);
 }
 
-.new_quote{
+.new_quote {
     border-radius: 14px;
     background-color: #fbe4d8;
     border: 2px solid #2B124C;
@@ -103,57 +158,20 @@ h2{
     margin-left: auto;
     margin-bottom: 10px;
     width: fit-content;
-    padding: 5px;
+    padding: 5px 15px;
     text-decoration: none;
-}
-
-.vid_column{
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-}
-
-h3{
     color: #2B124C;
-    text-align: center;
+    font-weight: bold;
 }
 
-.vid_column ul{
-    list-style: none;
-    padding: 0%;
-    margin: 0%;
+/* ==========================================================
+   FEATURE 2: POMODORO TIMER ORIGINAL COMPONENTS
+   ========================================================== */
+.timer_display {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
-}
-
-.vid_column li{
-    padding: 0%;
-    margin: 0%;
-}
-
-.break_zone{
-    display: flex;
-    gap: 20px;
-    justify-content: space-between;
-    padding: 15px;
-    align-items: flex-start;
-    
-}
-
-.vid{
-    border: 2px solid #fbe4d8;
-    border-radius: 14px;
-    box-shadow: 0 4px 20px rgb(247, 106, 247);
-}
-
-.timer_display{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    justify-content: center;
     background-color: #fbe4d8;
     border-radius: 14px;
     font-size: 64px;
@@ -162,64 +180,137 @@ h3{
     width: 240px;
     height: 100px;
     padding: 15px 30px;
-    margin: auto;
-    box-shadow: 0 4px 20px rgb(247, 106, 247)
+    margin: 20px auto;
+    box-shadow: 0 4px 20px rgb(247, 106, 247);
 }
 
-.timer_btn{
+.timer_btn {
     display: flex;
     justify-content: center;
     gap: 20px;
+    margin-bottom: 15px;
 }
 
-.start_btn{
+.timer_btn button {
     border-radius: 14px;
     background-color: #fbe4d8;  
     color: #522b5b;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: bold;
-    padding: 8px;
-    margin-inline: 5px;
-    margin-bottom: 5px;
-    margin-top: 5px;
+    padding: 10px 20px;
     cursor: pointer;  
+    border: 2px solid #2B124C;
 }
 
-.pause_btn{
-    border-radius: 14px;
-    background-color: #fbe4d8;  
-    color: #522b5b;
-    font-size: 12px;
-    font-weight: bold;
-    padding: 8px;
-    margin-inline: 5px;
-    margin-bottom: 5px;
-    margin-top: 5px;
-    cursor: pointer;  
+/* ==========================================================
+   FEATURE 3: QUICK NOTES & AI ORIGINAL COMPONENTS
+   ========================================================== */
+.notes-area {
+    padding: 15px;
+    border-radius: 12px;
 }
 
-.resume_btn{
-    border-radius: 14px;
-    background-color: #fbe4d8;  
-    color: #522b5b;
-    font-size: 12px;
-    font-weight: bold;
-    padding: 8px;
-    margin-inline: 5px;
-    margin-bottom: 5px;
-    margin-top: 5px;
-    cursor: pointer;  
+.notes-area textarea {
+    width: 100%;
+    height: 120px;
+    padding: 15px;
+    border-radius: 8px;
+    border: 2px solid #2B124C;
+    background: #fbe4d8;
+    box-sizing: border-box;
+    resize: none;
+    box-shadow: 0 4px 20px rgb(247, 106, 247);
+    font-size: 14px;
 }
 
-.reset_btn{
+.file-input::file-selector-button {
+    font-size: 11px;
+    margin: 15px 0;
+    display: block;
+    background-color: #fbe4d8;
+    border: 2px solid #2B124C;
     border-radius: 14px;
-    background-color: #fbe4d8;  
-    color: #522b5b;
-    font-size: 12px;
-    font-weight: bold;
     padding: 8px;
-    margin-inline: 5px;
-    margin-bottom: 5px;
-    margin-top: 5px;
-    cursor: pointer;  
+    cursor: pointer;
 }
+
+.btn-row {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.btn-row button {
+    flex: 1;
+    padding: 12px;
+    background: #522b5b;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.btn-row button:hover {
+    background: #854f6c;
+}
+
+.ai-result {
+    margin-top: 20px;
+    padding: 15px;
+    background: #fbe4d8;
+    border-radius: 8px;
+    font-size: 13px;
+    text-align: left;
+    max-height: 200px;
+    overflow-y: auto;
+    color: #2B124C;
+    border: 2px solid #2B124C;
+}
+
+/* ==========================================================
+   FEATURE 4: BREAK ZONE VIDEOS GRID CONFIGURATION
+   ========================================================== */
+.break_zone {
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+    padding: 15px 0;
+    align-items: flex-start;
+    width: 100%;
+}
+
+.vid_column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.vid_column ul {
+    list-style: none; /* Removes those bullet circles completely */
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+}
+
+.vid_column li {
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.vid {
+    border: 2px solid #fbe4d8;
+    border-radius: 14px;
+    box-shadow: 0 4px 20px rgb(247, 106, 247);
+    max-width: 100%;
+}
+

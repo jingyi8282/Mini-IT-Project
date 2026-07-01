@@ -3,18 +3,18 @@
     {
       "id": 1,
       "title": "Task Due Tomorrow \u26a0\ufe0f",
-      "message": "'maths quiz 2' is due tomorrow! Don't forget!",
+      "message": "'Ds assignment ' is due tomorrow! Don't forget!",
       "type": "warning",
       "read": false,
-      "time": "2026-06-10 00:20:35.592715"
+      "time": "2026-06-18 01:00:24.686450"
     },
     {
       "id": 2,
-      "title": "Task Completed! \ud83c\udf89",
-      "message": "You completed 'maths quiz 2' and earned 10 XP!",
-      "type": "success",
+      "title": "Task Due Tomorrow \u26a0\ufe0f",
+      "message": "'Maths quiz 1' is due tomorrow! Don't forget!",
+      "type": "warning",
       "read": false,
-      "time": "2026-06-10 00:30:18.126709"
+      "time": "2026-06-18 01:00:24.710596"
     }
   ],
   "jingyi2828@gmail.com": []
