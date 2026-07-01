@@ -14,6 +14,22 @@
       "priority": "Medium",
       "deadline": "2026-06-19",
       "category": "assignments",
+      "status": "in_progress"
+    },
+    {
+      "id": 6,
+      "title": "CT quiz",
+      "priority": "Medium",
+      "deadline": "2026-06-29",
+      "category": "revision",
+      "status": "my_task"
+    },
+    {
+      "id": 7,
+      "title": "Physics test",
+      "priority": "High",
+      "deadline": "2026-06-19",
+      "category": "revision",
       "status": "my_task"
     }
   ],
