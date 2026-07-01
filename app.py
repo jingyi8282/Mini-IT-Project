@@ -146,15 +146,8 @@ def admin_dashboard():
 
     return render_template(
         "admin_dashboard.html",
-        total_users=total_users,
-        total_tasks=total_tasks,
-        total_overdue=global_overdue,
-        global_completed=global_completed,
-        global_pending=global_pending,
-        completion_percentage=completion_percentage,
-        pending_percentage=pending_percentage,
-        user_tracking_list=admin_user_tracking
-    )
+        total_users=total_users,total_tasks=total_tasks,total_overdue=global_overdue,global_completed=global_completed,global_pending=global_pending,
+        completion_percentage=completion_percentage,pending_percentage=pending_percentage,user_tracking_list=admin_user_tracking)
     
 @app.route("/admin/tasks")
 def admin_tasks():
@@ -189,11 +182,7 @@ def admin_tasks():
         "completion_rate": completion_rate
     }
     
-    return render_template("admin_tasks.html", 
-                         tasks=all_tasks,
-                         users=all_users,
-                         filter_user=filter_user,
-                         stats=stats)
+    return render_template("admin_tasks.html",tasks=all_tasks,users=all_users,filter_user=filter_user,stats=stats)
 
 #admin delete tasks
 @app.route("/admin/delete_task/<int:task_id>", methods=["POST"])
@@ -362,7 +351,7 @@ Notes:
 def timer_update():
     if "timer_end" in session and session.get("timer_running"):
         end_time = float(session.get("timer_end", 0))
-        remaining = int(end_time - time.time())
+        remaining = max(0,round(end_time - time.time()))
         if remaining <= 0:
             session["timer_running"] = False
             session["timer_remaining"] = 0
@@ -388,7 +377,7 @@ def start_timer():
 @app.route("/focus/timer/pause")
 def pause_timer():
     if session.get("timer_running", False) and "timer_end" in session:
-        remaining = int(float(session.get("timer_end", 0)) - time.time())
+        remaining = round(float(session.get("timer_end", 0)) - time.time())
         session["timer_remaining"] = max(0, remaining)
         session["timer_running"] = False
     return redirect(url_for("focus_room"))
@@ -526,24 +515,12 @@ def dashboard():
 
     
     donut_fig = go.Figure(data=[go.Pie(
-        labels=['Incomplete', 'Complete'],
-        values=[incomplete_count, completed_count],
-        hole=0.75,
-        marker=dict(colors=['#E2D6FF', '#8A4FFF']),
-        textinfo='none',
-        hoverinfo='label+value',
-        sort=False
-    )])
+        labels=['Incomplete', 'Complete'],values=[incomplete_count, completed_count],hole=0.75,marker=dict(colors=['#E2D6FF', '#8A4FFF']),
+        textinfo='none',hoverinfo='label+value',sort=False)])
     
-    donut_fig.update_layout(
-        showlegend=True,
-        legend=dict(orientation="h", yanchor="bottom", y=-0.2, xanchor="center", x=0.5),
-        margin=dict(t=10, b=10, l=10, r=10),
-        height=220,
-        paper_bgcolor='rgba(0,0,0,0)',
-        plot_bgcolor='rgba(0,0,0,0)',
-        annotations=[dict(text=f'<b>{total_tasks}</b><br>total', x=0.5, y=0.5, font_size=14, showarrow=False, font_color='#1F2937')]
-    )
+    donut_fig.update_layout(showlegend=True,legend=dict(orientation="h", yanchor="bottom", y=-0.2, xanchor="center", x=0.5),
+        margin=dict(t=10, b=10, l=10, r=10),height=220,paper_bgcolor='rgba(0,0,0,0)',plot_bgcolor='rgba(0,0,0,0)',
+        annotations=[dict(text=f'<b>{total_tasks}</b><br>total', x=0.5, y=0.5, font_size=14, showarrow=False, font_color='#1F2937')])
     
     donut_html = donut_fig.to_html(full_html=False, include_plotlyjs='cdn', config={'displayModeBar': False})
 
@@ -595,15 +572,8 @@ def dashboard():
 
     return render_template(
         "dashboard.html", 
-        name=session.get("name"),
-        completed=completed_count,
-        incomplete=incomplete_count,
-        overdue=overdue_count,   
-        total=total_tasks,
-        donut_chart=donut_html,
-        bar_chart=bar_html,
-        active_filter=active_filter,
-        notifications=notifications)
+        name=session.get("name"),completed=completed_count,incomplete=incomplete_count,overdue=overdue_count,total=total_tasks,
+        donut_chart=donut_html,bar_chart=bar_html,active_filter=active_filter,notifications=notifications)
 
 @app.route("/api/graph-data/<filter_type>")
 def get_graph_data(filter_type):
@@ -759,15 +729,8 @@ def profile():
     bio = db.get_bio(session["email"])
     
     return render_template("profile.html",
-                         name=session.get("name"),
-                         email=session["email"],
-                         joined_date=user.get("joined", "2025"),
-                         total_tasks=total_tasks,
-                         completed_tasks=completed_tasks,
-                         points=points,
-                         streak=streak,
-                         profile_pic=user.get("pic"),
-                         bio=bio)
+                         name=session.get("name"),email=session["email"],joined_date=user.get("joined", "2025"),total_tasks=total_tasks,
+                         completed_tasks=completed_tasks,points=points,streak=streak,profile_pic=user.get("pic"),bio=bio)
 
 @app.route("/upload_photo", methods=["POST"])
 def upload_photo():
