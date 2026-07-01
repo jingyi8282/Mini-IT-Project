@@ -12,17 +12,25 @@
       "id": 5,
       "title": "Ds assignment ",
       "priority": "Medium",
-      "deadline": "2026-06-19",
+      "deadline": "2026-07-08",
       "category": "assignments",
-      "status": "my_task"
+      "status": "in_progress"
     },
     {
       "id": 6,
-      "title": "Maths quiz 1",
-      "priority": "High",
-      "deadline": "2026-06-19",
+      "title": "CT quiz",
+      "priority": "Low",
+      "deadline": "2026-07-10",
       "category": "revision",
-      "status": "in_progress"
+      "status": "my_task"
+    },
+    {
+      "id": 7,
+      "title": "English assignment ",
+      "priority": "Low",
+      "deadline": "2026-07-11",
+      "category": "assignments",
+      "status": "my_task"
     }
   ],
   "ratnajane0207@gmail.com": [

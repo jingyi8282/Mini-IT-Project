@@ -1,39 +1,4 @@
 {
-  "LALITHAMBIGAI.ANANDAN.RAJ@student.mmu.edu.my": [
-    {
-      "id": 1,
-      "title": "Task Due Tomorrow \u26a0\ufe0f",
-      "message": "'Ds assignment ' is due tomorrow! Don't forget!",
-      "type": "warning",
-      "read": false,
-      "time": "2026-06-18 01:00:24.686450"
-    },
-    {
-      "id": 2,
-      "title": "Task Due Tomorrow \u26a0\ufe0f",
-      "message": "'Maths quiz 1' is due tomorrow! Don't forget!",
-      "type": "warning",
-      "read": false,
-      "time": "2026-06-18 01:00:24.710596"
-    }
-  ],
-  "jingyi2828@gmail.com": [],
-  "guest123@gmail.com": [
-    {
-      "id": 1,
-      "title": "Welcome!",
-      "message": "Thanks for joining Academic Diary! Start by adding your first task.",
-      "type": "success",
-      "read": false,
-      "time": "2026-07-02 02:51:24.737565"
-    },
-    {
-      "id": 2,
-      "title": "Task Completed! \ud83c\udf89",
-      "message": "You completed 'coding' and earned 10 XP!",
-      "type": "success",
-      "read": false,
-      "time": "2026-07-02 02:53:13.096011"
-    }
-  ]
+  "LALITHAMBIGAI.ANANDAN.RAJ@student.mmu.edu.my": [],
+  "jingyi2828@gmail.com": []
 }
